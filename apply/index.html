@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<meta name="description" content="BEYOND PLAYBOOK お問合せフォーム。関心のあるサービスを選んでお送りください。1時間以内に折り返します。">
+<meta property="og:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
+<title>お問合せ｜BEYOND PLAYBOOK</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23060b1a'/><stop offset='1' stop-color='%230a1e3d'/></linearGradient></defs><rect width='100' height='100' rx='18' fill='url(#g)'/><text x='50' y='75' font-family='Inter,Arial,sans-serif' font-weight='900' font-size='72' fill='%23f5c542' text-anchor='middle' letter-spacing='-2'>P</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PJY2SKCX2L"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PJY2SKCX2L');</script>
+<style>
+:root { --bg:#fff; --bg-soft:#f7f6f3; --text:#1a1a1a; --text-soft:#555; --line:#e5e3dc; --accent:#0a1e3d; --accent-deep:#050d1f; --gold:#d4a843; --gold-bright:#f5c542; --gold-deep:#a07d2c; --red:#8b1c1c; --green:#2d6a3e; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family:'Noto Sans JP',sans-serif; color: var(--text); background: var(--bg-soft); line-height:1.85; font-size:15px; -webkit-font-smoothing:antialiased; min-height:100vh; display:flex; flex-direction:column; }
+a { color: inherit; text-decoration: none; }
+header { background:#fff; border-bottom:1px solid var(--line); }
+.header-inner { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1080px; margin:0 auto; }
+.logo { display:flex; align-items:center; gap:14px; }
+.logo .brand-logo { height:28px; width:auto; filter:brightness(0) saturate(100%); }
+.logo .brand-name { font-family:'Inter',sans-serif; font-weight:900; font-size:22px; letter-spacing:0.04em; color:var(--accent); padding-left:12px; border-left:1px solid var(--line); line-height:1; }
+.back-link { font-size:13px; color:var(--text-soft); }
+.back-link:hover { color: var(--accent); }
+
+main { flex:1; max-width:680px; margin:0 auto; padding:56px 24px 80px; width:100%; }
+.page-meta { font-family:'Inter',sans-serif; font-weight:600; font-size:12px; letter-spacing:0.2em; color:var(--gold-deep); margin-bottom:12px; }
+h1 { font-size:clamp(26px,4vw,34px); font-weight:900; line-height:1.5; margin-bottom:14px; }
+.lead { font-size:15px; color:var(--text-soft); margin-bottom:36px; padding-bottom:24px; border-bottom:1px solid var(--line); line-height:1.95; }
+.lead strong { color:var(--accent); }
+
+form { background:#fff; border:1px solid var(--line); border-radius:10px; padding:32px; }
+.fld { margin-bottom:22px; }
+.fld label { display:block; font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; }
+.fld .req { color:var(--red); margin-left:4px; }
+.fld input, .fld select, .fld textarea {
+  width:100%; padding:12px 14px; border:1px solid #cdc8b8; border-radius:6px;
+  font-size:15px; font-family:inherit; background:#fff; line-height:1.6;
+  transition: border-color 0.15s;
+}
+.fld input:focus, .fld select:focus, .fld textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,168,67,0.15); }
+.fld textarea { min-height:120px; resize: vertical; }
+.fld .hint { font-size:12px; color:var(--text-soft); margin-top:6px; line-height:1.6; }
+
+.interests-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; }
+.interest { display:block; cursor:pointer; padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:#fafaf6; transition: all 0.15s; position:relative; }
+.interest input { position:absolute; opacity:0; pointer-events:none; }
+.interest:hover { border-color: var(--gold); background:#fff; }
+.interest.checked { border-color: var(--gold); background: #fff8e1; }
+.interest .iname { font-family:'Inter',sans-serif; font-weight:800; font-size:14px; color:var(--accent); margin-bottom:2px; }
+.interest .itheme { font-size:11px; color:var(--text-soft); line-height:1.5; }
+.interest .ilive { display:inline-block; font-size:9px; font-weight:700; letter-spacing:0.1em; padding:2px 6px; border-radius:4px; background:var(--gold-bright); color:var(--accent-deep); margin-left:6px; vertical-align:middle; }
+
+.submit-btn {
+  width:100%; padding:18px; border:none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color:#fff; font-size:16px; font-weight:800; border-radius:8px;
+  cursor:pointer; transition: all 0.15s; font-family:inherit; letter-spacing:0.05em;
+}
+.submit-btn:hover { background: linear-gradient(135deg, var(--gold), var(--gold-deep)); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+.submit-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+#msg { margin-top:18px; padding:14px; border-radius:6px; font-size:14px; line-height:1.7; display:none; }
+#msg.ok { background: #e9f5ec; color: var(--green); border:1px solid #b8d9c0; display:block; }
+#msg.ng { background: #fbeaea; color: var(--red); border:1px solid #e8b8b8; display:block; }
+
+.note { font-size:12px; color:var(--text-soft); margin-top:18px; padding-top:18px; border-top:1px solid var(--line); }
+.note a { color: var(--accent); text-decoration: underline; }
+
+footer { background: #0a0e1a; color: rgba(255,255,255,0.7); padding: 32px 24px; font-size: 13px; text-align:center; }
+footer a { color: rgba(255,255,255,0.85); }
+footer a:hover { color: var(--gold-bright); }
+
+@media (max-width: 560px) {
+  form { padding: 22px 18px; }
+  .interests-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <img src="../assets/beyond_logo.png" alt="BEYOND Holdings" class="brand-logo">
+      <span class="brand-name">PLAYBOOK</span>
+    </a>
+    <a href="/" class="back-link">← トップへ戻る</a>
+  </div>
+</header>
+
+<main>
+  <div class="page-meta">CONTACT</div>
+  <h1>お問合せ</h1>
+  <p class="lead">
+    関心のあるサービス・現在の課題をお聞かせください。<br>
+    <strong>1時間以内に折り返し</strong>、 <strong>3営業日以内に初回ヒアリング</strong>をお取りします。
+  </p>
+
+  <form id="contactForm">
+    <div class="fld">
+      <label>お名前<span class="req">*</span></label>
+      <input type="text" name="name" required maxlength="60" autocomplete="name">
+    </div>
+
+    <div class="fld">
+      <label>会社名<span class="req">*</span></label>
+      <input type="text" name="company" required maxlength="80" autocomplete="organization">
+    </div>
+
+    <div class="fld">
+      <label>業種</label>
+      <select name="industry">
+        <option value="">選択してください (任意)</option>
+        <option>製造業</option>
+        <option>建設業</option>
+        <option>卸売・小売業</option>
+        <option>サービス業</option>
+        <option>IT・通信</option>
+        <option>不動産・建築</option>
+        <option>飲食・宿泊</option>
+        <option>運輸・物流</option>
+        <option>美容・健康</option>
+        <option>その他</option>
+      </select>
+    </div>
+
+    <div class="fld">
+      <label>年商規模</label>
+      <select name="revenue">
+        <option value="">選択してください (任意)</option>
+        <option>1億円未満</option>
+        <option>1〜3億円</option>
+        <option>3〜10億円</option>
+        <option>10〜30億円</option>
+        <option>30億円以上</option>
+      </select>
+    </div>
+
+    <div class="fld">
+      <label>関心のあるサービス<span style="font-weight:400; color:var(--text-soft); margin-left:6px;">(複数選択可)</span></label>
+      <div class="interests-grid">
+        <label class="interest"><input type="checkbox" name="interests" value="FLOW"><div class="iname">FLOW<span class="ilive">LIVE</span></div><div class="itheme">財務・資金繰り・銀行交渉</div></label>
+        <label class="interest"><input type="checkbox" name="interests" value="SURGE"><div class="iname">SURGE</div><div class="itheme">売上の天井を破る</div></label>
+        <label class="interest"><input type="checkbox" name="interests" value="MAGNET"><div class="iname">MAGNET</div><div class="itheme">選ばれる会社になる</div></label>
+        <label class="interest"><input type="checkbox" name="interests" value="PACK"><div class="iname">PACK</div><div class="itheme">人で勝つ組織を作る</div></label>
+        <label class="interest"><input type="checkbox" name="interests" value="GEAR"><div class="iname">GEAR</div><div class="itheme">現場を回し切る</div></label>
+        <label class="interest"><input type="checkbox" name="interests" value="LENS"><div class="iname">LENS</div><div class="itheme">判断のスピードを上げる</div></label>
+        <label class="interest"><input type="checkbox" name="interests" value="NORTH"><div class="iname">NORTH</div><div class="itheme">会社の旗を立てる</div></label>
+        <label class="interest"><input type="checkbox" name="interests" value="BEACON"><div class="iname">BEACON</div><div class="itheme">強みが伝わる会社</div></label>
+        <label class="interest"><input type="checkbox" name="interests" value="SEED"><div class="iname">SEED</div><div class="itheme">次の事業の柱を作る</div></label>
+        <label class="interest"><input type="checkbox" name="interests" value="UNSURE"><div class="iname">迷っている</div><div class="itheme">話して整理したい</div></label>
+      </div>
+    </div>
+
+    <div class="fld">
+      <label>ご連絡先<span class="req">*</span></label>
+      <input type="text" name="contact" required maxlength="120" placeholder="メールアドレス / 電話番号 / LINE ID 等">
+    </div>
+
+    <div class="fld">
+      <label>ご希望の連絡方法</label>
+      <select name="contact_method">
+        <option value="">指定なし</option>
+        <option>メール</option>
+        <option>電話</option>
+        <option>LINE</option>
+        <option>LINE WORKS</option>
+        <option>Zoom等オンライン会議</option>
+      </select>
+    </div>
+
+    <div class="fld">
+      <label>ご相談内容</label>
+      <textarea name="message" maxlength="2000" placeholder="現在の状況・課題・聞きたいこと等、自由にご記入ください (任意)"></textarea>
+      <div class="hint">★詳細はヒアリング時にお伺いするので、ここはサマリで十分です★</div>
+    </div>
+
+    <button type="submit" class="submit-btn" data-track="cta_contact_submit">✉️ 送信する</button>
+    <div id="msg"></div>
+
+    <div class="note">
+      送信いただいた情報は、 <a href="../privacy/">プライバシーポリシー</a> に従って取り扱います。<br>
+      ★1時間以内に折り返し★ ─ 受付確認のご連絡をお送りします。
+    </div>
+  </form>
+</main>
+
+<footer>
+  © 2026 BEYOND Holdings 株式会社 ─ <a href="/">PLAYBOOK トップ</a> ─ <a href="../privacy/">プライバシー</a>
+</footer>
+
+<script>
+// チェックボックス見た目連動
+document.querySelectorAll('.interest input').forEach(function(i){
+  i.addEventListener('change', function(){
+    i.closest('.interest').classList.toggle('checked', i.checked);
+  });
+});
+
+document.getElementById('contactForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  var f = e.target;
+  var btn = f.querySelector('.submit-btn');
+  var msg = document.getElementById('msg');
+  msg.style.display = 'none'; msg.className = '';
+  btn.disabled = true; btn.textContent = '送信中...';
+
+  var fd = new FormData(f);
+  var data = {};
+  fd.forEach(function(v, k){
+    if (k === 'interests') {
+      if (!data.interests) data.interests = [];
+      data.interests.push(v);
+    } else {
+      data[k] = String(v).trim();
+    }
+  });
+
+  try {
+    var res = await fetch('/api/submit', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data),
+    });
+    var ct = res.headers.get('content-type') || '';
+    var body = ct.indexOf('json') >= 0 ? await res.json() : {};
+    if (res.ok && body.ok) {
+      msg.className = 'ok';
+      msg.textContent = '✓ お問合せを受け付けました。1時間以内に折り返します。';
+      f.reset();
+      document.querySelectorAll('.interest.checked').forEach(function(x){ x.classList.remove('checked'); });
+      if (typeof gtag === 'function') gtag('event','contact_submit_success', { interests: (data.interests||[]).join('|') });
+    } else {
+      msg.className = 'ng';
+      msg.textContent = '✗ ' + (body.error || '送信に失敗しました。少し時間を置いてお試しください。');
+    }
+  } catch (err) {
+    msg.className = 'ng';
+    msg.textContent = '✗ 通信エラーが発生しました: ' + err.message;
+  }
+  btn.disabled = false; btn.textContent = '✉️ 送信する';
+  if (msg.className) window.scrollTo({ top: msg.offsetTop - 100, behavior: 'smooth' });
+});
+</script>
+</body>
+</html>

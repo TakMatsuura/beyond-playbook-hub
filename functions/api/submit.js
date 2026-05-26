@@ -1,0 +1,141 @@
+/**
+ * PLAYBOOK ハブ お問合せ受付
+ * - POST /api/submit
+ * - 内容を LINE WORKS Bot (BEYOND Playbook Bot 12320538) で松浦さんDM通知
+ * - 「どのサービスに関心があるか」 を取得することで各9サービスの需要把握
+ */
+
+import { SignJWT, importPKCS8 } from 'jose';
+
+const AUTH_BASE = 'https://auth.worksmobile.com/oauth2/v2.0';
+const API_BASE = 'https://www.worksapis.com/v1.0';
+
+export async function onRequestPost(context) {
+  const { env, request } = context;
+  const cors = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json; charset=utf-8' };
+
+  try {
+    const requiredEnv = ['LINE_WORKS_CLIENT_ID','LINE_WORKS_CLIENT_SECRET','LINE_WORKS_SERVICE_ACCOUNT','LINE_WORKS_BOT_ID','LINE_WORKS_MATSUURA_ID','LINE_WORKS_PRIVATE_KEY'];
+    const missing = requiredEnv.filter(k => !env[k]);
+    if (missing.length > 0) return new Response(JSON.stringify({ ok:false, error:`Missing env: ${missing.join(',')}` }), { status:500, headers:cors });
+
+    const bodyText = await request.text();
+    let data;
+    try { data = JSON.parse(bodyText); } catch (e) {
+      return new Response(JSON.stringify({ ok:false, error:`Invalid JSON: ${e.message}` }), { status:400, headers:cors });
+    }
+
+    if (!data.name || !data.company || !data.contact) {
+      return new Response(JSON.stringify({ ok:false, error:'お名前・会社名・連絡先は必須です' }), { status:400, headers:cors });
+    }
+
+    const jstNow = new Intl.DateTimeFormat('ja-JP', {
+      timeZone: 'Asia/Tokyo', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit',
+    }).format(new Date());
+
+    const msg = formatNotification(data, jstNow);
+
+    const accessToken = await getAccessToken(env);
+    await sendDirectMessage(env, accessToken, env.LINE_WORKS_MATSUURA_ID, msg);
+
+    // 申込カウンタ
+    if (env.PLAYBOOK_ANALYTICS) {
+      try {
+        const jstDate = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Asia/Tokyo', year:'numeric', month:'2-digit', day:'2-digit',
+        }).format(new Date());
+        const submitKey = `submit:${jstDate}`;
+        const cur = parseInt((await env.PLAYBOOK_ANALYTICS.get(submitKey)) || '0', 10);
+        await env.PLAYBOOK_ANALYTICS.put(submitKey, String(cur + 1), { expirationTtl: 90 * 24 * 60 * 60 });
+
+        // 興味サービス別カウンタ (どのサービスに関心があるかの可視化)
+        if (Array.isArray(data.interests) && data.interests.length > 0) {
+          for (const svc of data.interests) {
+            const safe = String(svc).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 30);
+            if (!safe) continue;
+            const k = `interest:${jstDate}:${safe}`;
+            const c = parseInt((await env.PLAYBOOK_ANALYTICS.get(k)) || '0', 10);
+            await env.PLAYBOOK_ANALYTICS.put(k, String(c + 1), { expirationTtl: 90 * 24 * 60 * 60 });
+          }
+        }
+      } catch (e) { console.error('submit counter:', e.message); }
+    }
+
+    return new Response(JSON.stringify({ ok:true }), { status:200, headers:cors });
+  } catch (err) {
+    console.error('[submit] error:', err.message, err.stack);
+    return new Response(JSON.stringify({ ok:false, error: err.message || 'Internal error', name: err.name }), { status:500, headers:cors });
+  }
+}
+
+export async function onRequestOptions() {
+  return new Response(null, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+}
+
+async function getAccessToken(env) {
+  const privateKey = await importPKCS8(env.LINE_WORKS_PRIVATE_KEY, 'RS256');
+  const now = Math.floor(Date.now() / 1000);
+  const assertion = await new SignJWT({})
+    .setProtectedHeader({ alg: 'RS256' })
+    .setIssuer(env.LINE_WORKS_CLIENT_ID)
+    .setSubject(env.LINE_WORKS_SERVICE_ACCOUNT)
+    .setIssuedAt(now)
+    .setExpirationTime(now + 3600)
+    .sign(privateKey);
+  const params = new URLSearchParams({
+    assertion, grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',
+    client_id: env.LINE_WORKS_CLIENT_ID, client_secret: env.LINE_WORKS_CLIENT_SECRET, scope:'bot,bot.message',
+  });
+  const res = await fetch(`${AUTH_BASE}/token`, {
+    method: 'POST', headers: { 'Content-Type':'application/x-www-form-urlencoded' }, body: params,
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(`Token failed: ${res.status} ${text.slice(0,200)}`);
+  return JSON.parse(text).access_token;
+}
+
+async function sendDirectMessage(env, token, userId, text) {
+  const res = await fetch(`${API_BASE}/bots/${env.LINE_WORKS_BOT_ID}/users/${userId}/messages`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type':'application/json' },
+    body: JSON.stringify({ content: { type:'text', text } }),
+  });
+  if (!res.ok) throw new Error(`DM failed: ${res.status} ${(await res.text()).slice(0,200)}`);
+}
+
+function formatNotification(d, jstNow) {
+  const interests = (Array.isArray(d.interests) && d.interests.length > 0)
+    ? d.interests.join(' / ')
+    : '(未選択)';
+  return [
+    `📥 PLAYBOOK 新規お問合せ`,
+    ``,
+    `📅 受付: ${jstNow} JST`,
+    ``,
+    `━━━ お客様情報 ━━━`,
+    `👤 お名前: ${d.name}`,
+    `🏢 会社名: ${d.company}`,
+    d.industry ? `🏭 業種: ${d.industry}` : null,
+    d.revenue ? `💰 年商: ${d.revenue}` : null,
+    `━━━━━━━━━━━━━━━`,
+    ``,
+    `📲 ご連絡先: ${d.contact}`,
+    d.contact_method ? `📞 連絡方法希望: ${d.contact_method}` : null,
+    ``,
+    `━━━ 関心サービス ━━━`,
+    `🎯 ${interests}`,
+    `━━━━━━━━━━━━━━━`,
+    ``,
+    d.message ? `━━━ ご相談内容 ━━━\n${d.message}\n━━━━━━━━━━━━━━━` : null,
+    ``,
+    `→ 1時間以内に折り返し対応をお願いします`,
+    ``,
+    `🌐 https://playbook.beyond-holdings.co.jp/apply/`,
+  ].filter(l => l !== null).join('\n');
+}

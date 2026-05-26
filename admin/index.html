@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>PLAYBOOK 管理ダッシュボード</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23060b1a'/><text x='50' y='75' font-family='Inter,sans-serif' font-weight='900' font-size='70' fill='%23f5c542' text-anchor='middle'>📊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#0a0e1a; --panel:#111826; --line:#1f2937; --text:#e5e7eb; --soft:#9ca3af; --gold:#f5c542; --gold-deep:#a07d2c; --accent:#3b82f6; --green:#10b981; --red:#ef4444; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); padding: 20px; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+.brand { font-family:'Inter',sans-serif; font-weight:900; font-size:22px; letter-spacing:0.05em; color: var(--gold); }
+.brand .sub { font-size: 11px; color: var(--soft); margin-left: 10px; letter-spacing: 0.2em; }
+.controls { display:flex; gap:8px; align-items:center; font-size:13px; }
+.controls select, .controls button { background: var(--panel); color: var(--text); border:1px solid var(--line); padding:8px 14px; border-radius:6px; font-family:inherit; font-size:13px; cursor:pointer; }
+.controls button:hover { border-color: var(--gold); }
+.controls a { color: var(--soft); text-decoration:none; padding: 8px 14px; }
+.controls a:hover { color: var(--gold); }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+.kpi .label { font-size: 11px; letter-spacing: 0.15em; color: var(--soft); margin-bottom: 8px; font-weight: 600; }
+.kpi .value { font-family:'Inter',sans-serif; font-weight: 800; font-size: 36px; color: var(--gold); }
+.kpi .unit { font-size: 14px; color: var(--soft); margin-left: 4px; }
+.kpi .sub { font-size: 12px; color: var(--soft); margin-top: 6px; }
+.section { background: var(--panel); border:1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+.section h2 { font-size: 14px; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 16px; font-weight: 600; }
+table { width:100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align:left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--soft); font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+td.num { text-align:right; font-family:'Inter',sans-serif; font-weight:600; }
+.bar-cell { position:relative; }
+.bar-cell .bar { display:inline-block; height: 6px; background: linear-gradient(90deg, var(--gold-deep), var(--gold)); border-radius: 3px; vertical-align: middle; margin-right: 8px; }
+.chart-wrap { overflow-x: auto; }
+.chart { display: flex; align-items: flex-end; gap: 4px; height: 180px; min-width: 600px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.chart .bar { flex: 1; background: linear-gradient(180deg, var(--gold), var(--gold-deep)); border-radius: 3px 3px 0 0; min-height: 2px; position: relative; transition: opacity 0.2s; }
+.chart .bar:hover { opacity: 0.7; }
+.chart .bar .tip { display:none; position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:#000; color:#fff; padding:6px 10px; border-radius:4px; font-size:11px; white-space:nowrap; margin-bottom: 4px; }
+.chart .bar:hover .tip { display:block; }
+.chart-x { display:flex; gap:4px; font-size: 10px; color: var(--soft); margin-top: 6px; min-width: 600px; }
+.chart-x span { flex: 1; text-align:center; }
+.loading { text-align: center; padding: 40px; color: var(--soft); }
+.error { color: var(--red); padding: 20px; text-align: center; }
+footer { text-align:center; margin-top: 32px; color: var(--soft); font-size: 11px; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">PLAYBOOK 管理 <span class="sub">ANALYTICS DASHBOARD</span></div>
+    <div class="controls">
+      <select id="days">
+        <option value="7">過去7日</option>
+        <option value="30" selected>過去30日</option>
+        <option value="90">過去90日</option>
+      </select>
+      <button id="reload">🔄 更新</button>
+      <a href="/" target="_blank">↗ サイト</a>
+    </div>
+  </header>
+
+  <div id="content"><div class="loading">読み込み中...</div></div>
+
+  <footer>BEYOND PLAYBOOK ─ PLAYBOOK Internal Dashboard ─ JST</footer>
+
+<script>
+async function load() {
+  const days = document.getElementById('days').value;
+  const content = document.getElementById('content');
+  content.innerHTML = '<div class="loading">読み込み中...</div>';
+  try {
+    const res = await fetch('/api/admin-stats?days=' + days, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    render(data);
+  } catch (e) {
+    content.innerHTML = '<div class="error">読み込みエラー: ' + e.message + '</div>';
+  }
+}
+
+function render(d) {
+  const t = d.totals, daily = d.daily, paths = d.paths;
+  const maxPV = Math.max(1, ...daily.map(x => x.pv));
+  const cvr = d.cvr;
+
+  const kpi = `
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">PV (合計)</div><div class="value">${t.pv.toLocaleString()}</div><div class="sub">${d.range.from} 〜 ${d.range.to}</div></div>
+      <div class="kpi"><div class="label">UU (合計)</div><div class="value">${t.uu.toLocaleString()}</div><div class="sub">ユニーク訪問</div></div>
+      <div class="kpi"><div class="label">申込</div><div class="value">${t.submit}<span class="unit">件</span></div><div class="sub">CVR ${cvr}%</div></div>
+      <div class="kpi"><div class="label">メルマガ登録</div><div class="value">${t.newsletter}<span class="unit">件</span></div><div class="sub">中間CV</div></div>
+    </div>
+  `;
+
+  const chartBars = daily.map(x => {
+    const h = Math.max(2, (x.pv / maxPV) * 160);
+    return `<div class="bar" style="height:${h}px"><div class="tip">${x.date}<br>PV:${x.pv} UU:${x.uu} 申込:${x.submit}</div></div>`;
+  }).join('');
+  const chartX = daily.map((x, i) => {
+    const show = daily.length <= 14 || i % Math.ceil(daily.length / 10) === 0;
+    return '<span>' + (show ? x.date.slice(5) : '') + '</span>';
+  }).join('');
+
+  const pathRows = paths.length === 0
+    ? '<tr><td colspan="2" style="text-align:center;color:var(--soft);">データなし</td></tr>'
+    : paths.map(p => {
+        const ratio = (p.count / paths[0].count) * 100;
+        return `<tr><td class="bar-cell"><span class="bar" style="width:${Math.max(8, ratio * 0.8)}px"></span>${escapeHtml(p.path)}</td><td class="num">${p.count.toLocaleString()}</td></tr>`;
+      }).join('');
+
+  document.getElementById('content').innerHTML = kpi + `
+    <div class="section">
+      <h2>📈 日別PV推移</h2>
+      <div class="chart-wrap">
+        <div class="chart">${chartBars}</div>
+        <div class="chart-x">${chartX}</div>
+      </div>
+    </div>
+    <div class="section">
+      <h2>🏆 人気ページ TOP20</h2>
+      <table>
+        <thead><tr><th>パス</th><th class="num">PV</th></tr></thead>
+        <tbody>${pathRows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+document.getElementById('days').addEventListener('change', load);
+document.getElementById('reload').addEventListener('click', load);
+load();
+</script>
+</body>
+</html>

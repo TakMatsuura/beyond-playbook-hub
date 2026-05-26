@@ -1,0 +1,9 @@
+{
+  "name": "beyond-playbook-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BEYOND PLAYBOOK ハブサイト ─ 中小企業を加速する。9サービスを束ねる",
+  "dependencies": {
+    "jose": "^5.9.6"
+  }
+}

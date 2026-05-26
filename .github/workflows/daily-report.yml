@@ -1,0 +1,24 @@
+name: Daily Report
+
+on:
+  schedule:
+    # 毎日 22:00 UTC = 翌朝 7:00 JST
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send daily report
+        env:
+          DAILY_REPORT_KEY: ${{ secrets.DAILY_REPORT_KEY }}
+        run: |
+          if [ -z "$DAILY_REPORT_KEY" ]; then
+            echo "::error::DAILY_REPORT_KEY secret is missing"
+            exit 1
+          fi
+          status=$(curl -sS -w "%{http_code}" -o /tmp/resp.json "https://playbook.beyond-holdings.co.jp/api/daily-report?key=${DAILY_REPORT_KEY}")
+          echo "HTTP: $status"
+          cat /tmp/resp.json
+          test "$status" = "200"

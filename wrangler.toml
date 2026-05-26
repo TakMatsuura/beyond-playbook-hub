@@ -1,0 +1,7 @@
+name = "playbook-beyond"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "."
+
+[[kv_namespaces]]
+binding = "PLAYBOOK_ANALYTICS"
+id = "2ad08b7ca5974674a56025bba6defd2a"
