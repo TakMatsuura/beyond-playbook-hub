@@ -532,8 +532,8 @@ header.site-header {
 .orbit-caption .label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: var(--gold-deep); letter-spacing: 0.3em; }
 .orbit-caption .title { font-family: 'Noto Serif JP', serif; font-weight: 500; font-size: clamp(20px, 3vw, 28px); color: var(--gold-bright); margin-top: 6px; letter-spacing: 0.08em; }
 .orbit-stage {
-  position: relative; width: min(92vw, 680px); height: min(92vw, 680px);
-  margin: 24px auto 0; --r: clamp(168px, 31vw, 250px);
+  position: relative; width: min(94vw, 820px); height: min(94vw, 820px);
+  margin: 24px auto 0; --r: clamp(190px, 34vw, 308px);
 }
 .orbit-ring {
   position: absolute; top: 50%; left: 50%;
@@ -541,7 +541,7 @@ header.site-header {
   transform: translate(-50%, -50%); border: 1px solid var(--gold-line); border-radius: 50%;
 }
 .orbit-ring-2 {
-  width: calc(var(--r) * 2 + 26px); height: calc(var(--r) * 2 + 26px);
+  width: calc(var(--r) * 2 + 30px); height: calc(var(--r) * 2 + 30px);
   border-style: dashed; border-color: rgba(201,169,97,0.12);
 }
 .orbit-spinner {
@@ -549,7 +549,7 @@ header.site-header {
   animation: orbitSpin 16s linear infinite;
 }
 .orbit-ball {
-  position: absolute; left: 0; top: 0; width: 14px; height: 14px; border-radius: 50%;
+  position: absolute; left: 0; top: 0; width: 16px; height: 16px; border-radius: 50%;
   transform: translate(-50%, -50%) translateY(calc(-1 * var(--r)));
   background: radial-gradient(circle at 34% 30%, var(--gold-bright), var(--gold) 45%, var(--gold-deep));
   box-shadow: 0 0 14px 3px rgba(201,169,97,0.55), 0 0 4px 1px rgba(232,196,116,0.9);
@@ -557,25 +557,25 @@ header.site-header {
 @keyframes orbitSpin { to { transform: rotate(360deg); } }
 .orbit-core {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: clamp(124px, 23vw, 176px); height: clamp(124px, 23vw, 176px); border-radius: 50%;
+  width: clamp(150px, 26vw, 212px); height: clamp(150px, 26vw, 212px); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: radial-gradient(circle at 38% 32%, #2c2c30 0%, #161616 46%, #050505 100%);
   box-shadow: inset 0 0 44px rgba(0,0,0,0.85), 0 0 60px rgba(201,169,97,0.14), 0 0 0 1px var(--gold-line);
 }
 .orbit-core-label {
   font-family: 'Bodoni Moda', 'Noto Serif JP', serif; font-weight: 500;
-  font-size: clamp(13px, 2vw, 18px); letter-spacing: 0.12em; color: var(--gold-bright); text-align: center;
+  font-size: clamp(15px, 2.2vw, 21px); letter-spacing: 0.12em; color: var(--gold-bright); text-align: center;
 }
 .orbit-node {
-  position: absolute; top: 50%; left: 50%; width: 152px;
+  position: absolute; top: 50%; left: 50%; width: 172px;
   transform: translate(-50%, -50%) rotate(var(--ang)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--ang)));
   text-align: center; padding: 6px; transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
 }
 .on-name {
   display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
-  font-size: 22px; color: var(--c, var(--gold-bright)); letter-spacing: 0.04em; line-height: 1.1;
+  font-size: 25px; color: var(--c, var(--gold-bright)); letter-spacing: 0.04em; line-height: 1.1;
 }
-.on-theme { display: block; font-size: 11.5px; color: var(--text-on-dark-soft); margin-top: 5px; line-height: 1.45; }
+.on-theme { display: block; font-size: 12.5px; color: var(--text-on-dark-soft); margin-top: 6px; line-height: 1.45; }
 .on-status {
   display: inline-block; margin-top: 7px; font-family: 'Inter', sans-serif; font-weight: 600;
   font-size: 8px; letter-spacing: 0.22em; padding: 2px 8px; border-radius: 2px; text-transform: uppercase;
