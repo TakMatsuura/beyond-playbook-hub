@@ -1283,6 +1283,25 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
     });
     function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
+    window.__lenis = lenis;
+
+    // bfcache (ブラウザの戻る/進む) で Lenis が固まる対策
+    window.addEventListener('pageshow', function(e){ if (e.persisted) { try { lenis.resize(); lenis.start(); } catch(_){} } });
+
+    // 安全網: ホイール操作してもページ中央でスクロールが動かない場合は Lenis を解除しネイティブスクロールに戻す
+    var __stuck = 0;
+    window.addEventListener('wheel', function(){
+      var y0 = window.scrollY;
+      setTimeout(function(){
+        var doc = document.documentElement;
+        var maxY = doc.scrollHeight - doc.clientHeight;
+        var atEdge = (y0 <= 1) || (y0 >= maxY - 1);
+        if (!atEdge && Math.abs(window.scrollY - y0) < 1) {
+          if (++__stuck >= 3) { try { lenis.destroy(); } catch(_){}
+            document.documentElement.classList.remove('lenis','lenis-smooth'); }
+        } else { __stuck = 0; }
+      }, 220);
+    }, { passive: true });
 
     // chapter-rail のドットクリックで lenis.scrollTo に置き換え
     document.querySelectorAll('.chapter-rail .dot').forEach(function(dot){
