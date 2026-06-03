@@ -526,6 +526,77 @@ header.site-header {
   color: var(--gold-deep); text-transform: uppercase; margin-top: 4px; align-self: flex-start;
 }
 
+/* === Chapter III : 9 Services ─ オービット (中央PLAYBOOK + 周回する金の玉) === */
+.orbit-wrap { max-width: 1080px; margin: 0 auto; }
+.orbit-caption { text-align: center; margin-bottom: 8px; }
+.orbit-caption .label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: var(--gold-deep); letter-spacing: 0.3em; }
+.orbit-caption .title { font-family: 'Noto Serif JP', serif; font-weight: 500; font-size: clamp(20px, 3vw, 28px); color: var(--gold-bright); margin-top: 6px; letter-spacing: 0.08em; }
+.orbit-stage {
+  position: relative; width: min(92vw, 680px); height: min(92vw, 680px);
+  margin: 24px auto 0; --r: clamp(168px, 31vw, 250px);
+}
+.orbit-ring {
+  position: absolute; top: 50%; left: 50%;
+  width: calc(var(--r) * 2); height: calc(var(--r) * 2);
+  transform: translate(-50%, -50%); border: 1px solid var(--gold-line); border-radius: 50%;
+}
+.orbit-ring-2 {
+  width: calc(var(--r) * 2 + 26px); height: calc(var(--r) * 2 + 26px);
+  border-style: dashed; border-color: rgba(201,169,97,0.12);
+}
+.orbit-spinner {
+  position: absolute; top: 50%; left: 50%; width: 0; height: 0;
+  animation: orbitSpin 16s linear infinite;
+}
+.orbit-ball {
+  position: absolute; left: 0; top: 0; width: 14px; height: 14px; border-radius: 50%;
+  transform: translate(-50%, -50%) translateY(calc(-1 * var(--r)));
+  background: radial-gradient(circle at 34% 30%, var(--gold-bright), var(--gold) 45%, var(--gold-deep));
+  box-shadow: 0 0 14px 3px rgba(201,169,97,0.55), 0 0 4px 1px rgba(232,196,116,0.9);
+}
+@keyframes orbitSpin { to { transform: rotate(360deg); } }
+.orbit-core {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: clamp(124px, 23vw, 176px); height: clamp(124px, 23vw, 176px); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 38% 32%, #2c2c30 0%, #161616 46%, #050505 100%);
+  box-shadow: inset 0 0 44px rgba(0,0,0,0.85), 0 0 60px rgba(201,169,97,0.14), 0 0 0 1px var(--gold-line);
+}
+.orbit-core-label {
+  font-family: 'Bodoni Moda', 'Noto Serif JP', serif; font-weight: 500;
+  font-size: clamp(13px, 2vw, 18px); letter-spacing: 0.12em; color: var(--gold-bright); text-align: center;
+}
+.orbit-node {
+  position: absolute; top: 50%; left: 50%; width: 152px;
+  transform: translate(-50%, -50%) rotate(var(--ang)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--ang)));
+  text-align: center; padding: 6px; transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+.on-name {
+  display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
+  font-size: 22px; color: var(--c, var(--gold-bright)); letter-spacing: 0.04em; line-height: 1.1;
+}
+.on-theme { display: block; font-size: 11.5px; color: var(--text-on-dark-soft); margin-top: 5px; line-height: 1.45; }
+.on-status {
+  display: inline-block; margin-top: 7px; font-family: 'Inter', sans-serif; font-weight: 600;
+  font-size: 8px; letter-spacing: 0.22em; padding: 2px 8px; border-radius: 2px; text-transform: uppercase;
+}
+.on-status.live { background: var(--c, var(--gold)); color: var(--ink); }
+.on-status.soon { color: var(--text-on-dark-mute); border: 1px solid rgba(255,255,255,0.14); }
+.orbit-node.live { cursor: pointer; }
+.orbit-node.live:hover { transform: translate(-50%, -50%) rotate(var(--ang)) translateY(calc(-1 * var(--r) - 7px)) rotate(calc(-1 * var(--ang))); }
+.orbit-node.live:hover .on-name { text-shadow: 0 0 18px var(--c, var(--gold)); }
+@media (prefers-reduced-motion: reduce) { .orbit-spinner { animation: none; } }
+/* モバイル: 円をやめてリストへ */
+@media (max-width: 760px) {
+  .orbit-stage { width: 100%; height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 40px; margin-top: 28px; }
+  .orbit-ring, .orbit-ring-2, .orbit-spinner, .orbit-core { display: none; }
+  .orbit-node { position: static; transform: none; width: auto; text-align: left; padding: 16px 0; border-bottom: 1px dashed rgba(201,169,97,0.18); }
+  .orbit-node.live:hover { transform: none; }
+  .on-name { font-size: 20px; }
+  .on-theme { font-size: 12.5px; }
+}
+@media (max-width: 480px) { .orbit-stage { grid-template-columns: 1fr; } }
+
 /* === Chapter IV : Philosophy === */
 .philosophy {
   background: var(--paper); color: var(--text-on-paper);
@@ -929,104 +1000,71 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
       ここでは、 9 つの入口 だけをお見せします。
     </p>
 
-    <div class="toc-frame reveal">
-      <div class="toc-header">
+    <div class="orbit-wrap reveal">
+      <div class="orbit-caption">
         <div class="label">— Table of Contents —</div>
         <div class="title">9 Entries</div>
       </div>
 
-      <div class="toc-grid reveal-stagger">
+      <div class="orbit-stage">
+        <div class="orbit-ring" aria-hidden="true"></div>
+        <div class="orbit-ring orbit-ring-2" aria-hidden="true"></div>
+        <div class="orbit-spinner" aria-hidden="true"><span class="orbit-ball"></span></div>
+        <div class="orbit-core" aria-hidden="true"><span class="orbit-core-label">PLAYBOOK</span></div>
 
-        <a href="https://flow.beyond-holdings.co.jp/" target="_blank" rel="noopener" class="toc-entry live" style="--accent: var(--c-flow);" data-track="service_click" data-track-service="flow">
-          <div class="num">I</div>
-          <div class="title-row">
-            <span class="name">FLOW</span>
-            <span class="theme">お金の流れを、止めない。</span>
-            <span class="tag">Finance · Cash · Execution</span>
-          </div>
-          <span class="status live">Live</span>
+        <a href="https://flow.beyond-holdings.co.jp/" target="_blank" rel="noopener" class="orbit-node live" style="--ang: -90deg; --c: var(--c-flow);" data-track="service_click" data-track-service="flow">
+          <span class="on-name">FLOW</span>
+          <span class="on-theme">お金の流れを、止めない。</span>
+          <span class="on-status live">Live</span>
         </a>
 
-        <div class="toc-entry" style="--accent: var(--c-surge);" data-service="surge">
-          <div class="num">II</div>
-          <div class="title-row">
-            <span class="name">SURGE</span>
-            <span class="theme">売上の天井を、破る。</span>
-            <span class="tag">Sales · Growth · Execution</span>
-          </div>
-          <span class="status soon">Soon</span>
+        <div class="orbit-node" style="--ang: -50deg; --c: var(--c-surge);" data-service="surge">
+          <span class="on-name">SURGE</span>
+          <span class="on-theme">売上の天井を、破る。</span>
+          <span class="on-status soon">Soon</span>
         </div>
 
-        <div class="toc-entry" style="--accent: var(--c-magnet);" data-service="magnet">
-          <div class="num">III</div>
-          <div class="title-row">
-            <span class="name">MAGNET</span>
-            <span class="theme">選ばれる会社に、なる。</span>
-            <span class="tag">Marketing · Brand · Execution</span>
-          </div>
-          <span class="status soon">Soon</span>
+        <div class="orbit-node" style="--ang: -10deg; --c: var(--c-magnet);" data-service="magnet">
+          <span class="on-name">MAGNET</span>
+          <span class="on-theme">選ばれる会社に、なる。</span>
+          <span class="on-status soon">Soon</span>
         </div>
 
-        <div class="toc-entry" style="--accent: var(--c-beacon);" data-service="beacon">
-          <div class="num">IV</div>
-          <div class="title-row">
-            <span class="name">BEACON</span>
-            <span class="theme">強みが、伝わる。</span>
-            <span class="tag">PR · Communication · Execution</span>
-          </div>
-          <span class="status soon">Soon</span>
+        <div class="orbit-node" style="--ang: 30deg; --c: var(--c-beacon);" data-service="beacon">
+          <span class="on-name">BEACON</span>
+          <span class="on-theme">強みが、伝わる。</span>
+          <span class="on-status soon">Soon</span>
         </div>
 
-        <div class="toc-entry" style="--accent: var(--c-lens);" data-service="lens">
-          <div class="num">V</div>
-          <div class="title-row">
-            <span class="name">LENS</span>
-            <span class="theme">判断のスピードを、上げる。</span>
-            <span class="tag">Decision · Data · Management</span>
-          </div>
-          <span class="status soon">Soon</span>
+        <div class="orbit-node" style="--ang: 70deg; --c: var(--c-lens);" data-service="lens">
+          <span class="on-name">LENS</span>
+          <span class="on-theme">判断のスピードを、上げる。</span>
+          <span class="on-status soon">Soon</span>
         </div>
 
-        <div class="toc-entry" style="--accent: var(--c-north);" data-service="north">
-          <div class="num">VI</div>
-          <div class="title-row">
-            <span class="name">NORTH</span>
-            <span class="theme">会社の旗を、立てる。</span>
-            <span class="tag">Vision · Strategy · Management</span>
-          </div>
-          <span class="status soon">Soon</span>
+        <div class="orbit-node" style="--ang: 110deg; --c: var(--c-north);" data-service="north">
+          <span class="on-name">NORTH</span>
+          <span class="on-theme">会社の旗を、立てる。</span>
+          <span class="on-status soon">Soon</span>
         </div>
 
-        <div class="toc-entry" style="--accent: var(--c-seed);" data-service="seed">
-          <div class="num">VII</div>
-          <div class="title-row">
-            <span class="name">SEED</span>
-            <span class="theme">次の事業の柱を、作る。</span>
-            <span class="tag">New Business · M&amp;A · Management</span>
-          </div>
-          <span class="status soon">Soon</span>
+        <div class="orbit-node" style="--ang: 150deg; --c: var(--c-seed);" data-service="seed">
+          <span class="on-name">SEED</span>
+          <span class="on-theme">次の事業の柱を、作る。</span>
+          <span class="on-status soon">Soon</span>
         </div>
 
-        <div class="toc-entry" style="--accent: var(--c-pack);" data-service="pack">
-          <div class="num">VIII</div>
-          <div class="title-row">
-            <span class="name">PACK</span>
-            <span class="theme">人で勝つ組織を、作る。</span>
-            <span class="tag">Organization · HR · Operation</span>
-          </div>
-          <span class="status soon">Soon</span>
+        <div class="orbit-node" style="--ang: 190deg; --c: var(--c-pack);" data-service="pack">
+          <span class="on-name">PACK</span>
+          <span class="on-theme">人で勝つ組織を、作る。</span>
+          <span class="on-status soon">Soon</span>
         </div>
 
-        <div class="toc-entry" style="--accent: var(--c-gear);" data-service="gear">
-          <div class="num">IX</div>
-          <div class="title-row">
-            <span class="name">GEAR</span>
-            <span class="theme">現場を、回し切る。</span>
-            <span class="tag">Operations · System · Operation</span>
-          </div>
-          <span class="status soon">Soon</span>
+        <div class="orbit-node" style="--ang: 230deg; --c: var(--c-gear);" data-service="gear">
+          <span class="on-name">GEAR</span>
+          <span class="on-theme">現場を、回し切る。</span>
+          <span class="on-status soon">Soon</span>
         </div>
-
       </div>
     </div>
   </div>
