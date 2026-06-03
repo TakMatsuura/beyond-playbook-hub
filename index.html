@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="BEYOND PLAYBOOK｜中小企業を、加速する。BEYOND Holdings が自社で何度もくぐってきた経営の打ち手を体系化した、外販オペレーティングシステム。Execution Pack / Management Studio / Operation Partner の3層で、9つのサービスを束ねる。">
+<meta name="description" content="BEYOND PLAYBOOK｜試して、転んで、越えてきた。BEYOND Holdings が自分たちで9社を動かしながら経験してきた経営の動き方を、3つの入口 × 9つのテーマをあなたの隣で動かす実業者集団のオペレーティングシステム。">
 <meta name="keywords" content="BEYOND PLAYBOOK,BEYOND Holdings,中小企業 経営,Execution Pack,Management Studio,Operation Partner,外販OS">
-<meta property="og:title" content="BEYOND PLAYBOOK｜中小企業を、加速する。">
-<meta property="og:description" content="BEYOND Holdings の外販オペレーティングシステム。3層 × 9サービスで、経営の打ち手を切らさない。">
+<meta property="og:title" content="BEYOND PLAYBOOK｜試して、転んで、越えてきた。">
+<meta property="og:description" content="BEYOND Holdings は、自分たちで9社を動かしている実業の会社。試して、転んで、越えてきた経験を、3つの入口 × 9つのテーマをあなたの隣で動かす。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://playbook.beyond-holdings.co.jp/">
 <meta property="og:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.svg">
@@ -14,11 +14,12 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.svg">
-<title>BEYOND PLAYBOOK｜中小企業を、加速する。</title>
+<title>BEYOND PLAYBOOK｜試して、転んで、越えてきた。</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='10' fill='%230a0a0a'/><text x='50' y='72' font-family='Cormorant Garamond,serif' font-style='italic' font-weight='700' font-size='68' fill='%23c9a961' text-anchor='middle' letter-spacing='-2'>P</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Serif+JP:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Serif+JP:wght@300;400;500;600;700;900&family=Shippori+Mincho+B1:wght@400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-PJY2SKCX2L"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PJY2SKCX2L');</script>
 <script type="application/ld+json">
@@ -62,7 +63,13 @@
   --c-seed: #87a847;     /* 萌黄 */
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+html { -webkit-font-smoothing: antialiased; }
+/* Lenis 慣性スクロール 公式CSS ─ これが無いと scroll-behavior と競合してマウスホイールが効かなくなる */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
 body {
   font-family: 'Noto Serif JP', serif;
   color: var(--text-on-dark);
@@ -90,6 +97,14 @@ img { max-width: 100%; display: block; }
 .chapter-rail .dot.active { background: var(--gold-bright); box-shadow: 0 0 12px var(--gold); transform: scale(1.5); }
 .chapter-rail .label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 11px; color: var(--text-on-dark-mute); writing-mode: vertical-rl; margin-bottom: 18px; letter-spacing: 0.3em; text-transform: uppercase; }
 
+/* === SCROLL PROGRESS (極細ゴールドの進捗ライン) === */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-bright), var(--gold));
+  box-shadow: 0 0 8px rgba(201,169,97,0.5);
+  z-index: 100; transition: width 0.12s ease-out; will-change: width;
+}
+
 /* === HEADER === */
 header.site-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
@@ -100,8 +115,8 @@ header.site-header {
 .site-header .brand { display: flex; align-items: center; gap: 16px; }
 .site-header .brand img { height: 22px; filter: brightness(0) invert(0.85) sepia(0.7) saturate(2) hue-rotate(15deg); opacity: 0.9; }
 .site-header .brand-name {
-  font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
-  font-size: 22px; color: var(--gold); letter-spacing: 0.08em;
+  font-family: 'Bodoni Moda', 'Noto Serif JP', serif; font-style: normal; font-weight: 500;
+  font-size: 22px; color: var(--gold); letter-spacing: 0.06em;
   padding-left: 16px; border-left: 1px solid var(--gold-line); line-height: 1;
 }
 .site-header .nav-cta {
@@ -138,6 +153,17 @@ header.site-header {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.8  0 0 0 0 0.7  0 0 0 0 0.4  0 0 0 0.5 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
 }
 
+/* 背景に薄く開いた本 (Playbook のモチーフ) ─ ビネットと同じくらいの濃さ */
+.cover-book {
+  position: absolute; top: 48%; left: 50%; transform: translate(-50%, -50%);
+  width: min(132vw, 1480px); aspect-ratio: 1000 / 700;
+  z-index: 2; pointer-events: none; opacity: 0;
+  background: center / contain no-repeat
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 700' fill='none' stroke='%23C6A15B' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M500 250 C 380 208 220 204 108 252 L 108 452 C 220 408 380 412 500 452'/><path d='M500 250 C 620 208 780 204 892 252 L 892 452 C 780 408 620 412 500 452'/><path d='M500 250 L 500 452'/><path d='M108 452 C 220 470 380 474 500 458'/><path d='M892 452 C 780 470 620 474 500 458'/><path d='M150 300 L 430 293'/><path d='M150 335 L 430 328'/><path d='M150 370 L 430 363'/><path d='M150 405 L 412 399'/><path d='M570 293 L 850 300'/><path d='M570 328 L 850 335'/><path d='M570 363 L 850 370'/><path d='M588 399 L 850 405'/></svg>");
+  animation: bookIn 2.6s 1.7s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes bookIn { from { opacity: 0; transform: translate(-50%, -46%); } to { opacity: 0.07; transform: translate(-50%, -50%); } }
+
 /* 微かなビネット */
 .cover::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
@@ -170,300 +196,98 @@ header.site-header {
 @keyframes curtainOpenLeft  { to { transform: translateX(-100%); } }
 @keyframes curtainOpenRight { to { transform: translateX(100%); } }
 
-/* 中央の金の細い縦線 (上から下に伸びる) */
-.gold-line-v {
-  position: absolute; left: 50%; top: 0; bottom: 0;
-  width: 1px; transform: translateX(-0.5px) scaleY(0);
-  background: linear-gradient(180deg,
-    transparent 0%,
-    var(--c-gold-deep) 12%,
-    var(--c-gold) 35%,
-    var(--c-gold-bright) 50%,
-    var(--c-gold) 65%,
-    var(--c-gold-deep) 88%,
-    transparent 100%);
-  transform-origin: top center;
-  z-index: 2;
-  animation: lineGrowV 1.2s 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-@keyframes lineGrowV { to { transform: translateX(-0.5px) scaleY(1); } }
-
-/* 縦線に重なる金のドット (中央) */
-.gold-line-v::before {
-  content: ''; position: absolute; left: 50%; top: 50%;
-  width: 5px; height: 5px;
-  background: var(--c-gold-bright);
-  transform: translate(-50%, -50%) rotate(45deg) scale(0);
-  box-shadow: 0 0 14px rgba(214,182,106,0.55);
-  animation: dotIn 0.6s 2.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-@keyframes dotIn { to { transform: translate(-50%, -50%) rotate(45deg) scale(1); } }
 
 .cover-inner {
   text-align: center; width: 100%; max-width: 760px;
   padding: 0 16px; position: relative; z-index: 5;
 }
 
-/* ============ BOOK FLIP ANIMATION (XL · PREMIUM · SHORT) ============ */
-.cover { position: relative; }
-.cover .spotlight {
-  /* 本に当たる金色のスポットライト */
-  position: absolute; top: 50%; left: 50%; width: 130vw; height: 120vh;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(ellipse at 50% 35%, rgba(201,169,97,0.10), transparent 50%);
-  pointer-events: none; z-index: 0;
-  opacity: 0; animation: spotlightOn 0.6s 0s forwards, spotlightOff 0.8s 1.5s forwards;
-}
-@keyframes spotlightOn { to { opacity: 1; } }
-@keyframes spotlightOff { to { opacity: 0; } }
-
-.book-stage {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: min(1500px, 96vw);
-  height: min(900px, 86vh);
-  perspective: 4000px;
-  perspective-origin: 50% 35%;
-  z-index: 1;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.95);
-  animation:
-    bookEnter 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-    bookExit 0.9s 1.55s cubic-bezier(0.55, 0, 0.5, 0) forwards;
-}
-@keyframes bookEnter {
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-@keyframes bookExit {
-  0% { opacity: 1; filter: blur(0); transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; filter: blur(12px); transform: translate(-50%, -50%) scale(1.06); visibility: hidden; }
-}
-.book-stage::before {
-  /* 本の下に落ちる深い影 */
-  content: ''; position: absolute; left: 4%; right: 4%; bottom: -40px; height: 80px;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.75), transparent 70%);
-  filter: blur(28px); z-index: 0;
-}
-
-/* 左の見開きページ (静止・常時表示) ─ 上品アイボリーの古紙 */
-.book-base-left {
-  position: absolute; top: 0; bottom: 0;
-  left: 0; width: 50%;
-  background:
-    radial-gradient(ellipse at 92% 50%, rgba(60,40,15,0.32), transparent 55%),
-    radial-gradient(ellipse at 30% 30%, rgba(255,250,235,0.12), transparent 50%),
-    linear-gradient(78deg, #c9b58a 0%, #dcc89c 35%, #ebd9ae 70%, #e0cb98 100%);
-  box-shadow:
-    inset -18px 0 50px -14px rgba(0,0,0,0.55),
-    inset 0 0 80px rgba(60,40,15,0.15),
-    0 12px 40px rgba(0,0,0,0.5);
-  border-left: 1px solid rgba(60,40,15,0.4);
-  border-top: 1px solid rgba(60,40,15,0.35);
-  border-bottom: 1px solid rgba(60,40,15,0.35);
-}
-@keyframes bookOpen {
-  0% { opacity: 0; transform: scaleX(0.6); transform-origin: right center; }
-  100% { opacity: 1; transform: scaleX(1); transform-origin: right center; }
-}
-.book-base-left::before {
-  /* 紙の繊維テクスチャ */
-  content: ''; position: absolute; inset: 0;
-  background-image:
-    repeating-linear-gradient(91deg, rgba(80,60,20,0.06) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(0deg, rgba(80,60,20,0.04) 0 1px, transparent 1px 5px);
-  pointer-events: none;
-}
-
-/* 本の背 (中央の縦線) ─ 細く繊細な革の溝 */
-.book-spine {
-  position: absolute; left: 50%; top: 0; bottom: 0; width: 3px;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 15%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.7) 85%, rgba(0,0,0,0.3) 100%);
-  transform: translateX(-1.5px); z-index: 5;
-  box-shadow:
-    0 0 18px rgba(0,0,0,0.6),
-    1px 0 0 rgba(201,169,97,0.25),
-    -1px 0 0 rgba(201,169,97,0.25);
-}
-
-/* 本の縁飾り (極細ゴールド・全周) */
-.book-stage::after {
-  content: ''; position: absolute; left: 0; right: 0; top: 0; bottom: 0;
-  box-shadow:
-    inset 0 0 0 1px rgba(201,169,97,0.55),
-    inset 0 0 0 6px rgba(0,0,0,0.18),
-    inset 0 0 0 7px rgba(201,169,97,0.3);
-  pointer-events: none; z-index: 6;
-}
-
-.book-pages {
-  position: absolute; inset: 0;
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
-
-/* === ページ (めくられる) ─ 高級アイボリー・湾曲ライティング === */
-.page {
-  position: absolute; top: 0; bottom: 0;
-  left: 50%; width: 50%;
-  background:
-    /* 1. 中央の湾曲ハイライト (紙が曲がってる感) */
-    linear-gradient(90deg,
-      rgba(60,40,15,0.18) 0%,
-      rgba(255,250,235,0.06) 18%,
-      rgba(255,250,235,0.12) 45%,
-      rgba(255,250,235,0.06) 75%,
-      rgba(60,40,15,0.05) 100%),
-    /* 2. 左端から差し込む奥のシャドウ */
-    radial-gradient(ellipse at 0% 50%, rgba(40,28,10,0.42), transparent 45%),
-    /* 3. 紙のベースカラー */
-    linear-gradient(105deg, #c8b482 0%, #dcc99e 38%, #ecdcb0 65%, #e2cd9c 100%);
-  transform-origin: left center;
-  backface-visibility: hidden;
-  box-shadow:
-    inset 18px 0 50px -14px rgba(0,0,0,0.55),
-    inset 0 0 100px rgba(60,40,15,0.10),
-    0 16px 50px rgba(0,0,0,0.55),
-    0 4px 12px rgba(0,0,0,0.4);
-  border-right: 1px solid rgba(60,40,15,0.45);
-  border-top: 1px solid rgba(60,40,15,0.4);
-  border-bottom: 1px solid rgba(60,40,15,0.4);
-  transform: rotateY(0deg);
-  overflow: hidden;
-  opacity: 0;
-  animation:
-    pageAppear 0.01s forwards,
-    pageFlip 0.45s cubic-bezier(0.45, 0, 0.35, 1) forwards;
-  will-change: transform;
-}
-.page::before {
-  /* 紙の繊維テクスチャ (より細かい) */
-  content: ''; position: absolute; inset: 0;
-  background-image:
-    repeating-linear-gradient(91deg, rgba(60,40,15,0.06) 0 1px, transparent 1px 2px),
-    repeating-linear-gradient(2deg, rgba(60,40,15,0.04) 0 1px, transparent 1px 4px),
-    radial-gradient(ellipse at 18% 80%, rgba(255,250,235,0.18), transparent 35%),
-    radial-gradient(ellipse at 80% 20%, rgba(60,40,15,0.10), transparent 40%);
-  pointer-events: none; opacity: 0.85;
-}
-.page::after {
-  /* めくり中の表面光沢 (ゴールドの光が斜めに走る) */
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(105deg,
-    transparent 0%,
-    rgba(255,240,200,0.0) 30%,
-    rgba(255,232,170,0.35) 50%,
-    rgba(255,240,200,0.15) 65%,
-    transparent 80%,
-    rgba(0,0,0,0.28) 100%);
-  pointer-events: none;
-  opacity: 0;
-  animation: shineSweep 0.45s cubic-bezier(0.45, 0, 0.35, 1) forwards;
-  animation-delay: inherit;
-  mix-blend-mode: overlay;
-}
-
-/* 各ページのめくりタイミング (8枚・パパパパっと連続) */
-.page-1  { z-index: 8; animation-delay: 0s,     0.30s, 0.30s; }
-.page-2  { z-index: 7; animation-delay: 0.04s,  0.36s, 0.36s; }
-.page-3  { z-index: 6; animation-delay: 0.08s,  0.42s, 0.42s; }
-.page-4  { z-index: 5; animation-delay: 0.12s,  0.48s, 0.48s; }
-.page-5  { z-index: 4; animation-delay: 0.16s,  0.54s, 0.54s; }
-.page-6  { z-index: 3; animation-delay: 0.20s,  0.60s, 0.60s; }
-.page-7  { z-index: 2; animation-delay: 0.24s,  0.66s, 0.66s; }
-.page-8  { z-index: 1.5; animation-delay: 0.28s, 0.72s, 0.72s; }
-
-/* 最終ページ (背景として残る・装飾なし) */
-.page-final {
-  z-index: 1;
-  animation: pageAppear 0.01s 0.3s forwards;
-  transform: rotateY(0deg);
-}
-.page-final::after { display: none; }
-
-@keyframes pageAppear { to { opacity: 1; } }
-@keyframes pageFlip {
-  0% { transform: rotateY(0deg); box-shadow: inset 18px 0 50px -14px rgba(0,0,0,0.55), 0 16px 50px rgba(0,0,0,0.55); }
-  30% { box-shadow: inset 80px 0 100px -20px rgba(0,0,0,0.6), 0 40px 80px rgba(0,0,0,0.65); }
-  60% { box-shadow: inset -80px 0 100px -20px rgba(0,0,0,0.55), 0 40px 80px rgba(0,0,0,0.6); }
-  100% { transform: rotateY(-178deg); box-shadow: inset -18px 0 50px -14px rgba(0,0,0,0.5), 0 16px 50px rgba(0,0,0,0.45); }
-}
-@keyframes shineSweep {
-  0%   { opacity: 0; transform: translateX(-25%); }
-  50%  { opacity: 1; }
-  100% { opacity: 0; transform: translateX(25%); }
-}
-@keyframes textIn { to { opacity: 1; } }
-@keyframes lineGrow { to { width: 80px; } }
-@keyframes fadeIn { to { opacity: 1; } }
-
-/* === HERO TITLE (本フェードアウト後に中央登場) === */
-.cover-title {
-  font-family: 'Cormorant Garamond', serif; font-weight: 500; font-style: italic;
-  font-size: clamp(80px, 16vw, 200px); line-height: 0.95;
-  background: linear-gradient(135deg, var(--gold-deep) 0%, var(--gold-bright) 45%, var(--gold) 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  margin-bottom: 28px; letter-spacing: -0.01em;
-  opacity: 0; animation: fadeUpSmooth 1.4s 2.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
+/* === HERO TEXT (静かに 0.2s ずつ遅延で立ち上がる) === */
 .cover-eyebrow {
-  font-family: 'Inter', sans-serif; font-weight: 500; font-size: 11px;
-  letter-spacing: 0.6em; color: var(--gold-deep);
-  margin-bottom: 32px; text-transform: uppercase;
-  opacity: 0; animation: fadeUpSmooth 1.0s 1.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  font-family: 'Inter', sans-serif; font-weight: 400; font-size: 11px;
+  letter-spacing: 0.5em; color: var(--c-gold); text-transform: uppercase;
+  margin-bottom: 56px;
+  opacity: 0; animation: rise 1.4s 1.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-.cover-ornament {
-  display: flex; align-items: center; justify-content: center; gap: 22px;
-  margin: 8px auto 28px;
-  opacity: 0; animation: fadeUpSmooth 1.0s 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.cover-title {
+  font-family: 'Bodoni Moda', 'Noto Serif JP', serif;
+  font-weight: 500; font-style: normal;
+  font-size: clamp(40px, 7.5vw, 92px);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  color: var(--c-ivory);
+  padding-bottom: 0.18em; /* descender 余白 */
+  margin-bottom: 36px;
+  opacity: 0; animation: rise 1.6s 1.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-.cover-ornament .line { width: 70px; height: 1px; background: var(--gold-line); }
-.cover-ornament .diamond { width: 6px; height: 6px; background: var(--gold-bright); transform: rotate(45deg); box-shadow: 0 0 12px var(--gold); }
-.cover-headline {
-  font-family: 'Noto Serif JP', serif; font-weight: 500;
-  font-size: clamp(24px, 4vw, 38px); line-height: 1.6;
-  color: var(--text-on-dark); margin-bottom: 28px;
-  letter-spacing: 0.08em;
-  opacity: 0; animation: fadeUpSmooth 1.0s 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.cover-divider {
+  display: block; width: 56px; height: 1px;
+  background: var(--c-gold); opacity: 0;
+  margin: 0 auto 40px;
+  animation: divIn 1.2s 2.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-.cover-headline strong { font-weight: 700; color: var(--gold-bright); }
-.cover-sub {
-  font-size: 14.5px; line-height: 2.0; color: var(--text-on-dark-soft);
-  max-width: 580px; margin: 0 auto 24px;
-  opacity: 0; animation: fadeUpSmooth 1.0s 2.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes divIn { to { opacity: 0.85; } }
+.cover-subtitle {
+  font-family: 'Shippori Mincho B1', 'Noto Serif JP', serif;
+  font-weight: 600;
+  font-size: clamp(15px, 1.8vw, 19px);
+  letter-spacing: 0.2em; line-height: 1.9;
+  color: var(--c-gold-bright);
+  margin-bottom: 44px;
+  opacity: 0; animation: rise 1.4s 2.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-.cover-meta {
-  font-family: 'Cormorant Garamond', serif; font-style: italic;
-  font-size: 13px; color: var(--gold-deep);
-  margin-top: 20px; letter-spacing: 0.15em;
-  opacity: 0; animation: fadeUpSmooth 1.0s 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.cover-lead {
+  font-family: 'Shippori Mincho B1', 'Noto Serif JP', serif;
+  font-weight: 400;
+  font-size: clamp(13px, 1.4vw, 15px);
+  line-height: 2.1; letter-spacing: 0.08em;
+  color: var(--c-ivory-soft);
+  max-width: 760px; margin: 0 auto 64px;
+  text-wrap: pretty;
+  opacity: 0; animation: rise 1.4s 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
+.cover-cta {
+  display: inline-block; padding: 20px 56px;
+  font-family: 'Inter', sans-serif; font-weight: 400;
+  font-size: 11.5px; letter-spacing: 0.4em;
+  color: var(--c-gold); background: transparent;
+  border: 1px solid var(--c-gold); text-transform: uppercase;
+  transition: background 0.5s ease, color 0.5s ease, letter-spacing 0.5s ease;
+  opacity: 0; animation: rise 1.4s 2.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  position: relative; overflow: hidden;
+}
+.cover-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(214,182,106,0.16) 50%, transparent 100%);
+  transform: translateX(-100%); transition: transform 0.8s ease;
+}
+.cover-cta:hover { background: var(--c-gold); color: var(--c-bg-1); letter-spacing: 0.5em; }
+.cover-cta:hover::before { transform: translateX(100%); }
 .scroll-cue {
-  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-  font-family: 'Inter', sans-serif; font-size: 10px; letter-spacing: 0.4em;
-  color: var(--gold-deep); text-transform: uppercase;
-  opacity: 0; animation: fadeUpSmooth 1.0s 3.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  z-index: 10;
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  font-family: 'Inter', sans-serif; font-size: 9px; letter-spacing: 0.5em;
+  color: var(--c-gold-deep); text-transform: uppercase;
+  opacity: 0; animation: rise 1.4s 3.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  z-index: 6;
 }
 .scroll-cue::after {
-  content: ''; display: block; width: 1px; height: 40px; background: var(--gold-line);
-  margin: 12px auto 0; animation: scrollPulse 2s 4s infinite;
+  content: ''; display: block; width: 1px; height: 36px;
+  background: linear-gradient(180deg, var(--c-gold), transparent);
+  margin: 14px auto 0; animation: scrollPulse 2.4s 4.0s infinite;
 }
-@keyframes fadeUpSmooth { from { opacity: 0; transform: translateY(28px); filter: blur(4px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes scrollPulse { 0%, 100% { opacity: 0.4; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.3); } }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scrollPulse { 0%, 100% { opacity: 0.4; transform: scaleY(0.7); } 50% { opacity: 1; transform: scaleY(1); } }
 
 /* モーション制限ユーザー向け */
 @media (prefers-reduced-motion: reduce) {
-  .page, .book-base-left, .book-spine, .scroll-cue { animation-duration: 0.01s !important; animation-delay: 0s !important; opacity: 1 !important; }
-  .page { transform: rotateY(-178deg); }
-  .page-final { transform: rotateY(0deg); }
-  .page-final * { animation: none !important; opacity: 1 !important; }
-}
-
-/* モバイル: 本の縦横比調整 */
-@media (max-width: 720px) {
-  .book-stage { width: 98vw; height: 70vh; }
+  .curtain,
+  .cover-eyebrow, .cover-title, .cover-divider, .cover-subtitle, .cover-lead, .cover-cta, .scroll-cue {
+    animation-duration: 0.01s !important; animation-delay: 0s !important;
+    opacity: 1 !important; transform: none !important;
+  }
+  .cover-book { animation: none !important; opacity: 0.07 !important; transform: translate(-50%, -50%) !important; }
+  .curtain-left  { transform: translateX(-100%) !important; }
+  .curtain-right { transform: translateX(100%) !important; }
 }
 
 /* === SECTION COMMON === */
@@ -472,57 +296,130 @@ header.site-header {
 .chapter-narrow { max-width: 760px; margin: 0 auto; }
 
 .chapter-mark {
-  display: flex; align-items: baseline; justify-content: center; gap: 24px;
-  margin-bottom: 24px;
+  display: flex; align-items: baseline; justify-content: center; gap: 28px;
+  margin-bottom: 28px;
 }
 .chapter-mark .num {
   font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
-  font-size: 36px; color: var(--gold-deep);
+  font-size: 42px; color: var(--gold-deep); line-height: 1;
 }
 .chapter-mark .name {
-  font-family: 'Inter', sans-serif; font-weight: 500; font-size: 11px;
-  letter-spacing: 0.5em; color: var(--gold); text-transform: uppercase;
+  font-family: 'Inter', sans-serif; font-weight: 500; font-size: 15px;
+  letter-spacing: 0.42em; color: var(--gold); text-transform: uppercase;
 }
 .chapter-title {
-  text-align: center; font-family: 'Noto Serif JP', serif; font-weight: 600;
+  text-align: center; font-family: 'Bodoni Moda', 'Noto Serif JP', serif; font-weight: 500;
   font-size: clamp(28px, 4.5vw, 44px); line-height: 1.5;
   color: var(--text-on-dark); margin-bottom: 28px; letter-spacing: 0.04em;
+  position: relative;
 }
-.chapter-title .accent { color: var(--gold-bright); font-style: italic; font-family: 'Cormorant Garamond', serif; font-weight: 500; }
+.chapter-title .accent { color: var(--gold-bright); font-family: inherit; font-style: normal; font-weight: 500; }
+/* 章タイトル下に金の線がスッと引かれる */
+.chapter-title::after {
+  content: ''; display: block; width: 52px; height: 1px; margin: 24px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform: scaleX(0); transform-origin: center; opacity: 0;
+  transition: transform 1.3s cubic-bezier(0.22,1,0.36,1) 0.35s, opacity 1.3s ease 0.35s;
+}
+.chapter-title.in::after { transform: scaleX(1); opacity: 0.9; }
 .chapter-lead {
   text-align: center; font-size: 16px; line-height: 2.1;
-  color: var(--text-on-dark-soft); max-width: 680px; margin: 0 auto 80px;
+  color: var(--text-on-dark-soft); max-width: 920px; margin: 0 auto 80px;
 }
 .chapter-lead strong { color: var(--gold-bright); font-weight: 600; }
 
-/* === Chapter I : BEYOND OS 4階層 === */
-.os-stack { max-width: 920px; margin: 0 auto; }
+/* === Chapter I : BEYOND OS 4階層 ─ gritbank風 静寂ミニマル === */
+.os-stack {
+  max-width: 900px; margin: 0 auto;
+}
 .os-layer {
-  display: grid; grid-template-columns: 80px 1fr; gap: 36px;
-  padding: 28px 0; border-top: 1px solid rgba(255,255,255,0.06);
-  align-items: start;
+  display: grid; grid-template-columns: 140px 1fr; gap: 64px;
+  padding: 96px 0; align-items: start;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  position: relative;
 }
 .os-layer:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
-.os-layer.highlight { background: linear-gradient(90deg, transparent, rgba(201,169,97,0.04), transparent); }
+.os-layer.highlight {
+  background: linear-gradient(90deg, transparent, rgba(201,169,97,0.025), transparent);
+}
+
+/* 全要素のフェードアップ共通 (translateY 大きく・blur で焦点合わせ感) */
+.os-layer .num,
+.os-layer h3,
+.os-layer .ja-name,
+.os-layer p,
+.os-layer .os-tag {
+  opacity: 0;
+  transform: translateY(80px);
+  filter: blur(8px);
+  transition:
+    opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 番号 (i, ii, iii, iv) は左に大きく */
 .os-layer .num {
-  font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
-  font-size: 56px; line-height: 1; color: var(--gold-deep);
+  font-family: 'Bodoni Moda', 'Noto Serif JP', serif; font-style: italic; font-weight: 500;
+  font-size: 92px; line-height: 1; color: var(--gold-deep);
+  transition-delay: 0s;
 }
 .os-layer.highlight .num { color: var(--gold-bright); }
+
+/* h3 (BEYOND Standard 等) - 大きく・Bodoni Moda */
 .os-layer h3 {
-  font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
-  font-size: 28px; color: var(--gold); margin-bottom: 4px; letter-spacing: 0.04em;
+  font-family: 'Bodoni Moda', 'Noto Serif JP', serif; font-style: normal; font-weight: 500;
+  font-size: clamp(28px, 4vw, 44px); color: var(--gold); margin-bottom: 12px;
+  letter-spacing: 0.03em; line-height: 1.2;
+  transition-delay: 0.18s;
 }
-.os-layer .ja-name { font-size: 12px; color: var(--text-on-dark-mute); letter-spacing: 0.3em; margin-bottom: 14px; }
 .os-layer.highlight h3 { color: var(--gold-bright); }
-.os-layer p { font-size: 14px; color: var(--text-on-dark-soft); line-height: 1.95; }
+
+/* 日本語サブタイトル */
+.os-layer .ja-name {
+  font-family: 'Shippori Mincho B1', 'Noto Serif JP', serif;
+  font-size: 13px; color: var(--text-on-dark-mute); letter-spacing: 0.35em; margin-bottom: 28px;
+  transition-delay: 0.34s;
+}
+
+/* 本文 */
+.os-layer p {
+  font-family: 'Shippori Mincho B1', 'Noto Serif JP', serif; font-weight: 400;
+  font-size: 15px; color: var(--text-on-dark-soft); line-height: 2.1;
+  max-width: 580px;
+  transition-delay: 0.5s;
+}
 .os-layer.highlight p { color: var(--text-on-dark); }
+
+/* YOU ARE HERE バッジ */
 .os-tag {
   display: inline-block; font-family: 'Inter', sans-serif; font-weight: 600;
-  font-size: 10px; letter-spacing: 0.25em; padding: 3px 10px;
-  border: 1px solid var(--gold-line); color: var(--gold); margin-top: 12px;
+  font-size: 10px; letter-spacing: 0.3em; padding: 6px 14px;
+  border: 1px solid var(--gold-line); color: var(--gold); margin-top: 24px;
+  transition-delay: 0.68s;
 }
 .os-tag.this { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+/* IntersectionObserver で .in が付いたら子要素が順次フェードアップ + ピント合わせ */
+.os-layer.in .num,
+.os-layer.in h3,
+.os-layer.in .ja-name,
+.os-layer.in p,
+.os-layer.in .os-tag {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* モバイル */
+@media (max-width: 720px) {
+  .os-layer {
+    grid-template-columns: 80px 1fr; gap: 28px;
+    padding: 56px 0;
+  }
+  .os-layer .num { font-size: 64px; }
+  .os-layer h3 { font-size: 26px; }
+}
 
 /* === Chapter II : 3層構造 === */
 .tiers { display: grid; grid-template-columns: 1fr; gap: 28px; max-width: 980px; margin: 0 auto; }
@@ -542,7 +439,28 @@ header.site-header {
 .tier .symbol {
   font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500;
   font-size: 80px; line-height: 1; color: var(--gold-deep);
-  margin-bottom: 18px;
+  margin-bottom: 12px;
+}
+/* カード上部のイメージ枠 (後で本番画像に差し替え可) */
+.tier-art {
+  display: flex; align-items: center; justify-content: center;
+  height: 88px; margin-bottom: 22px;
+  color: var(--accent, var(--gold));
+  border: 1px solid rgba(255,255,255,0.07);
+  background: linear-gradient(180deg, rgba(201,169,97,0.05), transparent);
+  position: relative; overflow: hidden;
+}
+.tier-art svg { width: 50px; height: 50px; opacity: 0.85; transition: transform 0.55s cubic-bezier(0.22,1,0.36,1), opacity 0.55s ease; }
+.tier:hover .tier-art { border-color: var(--gold-line); }
+.tier:hover .tier-art svg { transform: translateY(-4px) scale(1.06); opacity: 1; }
+.tier .tier-voice {
+  font-family: 'Shippori Mincho B1', 'Noto Serif JP', serif;
+  font-style: normal; font-weight: 500;
+  font-size: 15px; letter-spacing: 0.08em; line-height: 1.6;
+  color: var(--accent, var(--gold-bright));
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .tier h3 {
   font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
@@ -762,20 +680,38 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
 .footer-bottom { padding-top: 28px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-on-dark-mute); letter-spacing: 0.1em; }
 .footer-bottom a { color: var(--text-on-dark-soft); }
 
-/* === ANIMATIONS === */
-.reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal.in { opacity: 1; transform: translateY(0); }
-.reveal-stagger > * { opacity: 0; transform: translateY(20px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal-stagger.in > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.in > *:nth-child(2) { transition-delay: 0.12s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.in > *:nth-child(3) { transition-delay: 0.24s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.in > *:nth-child(4) { transition-delay: 0.36s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.in > *:nth-child(5) { transition-delay: 0.48s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.in > *:nth-child(6) { transition-delay: 0.60s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.in > *:nth-child(7) { transition-delay: 0.72s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.in > *:nth-child(8) { transition-delay: 0.84s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.in > *:nth-child(9) { transition-delay: 0.96s; opacity: 1; transform: translateY(0); }
-.reveal-stagger.in > *:nth-child(10) { transition-delay: 1.08s; opacity: 1; transform: translateY(0); }
+/* === ANIMATIONS ─ gritbank.jp 風: 下から大きく + ピント合わせ === */
+.reveal {
+  opacity: 0;
+  transform: translateY(70px);
+  filter: blur(8px);
+  transition:
+    opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.in {
+  opacity: 1; transform: translateY(0); filter: blur(0);
+}
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(50px);
+  filter: blur(6px);
+  transition:
+    opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-stagger.in > *:nth-child(1)  { transition-delay: 0s;     opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger.in > *:nth-child(2)  { transition-delay: 0.13s;  opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger.in > *:nth-child(3)  { transition-delay: 0.26s;  opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger.in > *:nth-child(4)  { transition-delay: 0.39s;  opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger.in > *:nth-child(5)  { transition-delay: 0.52s;  opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger.in > *:nth-child(6)  { transition-delay: 0.65s;  opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger.in > *:nth-child(7)  { transition-delay: 0.78s;  opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger.in > *:nth-child(8)  { transition-delay: 0.91s;  opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger.in > *:nth-child(9)  { transition-delay: 1.04s;  opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger.in > *:nth-child(10) { transition-delay: 1.17s;  opacity: 1; transform: translateY(0); filter: blur(0); }
 
 /* === MOBILE === */
 @media (max-width: 720px) {
@@ -794,6 +730,9 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
 </style>
 </head>
 <body>
+
+<!-- Scroll progress -->
+<div class="scroll-progress" aria-hidden="true"></div>
 
 <!-- Side chapter rail -->
 <nav class="chapter-rail" aria-hidden="true">
@@ -815,49 +754,30 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
   <a href="#closing" class="nav-cta" data-track="cta_header_contact">CONTACT</a>
 </header>
 
-<!-- ====== COVER ====== -->
+<!-- ====== COVER (Hero) ─ 黒い章が静かに開き、金のラインが走る ====== -->
 <section class="cover" id="cover">
-  <div class="corner tl"></div>
-  <div class="corner tr"></div>
-  <div class="corner bl"></div>
-  <div class="corner br"></div>
+  <!-- 背景の極薄ノイズ -->
+  <div class="cover-grain" aria-hidden="true"></div>
 
-  <!-- 本に当たるゴールドのスポットライト -->
-  <div class="spotlight" aria-hidden="true"></div>
+  <!-- 背景に薄く開いた本 (Playbook のモチーフ) -->
+  <div class="cover-book" aria-hidden="true"></div>
+
+  <!-- 黒いカバー (左右2枚) ─ 中央から外側へ静かにスライド -->
+  <div class="curtain curtain-left" aria-hidden="true"></div>
+  <div class="curtain curtain-right" aria-hidden="true"></div>
 
   <div class="cover-inner">
-
-    <!-- 本のページめくりアニメーション (画面いっぱい・革張りプレミアム) -->
-    <div class="book-stage" aria-hidden="true">
-      <div class="book-base-left"></div>
-      <div class="book-spine"></div>
-      <div class="book-pages">
-        <div class="page page-1"></div>
-        <div class="page page-2"></div>
-        <div class="page page-3"></div>
-        <div class="page page-4"></div>
-        <div class="page page-5"></div>
-        <div class="page page-6"></div>
-        <div class="page page-7"></div>
-        <div class="page page-8"></div>
-        <div class="page page-final"></div>
-      </div>
-    </div>
-
-    <!-- 本フェードアウト後に中央に登場するヒーロー -->
-    <div class="cover-eyebrow">BEYOND Holdings &nbsp;·&nbsp; Operating System</div>
-    <h1 class="cover-title">Playbook</h1>
-    <div class="cover-ornament">
-      <span class="line"></span><span class="diamond"></span><span class="line"></span>
-    </div>
-    <h2 class="cover-headline">中小企業を、<strong>加速する</strong>。</h2>
-    <p class="cover-sub">
-      BEYOND Holdings が、自社で何度もくぐってきた経営の打ち手を体系化した、<br>
-      外販オペレーティングシステム。 ★3層 × 9サービス★ で、経営の手を切らさない。
+    <div class="cover-eyebrow">BEYOND OS &nbsp;—&nbsp; Playbook</div>
+    <h1 class="cover-title">BEYOND PLAYBOOK</h1>
+    <span class="cover-divider" aria-hidden="true"></span>
+    <p class="cover-subtitle">試して、転んで、越えてきた。</p>
+    <p class="cover-lead">
+      BEYOND Holdings は、自分たちで9社を動かしている実業の会社です。<br>
+      試して、転んで、越えてきた経験を、3つの入口 × 9つのテーマをあなたの隣で動かします。
     </p>
-    <div class="cover-meta">— BEYOND Holdings 株式会社 —</div>
-
+    <a href="#chap-i" class="cover-cta" data-track="cta_hero_playbook">中身を見てみる</a>
   </div>
+
   <div class="scroll-cue">Scroll</div>
 </section>
 
@@ -870,16 +790,18 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
     </div>
     <h2 class="chapter-title reveal"><span class="accent">BEYOND</span> Operating System</h2>
     <p class="chapter-lead reveal">
-      BEYOND Holdings には、 ★4つの層★ があります。 ★Standard★ と ★Function★ で「組織の土台」 を作り、<br>
-      ★Engine★ と ★Playbook★ で「価値を生み出す動き」 を回す。<strong>Playbook は、その最上層の「外向きOS」</strong> です。
+      BEYOND Holdings には、4つの層があります。<br>
+      BEYOND Standard と BEYOND Function で「組織の土台」 を作り、<br>
+      BEYOND Engine と BEYOND Playbook で「価値を生み出す動き」 を回す。<br>
+      <strong>BEYOND Playbook は、他の会社と一緒に成長していくための「BEYOND の筋道」</strong> です。
     </p>
 
-    <div class="os-stack reveal-stagger">
+    <div class="os-stack">
 
       <div class="os-layer">
         <div class="num">i</div>
         <div>
-          <h3>Standard</h3>
+          <h3>BEYOND Standard</h3>
           <div class="ja-name">価値観 ・ 人的指標</div>
           <p>BEYOND Holdings に属する人としての理念・在り方・行動指針。組織の土台。</p>
         </div>
@@ -888,27 +810,27 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
       <div class="os-layer">
         <div class="num">ii</div>
         <div>
-          <h3>Function</h3>
+          <h3>BEYOND Function</h3>
           <div class="ja-name">組織底上げの仕組み</div>
-          <p>属人化を解いて、 ★誰が担当しても一定の品質で業務が回る★ ための仕組み。行動の再現性 / 思考の言語化 / 判断の標準化 / 情報の統合化。</p>
+          <p>属人化を解いて、 誰が担当しても一定の品質で業務が回る ための仕組み。行動の再現性 / 思考の言語化 / 判断の標準化 / 情報の統合化。</p>
         </div>
       </div>
 
       <div class="os-layer">
         <div class="num">iii</div>
         <div>
-          <h3>Engine</h3>
+          <h3>BEYOND Engine</h3>
           <div class="ja-name">価値を生み出す内部循環</div>
-          <p>事業・人・資産・信用を、グループ全体で再配分することで、 ★各社単独では不可能な勝ち方★ を可能にする内向きの循環装置。</p>
+          <p>事業・人・資産・信用を、グループ全体で再配分することで、 各社単独では不可能な勝ち方 を可能にする内向きの循環装置。</p>
         </div>
       </div>
 
       <div class="os-layer highlight">
         <div class="num">iv</div>
         <div>
-          <h3>Playbook</h3>
-          <div class="ja-name">外販オペレーティングシステム</div>
-          <p>BEYOND Holdings が中で回してきた知見・経験・打ち手を、 ★同じような課題を持つ中小企業の経営者に、外向けに販売できる商品★ として体系化したもの。</p>
+          <h3>BEYOND Playbook</h3>
+          <div class="ja-name">BEYOND の筋道</div>
+          <p>BEYOND Holdings が中で回してきた知見・経験・打ち手を、他の会社と一緒に成長していくための筋道としてまとめたもの。</p>
           <span class="os-tag this">YOU ARE HERE</span>
         </div>
       </div>
@@ -926,45 +848,66 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
     </div>
     <h2 class="chapter-title reveal">Playbook は、<span class="accent">3 層</span> でできている</h2>
     <p class="chapter-lead reveal">
-      コンサルティングとは違います。私たちは、 ★実業の当事者として隣で動きます★。<br>
-      関与の深さ・期間・予算で、3つのスタイルから選びます。
+      コンサルティングではありません。 私たちも、同じ実業の当事者 です。<br>
+      「いま欲しいもの」 で、3つの入口から選べます。
     </p>
 
     <div class="tiers reveal-stagger">
 
       <div class="tier" style="--accent: var(--gold);">
-        <div class="symbol">I</div>
+        <div class="tier-art" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 42 L24 28 L34 36 L52 16"/>
+            <path d="M52 16 L42 16 M52 16 L52 26"/>
+            <path d="M14 54 L14 46 M26 54 L26 40 M38 54 L38 46 M50 54 L50 34"/>
+          </svg>
+        </div>
+        <div class="tier-voice">&ldquo; すぐに売上が欲しい。 &rdquo;</div>
         <div class="tier-tag">Execution</div>
         <h3>Execution Pack</h3>
-        <div class="ja">売上を作りに行く、実働。</div>
-        <p>スコープと期間と期待値を最初に握り、 ★BEYOND が現場に入って結果を出しに行く★ サービス。考えるより、動きながら整える。</p>
+        <div class="ja">売上を作りに行く実働。</div>
+        <p>スコープと期間を最初に握って、BEYOND が現場に入って動く。考えるより、動きながら整える。</p>
         <div class="meta-row">
-          <span>SCALE</span>
-          <span class="value">¥50 – 200 万 / 月</span>
+          <span>DESIGN</span>
+          <span class="value">フルカスタム</span>
         </div>
       </div>
 
       <div class="tier" style="--accent: var(--gold-bright);">
-        <div class="symbol">II</div>
+        <div class="tier-art" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="32" cy="32" r="20"/>
+            <path d="M32 13 L38 32 L32 51 L26 32 Z"/>
+            <circle cx="32" cy="32" r="2.6" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="tier-voice">&ldquo; 経営の相談相手が欲しい。 &rdquo;</div>
         <div class="tier-tag">Management</div>
         <h3>Management Studio</h3>
-        <div class="ja">経営者の、右腕。</div>
-        <p>意思決定と経営判断の壁打ち。 ★経営の優先順位・論点・選択肢★ を整理して、社長の意思決定の質とスピードを上げるパートナー。</p>
+        <div class="ja">経営者の右腕。</div>
+        <p>意思決定と経営判断の壁打ち。優先順位・論点・選択肢を一緒に整理して、判断のスピードを上げる。</p>
         <div class="meta-row">
-          <span>SCALE</span>
-          <span class="value">¥50 – 150 万 / 月</span>
+          <span>DESIGN</span>
+          <span class="value">フルカスタム</span>
         </div>
       </div>
 
       <div class="tier" style="--accent: var(--gold-deep);">
-        <div class="symbol">III</div>
+        <div class="tier-art" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="12" y="12" width="24" height="24" rx="2.5"/>
+            <rect x="28" y="28" width="24" height="24" rx="2.5"/>
+            <path d="M36 22 L44 22 M22 36 L22 44"/>
+          </svg>
+        </div>
+        <div class="tier-voice">&ldquo; 雑務から解放されたい。 &rdquo;</div>
         <div class="tier-tag">Operation</div>
         <h3>Operation Partner</h3>
-        <div class="ja">業務と組織の、再設計。</div>
-        <p>業務・組織・人事を ★深いところから組み直す★ サービス。「なぜ動けないか」 「どこで詰まっているか」 を構造から整え、BEYONDが手も動かす。</p>
+        <div class="ja">業務と組織を整える。</div>
+        <p>業務・組織・人事を深いところから組み直す。 バックオフィスも含めて、BEYOND が手も動かす。</p>
         <div class="meta-row">
-          <span>SCALE</span>
-          <span class="value">¥30 – 100 万 / 月</span>
+          <span>DESIGN</span>
+          <span class="value">フルカスタム</span>
         </div>
       </div>
 
@@ -979,16 +922,17 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
       <span class="num">III.</span>
       <span class="name">The Nine</span>
     </div>
-    <h2 class="chapter-title reveal">9 つの、<span class="accent">具体的サービス</span></h2>
+    <h2 class="chapter-title reveal">Playbook の、<span class="accent">9 つの入口</span></h2>
     <p class="chapter-lead reveal">
-      3層の中身を、 ★中小企業が直面する 9つの経営テーマ★ に切り分けたのが、以下のサービスです。<br>
-      関心のあるサービスを選んでお問合せください。
+      Playbook には、9 つの入口があります。<br>
+      それぞれが、独立した 1 つの LP として深く設計されています。<br>
+      ここでは、 9 つの入口 だけをお見せします。
     </p>
 
     <div class="toc-frame reveal">
       <div class="toc-header">
         <div class="label">— Table of Contents —</div>
-        <div class="title">9 Services</div>
+        <div class="title">9 Entries</div>
       </div>
 
       <div class="toc-grid reveal-stagger">
@@ -1098,29 +1042,29 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
     <h2 class="chapter-title reveal">なぜ <span class="accent">BEYOND</span> なのか</h2>
     <p class="chapter-lead reveal">
       コンサルでも、銀行でも、税理士でもありません。<br>
-      ★自分たちで複数の中小企業を経営してきた★、 ★実業の当事者★ です。
+      自分たちで複数の中小企業を経営してきた、 実業の当事者 です。
     </p>
 
     <div class="quote-block reveal">
       <p>失敗の経験と、勝ちの経験を、<br>同じ手で持っている人間が、隣で動く。</p>
-      <div class="attribution">— BEYOND PLAYBOOK —</div>
+      <div class="attribution">— BEYOND Holdings —</div>
     </div>
 
     <div class="philo-grid reveal-stagger">
       <div class="philo-item">
         <div class="icon-num">i.</div>
-        <h4>構造的強み</h4>
-        <p>9社を同時に経営しているから、 ★1事業の浮き沈みを超えた経験★ を持っています。BEYOND には、 ★3倍以上の蓄積★ があります。</p>
+        <h4>9 社分の、経験。</h4>
+        <p>BEYOND Holdings は、9社を同時に経営しているから、 1事業の浮き沈みを超えた経験 を持っています。同規模の経営者の 3倍以上の蓄積 があります。</p>
       </div>
       <div class="philo-item">
         <div class="icon-num">ii.</div>
-        <h4>機能的強み</h4>
-        <p>外注先ではなく、 ★自らが事業の当事者★ として関与するため、 ★失敗前提での検証★ が可能。コンサルでは設計できない深さまで踏み込めます。</p>
+        <h4>当事者だから、踏み込める。</h4>
+        <p>BEYOND Holdings は外注先ではなく、 自らが事業の当事者 として関与します。だから 失敗前提での検証 ができる。コンサルでは設計できない深さまで踏み込めます。</p>
       </div>
       <div class="philo-item">
         <div class="icon-num">iii.</div>
-        <h4>感情的強み</h4>
-        <p>★同じ社長と社長として向き合います★。机上の戦略ではなく、現場の判断を、感情も含めて議論できる ── そんな相手です。</p>
+        <h4>同じ社長として。</h4>
+        <p>BEYOND Holdings は、 同じ社長と社長として 向き合います。机上の戦略ではなく、現場の判断を、感情も含めて議論できる ── そんな相手です。</p>
       </div>
     </div>
   </div>
@@ -1135,8 +1079,8 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
     </div>
     <h2 class="chapter-title reveal">合う相手 ・ <span class="accent">組まない相手</span></h2>
     <p class="chapter-lead reveal">
-      BEYOND は、 ★覚悟を持って前に進もうとしている経営者★ を最優先します。<br>
-      合わない関係は、お互いの時間を奪うから、 ★最初から線を引きます★。
+      BEYOND は、 覚悟を持って前に進もうとしている経営者 を最優先します。<br>
+      合わない関係は、お互いの時間を奪うから、 最初から線を引きます。
     </p>
 
     <div class="filter-grid reveal-stagger">
@@ -1165,7 +1109,7 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
           <li>BEYOND を「丸投げ先」 にしようとする</li>
           <li>判断を先延ばしする</li>
           <li>正しい指摘に、態度で返してくる</li>
-          <li>BEYONDの話を聞いて、変わる気がない</li>
+          <li>変わるつもりが、まだない</li>
         </ul>
       </div>
 
@@ -1189,7 +1133,7 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
         <div class="step-num">i</div>
         <div>
           <h3>関心サービスを選んで、お問合せ</h3>
-          <p>9つのうち、 ★今いちばん気になる軸★ を選んで送るだけ。複数選択可。「どれかわからない」 でも構いません ── 話して整理します。</p>
+          <p>9つのうち、 今いちばん気になる軸 を選んで送るだけ。複数選択可。「どれかわからない」 でも構いません ── 話して整理します。</p>
           <span class="duration">所要 3 分</span>
         </div>
       </div>
@@ -1198,7 +1142,7 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
         <div class="step-num">ii</div>
         <div>
           <h3>1時間以内に折り返し、3営業日以内にヒアリング</h3>
-          <p>BEYOND からスピードで返します。 ★初回ヒアリングは無料・60分・オンラインOK★。 ★合うかどうかは、話してから決めましょう★。</p>
+          <p>BEYOND からスピードで返します。 初回ヒアリングは無料・60分・オンラインOK。 合うかどうかは、話してから決めましょう。</p>
           <span class="duration">折返し 1h / 初回 3 営業日</span>
         </div>
       </div>
@@ -1207,7 +1151,7 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
         <div class="step-num">iii</div>
         <div>
           <h3>合うと分かったら、伴走スタート</h3>
-          <p>お互い「組める」 と判断したら、Kickoff (有料) で本格スタート。 ★合わなければ無理せず、こちらからお断りすることもあります★。</p>
+          <p>お互い「組める」 と判断したら、Kickoff (有料) で本格スタート。 合わなければ無理せず、こちらからお断りすることもあります。</p>
           <span class="duration">2 週間で初手</span>
         </div>
       </div>
@@ -1282,7 +1226,61 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
       }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-  document.querySelectorAll('.reveal, .reveal-stagger').forEach(function(el){ obs.observe(el); });
+  document.querySelectorAll('.reveal, .reveal-stagger, .os-layer').forEach(function(el){ obs.observe(el); });
+})();
+
+// === Lenis 慣性スムーススクロール (gritbank.jp と同じライブラリ) ===
+(function(){
+  // モーション制限ユーザーは通常スクロールで尊重
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  function init() {
+    if (typeof Lenis !== 'function') return;
+    var lenis = new Lenis({
+      duration: 1.4,                                         // 慣性の長さ
+      easing: function(t){ return Math.min(1, 1.001 - Math.pow(2, -10 * t)); }, // exp ease-out
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.2,
+    });
+    function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+
+    // chapter-rail のドットクリックで lenis.scrollTo に置き換え
+    document.querySelectorAll('.chapter-rail .dot').forEach(function(dot){
+      dot.addEventListener('click', function(e){
+        var sec = document.getElementById(dot.dataset.target);
+        if (sec) { e.preventDefault(); lenis.scrollTo(sec, { offset: 0, duration: 1.6 }); }
+      }, { capture: true });
+    });
+    // a[href^="#"] も慣性スクロールに
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var href = a.getAttribute('href');
+        if (href.length > 1) {
+          var target = document.querySelector(href);
+          if (target) { e.preventDefault(); lenis.scrollTo(target, { offset: 0, duration: 1.6 }); }
+        }
+      });
+    });
+  }
+  if (typeof Lenis === 'function') init();
+  else window.addEventListener('load', init);
+})();
+
+// === Scroll progress bar ===
+(function(){
+  var bar = document.querySelector('.scroll-progress');
+  if (!bar) return;
+  function upd(){
+    var h = document.documentElement;
+    var sh = (h.scrollHeight - h.clientHeight);
+    var pct = sh > 0 ? (h.scrollTop / sh) * 100 : 0;
+    bar.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', upd, { passive: true });
+  window.addEventListener('resize', upd, { passive: true });
+  upd();
 })();
 
 // === Side chapter rail tracking ===
