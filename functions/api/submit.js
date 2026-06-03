@@ -33,7 +33,19 @@ export async function onRequestPost(context) {
       timeZone: 'Asia/Tokyo', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit',
     }).format(new Date());
 
-    const msg = formatNotification(data, jstNow);
+    // ★送信元メタ情報★ (誰から・どこから が分かるように)
+    const cf = request.cf || {};
+    const ua = request.headers.get('User-Agent') || '';
+    const meta = {
+      ip: request.headers.get('CF-Connecting-IP') || 'unknown',
+      country: cf.country || request.headers.get('CF-IPCountry') || '?',
+      city: cf.city || '',
+      region: cf.region || '',
+      mojibake: hasMojibake(data),
+      botUA: /bot|crawler|spider|curl|wget|python|axios|httpie|scrap|fetch|monitor/i.test(ua) || ua === '',
+    };
+
+    const msg = formatNotification(data, jstNow, meta);
 
     const accessToken = await getAccessToken(env);
     await sendDirectMessage(env, accessToken, env.LINE_WORKS_MATSUURA_ID, msg);
@@ -109,12 +121,27 @@ async function sendDirectMessage(env, token, userId, text) {
   if (!res.ok) throw new Error(`DM failed: ${res.status} ${(await res.text()).slice(0,200)}`);
 }
 
-function formatNotification(d, jstNow) {
+// ★文字化け検知★ : UTF-8デコードで壊れた文字 (U+FFFD = �) が混ざっていれば
+//   ブラウザ以外 (Shift-JISのcurl等) からの送信と判定できる
+function hasMojibake(d) {
+  const fields = [d.name, d.company, d.contact, d.message, d.industry, d.revenue, d.contact_method];
+  return fields.some((v) => v && String(v).includes('�'));
+}
+
+function formatNotification(d, jstNow, meta = {}) {
   const interests = (Array.isArray(d.interests) && d.interests.length > 0)
     ? d.interests.join(' / ')
     : '(未選択)';
+
+  const warnLines = [];
+  if (meta.mojibake) warnLines.push('⚠️ 文字化け検出 — ブラウザ以外からの送信の可能性 (要注意)');
+  if (meta.botUA) warnLines.push('🤖 Bot疑い — User-Agentがブラウザではありません');
+  const warnBlock = warnLines.length ? warnLines.join('\n') + '\n\n' : '';
+
+  const loc = [meta.country, meta.region, meta.city].filter((x) => x && x !== '?').join(' / ') || '不明';
+
   return [
-    `📥 PLAYBOOK 新規お問合せ`,
+    `${warnBlock}📥 PLAYBOOK 新規お問合せ`,
     ``,
     `📅 受付: ${jstNow} JST`,
     ``,
@@ -133,6 +160,12 @@ function formatNotification(d, jstNow) {
     `━━━━━━━━━━━━━━━`,
     ``,
     d.message ? `━━━ ご相談内容 ━━━\n${d.message}\n━━━━━━━━━━━━━━━` : null,
+    ``,
+    `━━━ 送信元情報 ━━━`,
+    `🌍 地域: ${loc}`,
+    `📡 IP: ${meta.ip || 'unknown'}`,
+    meta.mojibake ? `🔤 文字コード: ⚠️ 異常 (UTF-8破損)` : null,
+    `━━━━━━━━━━━━━━━`,
     ``,
     `→ 1時間以内に折り返し対応をお願いします`,
     ``,

@@ -90,10 +90,28 @@ function checkBasicAuth(request, env) {
   });
 }
 
-// ★ver0.2 (2026-05-27): KV PV計測 廃止 → Cloudflare Web Analytics に移管★
+// ★ver0.3 (2026-05-28): KV PV計測を★復活★ (Paidプラン加入後・余裕あり)
 async function recordHit(env, date, path, ip) {
-  // ★no-op★ - PV計測は HTMLの Cloudflare Web Analytics タグで実施
-  return;
+  if (!env.PLAYBOOK_ANALYTICS) return;
+
+  const pvKey = `pv:${date}`;
+  const pvCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(pvKey)) || '0', 10);
+  await env.PLAYBOOK_ANALYTICS.put(pvKey, String(pvCur + 1), { expirationTtl: 90 * 24 * 60 * 60 });
+
+  const ipHash = await sha256(ip + date).then(h => h.slice(0, 12));
+  const uuKey = `uu:${date}:${ipHash}`;
+  const existing = await env.PLAYBOOK_ANALYTICS.get(uuKey);
+  if (!existing) {
+    await env.PLAYBOOK_ANALYTICS.put(uuKey, '1', { expirationTtl: 90 * 24 * 60 * 60 });
+    const uuCountKey = `uucount:${date}`;
+    const uuCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(uuCountKey)) || '0', 10);
+    await env.PLAYBOOK_ANALYTICS.put(uuCountKey, String(uuCur + 1), { expirationTtl: 90 * 24 * 60 * 60 });
+  }
+
+  const cleanPath = path.split('?')[0].replace(/\/+$/, '/');
+  const pathKey = `path:${date}:${cleanPath}`;
+  const pathCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(pathKey)) || '0', 10);
+  await env.PLAYBOOK_ANALYTICS.put(pathKey, String(pathCur + 1), { expirationTtl: 90 * 24 * 60 * 60 });
 }
 
 async function sha256(str) {
