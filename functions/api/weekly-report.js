@@ -72,7 +72,7 @@ function fmtDate(d) {
 }
 
 async function aggregateWeek(env, dates) {
-  let pv = 0, uu = 0, submit = 0, newsletter = 0;
+  let pv = 0, uu = 0, submit = 0, newsletter = 0, scan = 0;
   const pathMap = {};
   const dailyPV = [];
   for (const date of dates) {
@@ -80,7 +80,8 @@ async function aggregateWeek(env, dates) {
     const u = parseInt((await env.PLAYBOOK_ANALYTICS.get(`uucount:${date}`)) || '0', 10);
     const s = parseInt((await env.PLAYBOOK_ANALYTICS.get(`submit:${date}`)) || '0', 10);
     const n = parseInt((await env.PLAYBOOK_ANALYTICS.get(`newsletter_count:${date}`)) || '0', 10);
-    pv += p; uu += u; submit += s; newsletter += n;
+    const sc = parseInt((await env.PLAYBOOK_ANALYTICS.get(`scan:${date}`)) || '0', 10);
+    pv += p; uu += u; submit += s; newsletter += n; scan += sc;
     dailyPV.push({ date, pv: p });
 
     const pathList = await env.PLAYBOOK_ANALYTICS.list({ prefix: `path:${date}:` });
@@ -92,7 +93,7 @@ async function aggregateWeek(env, dates) {
   }
   const top5 = Object.entries(pathMap).map(([path, count]) => ({ path, count }))
     .sort((a, b) => b.count - a.count).slice(0, 5);
-  return { pv, uu, submit, newsletter, top5, dailyPV };
+  return { pv, uu, submit, newsletter, scan, top5, dailyPV };
 }
 
 function pct(cur, prev) {
@@ -140,6 +141,9 @@ function formatReport(start, end, w, p) {
     ``,
     `━━━ 人気ページ TOP5 ━━━`,
     topLines,
+    ``,
+    `━━━ 🛡️ 不正スキャン ━━━`,
+    `🚫 ブロック: ${w.scan}件 (${pct(w.scan, p.scan)}) ※集計除外`,
     ``,
     `🌐 https://playbook.beyond-holdings.co.jp/`,
     `📊 https://playbook.beyond-holdings.co.jp/admin/`,

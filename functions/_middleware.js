@@ -14,6 +14,11 @@ const EXCLUDE_PATHS = new Set([
 
 const PROTECTED_PREFIXES = ['/admin', '/api/admin-stats'];
 
+// ★ver0.4 (2026-06-06): 不正スキャン/探索パスの検知パターン
+//   .env / .git / wp- / バックアップ拡張子 等を狙う自動bot。
+//   これらは「人間アクセス」から除外し、別枠 (scan:) で可視化する。
+const SCAN_PATTERN = /^\/\.(git|env|aws|ssh|svn|hg|vscode|idea|ds_store)|^\/wp-|^\/vendor\/|^\/(phpmyadmin|phpinfo|xmlrpc|administrator|backup|config)\b|\.(bak|backup|old|sql|zip|tar|gz|tgz|env|log|swp|orig)$/i;
+
 export async function onRequest(context) {
   const url = new URL(context.request.url);
   const path = url.pathname;
@@ -55,7 +60,7 @@ export async function onRequest(context) {
       year: 'numeric', month: '2-digit', day: '2-digit',
     }).format(new Date());
 
-    context.waitUntil(recordHit(context.env, jstDate, path, ip));
+    context.waitUntil(recordHit(context.env, jstDate, path, ip, response.status));
   } catch (e) {
     console.error('[_middleware] hit recording error:', e.message);
   }
@@ -91,27 +96,46 @@ function checkBasicAuth(request, env) {
 }
 
 // ★ver0.3 (2026-05-28): KV PV計測を★復活★ (Paidプラン加入後・余裕あり)
-async function recordHit(env, date, path, ip) {
+// ★ver0.4 (2026-06-06): 「人間の実アクセス」と「不正スキャン/404」を分離。
+//   - 200で実際に表示できたページのみ PV/UU/人気ページに計上
+//   - 404 や .env/.git 等の探索は scan: 系キーに別計上 (レポートで可視化)
+async function recordHit(env, date, path, ip, status) {
   if (!env.PLAYBOOK_ANALYTICS) return;
+  const TTL = 90 * 24 * 60 * 60;
+  const cleanPath = path.split('?')[0].replace(/\/+$/, '/');
 
+  // ── 不正スキャン or エラー応答 (404等) は人間アクセスに含めない ──
+  const isError = status >= 400;
+  const isScan = SCAN_PATTERN.test(cleanPath);
+  if (isError || isScan) {
+    const scanKey = `scan:${date}`;
+    const scanCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(scanKey)) || '0', 10);
+    await env.PLAYBOOK_ANALYTICS.put(scanKey, String(scanCur + 1), { expirationTtl: TTL });
+
+    const scanPathKey = `scanpath:${date}:${cleanPath}`;
+    const spCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(scanPathKey)) || '0', 10);
+    await env.PLAYBOOK_ANALYTICS.put(scanPathKey, String(spCur + 1), { expirationTtl: TTL });
+    return;
+  }
+
+  // ── ここから先は「実際に表示できた人間ページ」だけ ──
   const pvKey = `pv:${date}`;
   const pvCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(pvKey)) || '0', 10);
-  await env.PLAYBOOK_ANALYTICS.put(pvKey, String(pvCur + 1), { expirationTtl: 90 * 24 * 60 * 60 });
+  await env.PLAYBOOK_ANALYTICS.put(pvKey, String(pvCur + 1), { expirationTtl: TTL });
 
   const ipHash = await sha256(ip + date).then(h => h.slice(0, 12));
   const uuKey = `uu:${date}:${ipHash}`;
   const existing = await env.PLAYBOOK_ANALYTICS.get(uuKey);
   if (!existing) {
-    await env.PLAYBOOK_ANALYTICS.put(uuKey, '1', { expirationTtl: 90 * 24 * 60 * 60 });
+    await env.PLAYBOOK_ANALYTICS.put(uuKey, '1', { expirationTtl: TTL });
     const uuCountKey = `uucount:${date}`;
     const uuCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(uuCountKey)) || '0', 10);
-    await env.PLAYBOOK_ANALYTICS.put(uuCountKey, String(uuCur + 1), { expirationTtl: 90 * 24 * 60 * 60 });
+    await env.PLAYBOOK_ANALYTICS.put(uuCountKey, String(uuCur + 1), { expirationTtl: TTL });
   }
 
-  const cleanPath = path.split('?')[0].replace(/\/+$/, '/');
   const pathKey = `path:${date}:${cleanPath}`;
   const pathCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(pathKey)) || '0', 10);
-  await env.PLAYBOOK_ANALYTICS.put(pathKey, String(pathCur + 1), { expirationTtl: 90 * 24 * 60 * 60 });
+  await env.PLAYBOOK_ANALYTICS.put(pathKey, String(pathCur + 1), { expirationTtl: TTL });
 }
 
 async function sha256(str) {

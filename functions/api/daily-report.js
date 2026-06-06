@@ -55,8 +55,20 @@ export async function onRequestGet(context) {
   pathStats.sort((a, b) => b.count - a.count);
   const top5 = pathStats.slice(0, 5);
 
+  // 不正スキャン (.env/.git 等の探索・404) を別集計
+  const scanTotal = parseInt((await env.PLAYBOOK_ANALYTICS.get(`scan:${targetDate}`)) || '0', 10);
+  const scanList = await env.PLAYBOOK_ANALYTICS.list({ prefix: `scanpath:${targetDate}:` });
+  const scanStats = [];
+  for (const k of scanList.keys) {
+    const cnt = parseInt(await env.PLAYBOOK_ANALYTICS.get(k.name) || '0', 10);
+    const p = k.name.replace(`scanpath:${targetDate}:`, '');
+    scanStats.push({ path: p, count: cnt });
+  }
+  scanStats.sort((a, b) => b.count - a.count);
+  const scanTop = scanStats.slice(0, 5);
+
   // メッセージ整形
-  const msg = formatReport(targetDate, pv, uu, submissions, top5);
+  const msg = formatReport(targetDate, pv, uu, submissions, top5, scanTotal, scanTop);
 
   // LINE WORKS Bot DM 送信
   const dryRun = url.searchParams.get('dry_run') === '1';
@@ -73,12 +85,13 @@ export async function onRequestGet(context) {
 
   return new Response(JSON.stringify({
     ok: true, date: targetDate, pv, uu, submissions, top5,
+    scan_total: scanTotal, scan_top: scanTop,
     message_preview: msg,
     dry_run: dryRun,
   }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' }});
 }
 
-function formatReport(date, pv, uu, submissions, top5) {
+function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop) {
   const dayOfWeek = ['日','月','火','水','木','金','土'][new Date(date + 'T00:00:00+09:00').getDay()];
   const topLines = top5.length > 0
     ? top5.map((p, i) => `  ${i+1}. ${p.path} (${p.count}PV)`).join('\n')
@@ -90,21 +103,40 @@ function formatReport(date, pv, uu, submissions, top5) {
     : pv < 200 ? '🔥 順調'
     : '🚀 急上昇';
 
-  return [
+  const lines = [
     `📊 PLAYBOOK 日次レポート`,
     `📅 ${date} (${dayOfWeek}) JST`,
     `${status}`,
     ``,
-    `━━━ アクセス ━━━`,
+    `━━━ アクセス (実ユーザー) ━━━`,
     `👀 PV: ${pv}`,
     `👤 UU: ${uu}`,
     submissions > 0 ? `✉️ 申込: ${submissions}件` : `✉️ 申込: 0件`,
     ``,
     `━━━ 人気ページ TOP5 ━━━`,
     topLines,
+  ];
+
+  // 不正スキャンがあった日だけ可視化セクションを追加
+  if (scanTotal > 0) {
+    const scanLines = scanTop.length > 0
+      ? scanTop.map((p, i) => `  ${i+1}. ${p.path} (${p.count})`).join('\n')
+      : '';
+    lines.push(
+      ``,
+      `━━━ 🛡️ 不正スキャン検知 ━━━`,
+      `🚫 ブロック: ${scanTotal}件 (集計除外)`,
+      scanLines,
+      `※ .env/.git 等を狙う自動bot。全て404で実害なし`,
+    );
+  }
+
+  lines.push(
     ``,
     `🌐 https://playbook.beyond-holdings.co.jp/`,
-  ].join('\n');
+  );
+
+  return lines.filter(l => l !== undefined).join('\n');
 }
 
 // ===== LINE WORKS Bot送信 =====
