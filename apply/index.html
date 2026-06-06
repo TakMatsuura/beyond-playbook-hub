@@ -208,6 +208,14 @@ document.querySelectorAll('.interest input').forEach(function(i){
   });
 });
 
+// LP由来のサービスを自動選択 (例: /apply/?s=surge → 関心サービスにSURGEを自動ON)
+(function(){
+  var s = new URLSearchParams(location.search).get('s');
+  if (!s) return;
+  var cb = document.querySelector('.interest input[value="' + s.toUpperCase() + '"]');
+  if (cb) { cb.checked = true; cb.closest('.interest').classList.add('checked'); }
+})();
+
 document.getElementById('contactForm').addEventListener('submit', async function(e){
   e.preventDefault();
   var f = e.target;
