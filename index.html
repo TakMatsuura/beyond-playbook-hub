@@ -1301,17 +1301,17 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
 
     // 安全網: ホイール操作してもページ中央でスクロールが動かない場合は Lenis を解除しネイティブスクロールに戻す
     var __stuck = 0;
-    window.addEventListener('wheel', function(){
-      var y0 = window.scrollY;
+    window.addEventListener('wheel', function(e){
+      var y0 = window.scrollY; var dir = e.deltaY;
       setTimeout(function(){
         var doc = document.documentElement;
         var maxY = doc.scrollHeight - doc.clientHeight;
-        var atEdge = (y0 <= 1) || (y0 >= maxY - 1);
-        if (!atEdge && Math.abs(window.scrollY - y0) < 1) {
-          if (++__stuck >= 3) { try { lenis.destroy(); } catch(_){}
+        var canMove = (dir > 0 && y0 < maxY - 1) || (dir < 0 && y0 > 1);
+        if (canMove && Math.abs(window.scrollY - y0) < 1) {
+          if (++__stuck >= 2) { try { lenis.destroy(); } catch(_){}
             document.documentElement.classList.remove('lenis','lenis-smooth'); }
         } else { __stuck = 0; }
-      }, 220);
+      }, 160);
     }, { passive: true });
 
     // chapter-rail のドットクリックで lenis.scrollTo に置き換え
