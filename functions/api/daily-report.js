@@ -43,6 +43,7 @@ export async function onRequestGet(context) {
   const pv = parseInt((await env.PLAYBOOK_ANALYTICS.get(`pv:${targetDate}`)) || '0', 10);
   const uu = parseInt((await env.PLAYBOOK_ANALYTICS.get(`uucount:${targetDate}`)) || '0', 10);
   const submissions = parseInt((await env.PLAYBOOK_ANALYTICS.get(`submit:${targetDate}`)) || '0', 10);
+  const submitTest = parseInt((await env.PLAYBOOK_ANALYTICS.get(`submittest:${targetDate}`)) || '0', 10);
 
   // パス別 PV (上位5)
   const pathList = await env.PLAYBOOK_ANALYTICS.list({ prefix: `path:${targetDate}:` });
@@ -68,7 +69,7 @@ export async function onRequestGet(context) {
   const scanTop = scanStats.slice(0, 5);
 
   // メッセージ整形
-  const msg = formatReport(targetDate, pv, uu, submissions, top5, scanTotal, scanTop);
+  const msg = formatReport(targetDate, pv, uu, submissions, top5, scanTotal, scanTop, submitTest);
 
   // LINE WORKS Bot DM 送信
   const dryRun = url.searchParams.get('dry_run') === '1';
@@ -91,7 +92,7 @@ export async function onRequestGet(context) {
   }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' }});
 }
 
-function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop) {
+function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop, submitTest = 0) {
   const dayOfWeek = ['日','月','火','水','木','金','土'][new Date(date + 'T00:00:00+09:00').getDay()];
   const topLines = top5.length > 0
     ? top5.map((p, i) => `  ${i+1}. ${p.path} (${p.count}PV)`).join('\n')
@@ -111,7 +112,7 @@ function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop) {
     `━━━ アクセス (実ユーザー) ━━━`,
     `👀 PV: ${pv}`,
     `👤 UU: ${uu}`,
-    submissions > 0 ? `✉️ 申込: ${submissions}件` : `✉️ 申込: 0件`,
+    `✉️ 申込: ${submissions}件${submitTest > 0 ? `（別途テスト${submitTest}件）` : ''}`,
     ``,
     `━━━ 人気ページ TOP5 ━━━`,
     topLines,

@@ -33,9 +33,16 @@ export async function onRequestPost(context) {
       timeZone: 'Asia/Tokyo', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit',
     }).format(new Date());
 
+    // JST日付 (カウンタ・記録キー用)
+    const jstDate = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Tokyo', year:'numeric', month:'2-digit', day:'2-digit',
+    }).format(new Date());
+
     // ★送信元メタ情報★ (誰から・どこから が分かるように)
     const cf = request.cf || {};
     const ua = request.headers.get('User-Agent') || '';
+    const cookieHeader = request.headers.get('Cookie') || '';
+    const isInternal = cookieHeader.includes('playbook_internal=1'); // 社内端末 (?internal=1 で付与)
     const meta = {
       ip: request.headers.get('CF-Connecting-IP') || 'unknown',
       country: cf.country || request.headers.get('CF-IPCountry') || '?',
@@ -43,25 +50,41 @@ export async function onRequestPost(context) {
       region: cf.region || '',
       mojibake: hasMojibake(data),
       botUA: /bot|crawler|spider|curl|wget|python|axios|httpie|scrap|fetch|monitor/i.test(ua) || ua === '',
+      internal: isInternal,
     };
+    // ★テスト/システム送信判定★ — 内部端末・bot・文字化けは「実リード」に計上しない
+    meta.isTest = isInternal || meta.botUA || meta.mojibake;
 
     const msg = formatNotification(data, jstNow, meta);
 
     const accessToken = await getAccessToken(env);
     await sendDirectMessage(env, accessToken, env.LINE_WORKS_MATSUURA_ID, msg);
 
-    // 申込カウンタ
+    // 申込記録 + カウンタ
     if (env.PLAYBOOK_ANALYTICS) {
       try {
-        const jstDate = new Intl.DateTimeFormat('en-CA', {
-          timeZone: 'Asia/Tokyo', year:'numeric', month:'2-digit', day:'2-digit',
-        }).format(new Date());
-        const submitKey = `submit:${jstDate}`;
+        // ① 1件ずつ記録を保存 (テスト含む・後から監査/追跡できるように)。lead: は2年保持
+        const id = (typeof crypto !== 'undefined' && crypto.randomUUID)
+          ? crypto.randomUUID().slice(0, 8) : String(Date.now());
+        const leadRec = {
+          ts: jstNow,
+          name: data.name, company: data.company, contact: data.contact,
+          industry: data.industry || '', revenue: data.revenue || '',
+          interests: Array.isArray(data.interests) ? data.interests : [],
+          contact_method: data.contact_method || '', message: data.message || '',
+          country: meta.country, region: meta.region, city: meta.city, ip: meta.ip,
+          isTest: meta.isTest, internal: meta.internal, botUA: meta.botUA, mojibake: meta.mojibake,
+        };
+        await env.PLAYBOOK_ANALYTICS.put(`lead:${jstDate}:${id}`, JSON.stringify(leadRec),
+          { expirationTtl: 730 * 24 * 60 * 60 });
+
+        // ② カウンタ: テスト/システム送信は実申込(submit:)に入れず submittest: で別計上
+        const submitKey = meta.isTest ? `submittest:${jstDate}` : `submit:${jstDate}`;
         const cur = parseInt((await env.PLAYBOOK_ANALYTICS.get(submitKey)) || '0', 10);
         await env.PLAYBOOK_ANALYTICS.put(submitKey, String(cur + 1), { expirationTtl: 90 * 24 * 60 * 60 });
 
-        // 興味サービス別カウンタ (どのサービスに関心があるかの可視化)
-        if (Array.isArray(data.interests) && data.interests.length > 0) {
+        // ③ 興味サービス別カウンタ (実申込のみ・需要把握)
+        if (!meta.isTest && Array.isArray(data.interests) && data.interests.length > 0) {
           for (const svc of data.interests) {
             const safe = String(svc).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 30);
             if (!safe) continue;
@@ -70,7 +93,7 @@ export async function onRequestPost(context) {
             await env.PLAYBOOK_ANALYTICS.put(k, String(c + 1), { expirationTtl: 90 * 24 * 60 * 60 });
           }
         }
-      } catch (e) { console.error('submit counter:', e.message); }
+      } catch (e) { console.error('submit record:', e.message); }
     }
 
     return new Response(JSON.stringify({ ok:true }), { status:200, headers:cors });
@@ -134,8 +157,10 @@ function formatNotification(d, jstNow, meta = {}) {
     : '(未選択)';
 
   const warnLines = [];
+  if (meta.internal) warnLines.push('🧪 内部/テスト送信 — 実申込にはカウントしていません');
   if (meta.mojibake) warnLines.push('⚠️ 文字化け検出 — ブラウザ以外からの送信の可能性 (要注意)');
   if (meta.botUA) warnLines.push('🤖 Bot疑い — User-Agentがブラウザではありません');
+  if (meta.isTest && !meta.internal && !meta.mojibake && !meta.botUA) warnLines.push('🧪 テスト扱い — 実申込にはカウントしていません');
   const warnBlock = warnLines.length ? warnLines.join('\n') + '\n\n' : '';
 
   const loc = [meta.country, meta.region, meta.city].filter((x) => x && x !== '?').join(' / ') || '不明';
