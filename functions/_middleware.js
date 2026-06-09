@@ -136,6 +136,25 @@ async function recordHit(env, date, path, ip, status) {
   const pathKey = `path:${date}:${cleanPath}`;
   const pathCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(pathKey)) || '0', 10);
   await env.PLAYBOOK_ANALYTICS.put(pathKey, String(pathCur + 1), { expirationTtl: TTL });
+
+  // ★LP別UU★ (2026-06-09): サービスLP (/surge/ 等) ごとの UU を集計。
+  //   PV は既存の path: キーから遡って算出できるが、UU は IP単位の重複排除が
+  //   必要なためここで別計上する。daily/weekly レポートでLP別内訳を出すのに使う。
+  const seg = segmentOf(cleanPath);
+  const lpUuKey = `lpuu:${date}:${seg}:${ipHash}`;
+  if (!(await env.PLAYBOOK_ANALYTICS.get(lpUuKey))) {
+    await env.PLAYBOOK_ANALYTICS.put(lpUuKey, '1', { expirationTtl: TTL });
+    const lpUuCountKey = `lpuucount:${date}:${seg}`;
+    const lpUuCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(lpUuCountKey)) || '0', 10);
+    await env.PLAYBOOK_ANALYTICS.put(lpUuCountKey, String(lpUuCur + 1), { expirationTtl: TTL });
+  }
+}
+
+// クリーンなパスから先頭セグメント (= LP識別子) を取り出す。'/' は 'home'。
+//   例: '/surge/' → 'surge' / '/' → 'home' / '/articles/x' → 'articles'
+function segmentOf(cleanPath) {
+  const first = cleanPath.replace(/^\/+/, '').split('/')[0] || '';
+  return first === '' ? 'home' : first.toLowerCase();
 }
 
 async function sha256(str) {

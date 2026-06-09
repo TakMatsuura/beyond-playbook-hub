@@ -11,6 +11,24 @@ import { SignJWT, importPKCS8 } from 'jose';
 const AUTH_BASE = 'https://auth.worksmobile.com/oauth2/v2.0';
 const API_BASE = 'https://www.worksapis.com/v1.0';
 
+// ★サービスLP一覧★ (2026-06-09): ハブ配下のサブパスLP。LP別PV/UUを通知に出す。
+const SERVICE_LPS = [
+  { seg: 'home',   name: 'PLAYBOOK(ハブ)', emoji: '🏠' },
+  { seg: 'surge',  name: 'SURGE',  emoji: '📈' },
+  { seg: 'magnet', name: 'MAGNET', emoji: '🧲' },
+  { seg: 'pack',   name: 'PACK',   emoji: '👥' },
+  { seg: 'gear',   name: 'GEAR',   emoji: '⚙️' },
+  { seg: 'lens',   name: 'LENS',   emoji: '🔍' },
+  { seg: 'north',  name: 'NORTH',  emoji: '🧭' },
+  { seg: 'beacon', name: 'BEACON', emoji: '📡' },
+  { seg: 'seed',   name: 'SEED',   emoji: '🌱' },
+];
+
+function segmentOf(cleanPath) {
+  const first = String(cleanPath).replace(/^\/+/, '').split('/')[0] || '';
+  return first === '' ? 'home' : first.toLowerCase();
+}
+
 export async function onRequestGet(context) {
   const { env, request } = context;
   const url = new URL(request.url);
@@ -74,6 +92,8 @@ function fmtDate(d) {
 async function aggregateWeek(env, dates) {
   let pv = 0, uu = 0, submit = 0, newsletter = 0, scan = 0;
   const pathMap = {};
+  const segPv = {};   // LP別PV (週合算)
+  const segUu = {};   // LP別UU (日毎のlpuucountを週合算)
   const dailyPV = [];
   for (const date of dates) {
     const p = parseInt((await env.PLAYBOOK_ANALYTICS.get(`pv:${date}`)) || '0', 10);
@@ -89,11 +109,20 @@ async function aggregateWeek(env, dates) {
       const cnt = parseInt(await env.PLAYBOOK_ANALYTICS.get(k.name) || '0', 10);
       const path = k.name.replace(`path:${date}:`, '');
       pathMap[path] = (pathMap[path] || 0) + cnt;
+      const seg = segmentOf(path);
+      segPv[seg] = (segPv[seg] || 0) + cnt;
+    }
+    for (const lp of SERVICE_LPS) {
+      const lu = parseInt((await env.PLAYBOOK_ANALYTICS.get(`lpuucount:${date}:${lp.seg}`)) || '0', 10);
+      segUu[lp.seg] = (segUu[lp.seg] || 0) + lu;
     }
   }
   const top5 = Object.entries(pathMap).map(([path, count]) => ({ path, count }))
     .sort((a, b) => b.count - a.count).slice(0, 5);
-  return { pv, uu, submit, newsletter, scan, top5, dailyPV };
+  // LP別行 (週合算UUはユニーク重複排除ではなく日次UUの和=延べ。目安として表示)
+  const lpRows = SERVICE_LPS.map((lp) => ({ ...lp, pv: segPv[lp.seg] || 0, uu: segUu[lp.seg] || 0 }))
+    .sort((a, b) => b.pv - a.pv);
+  return { pv, uu, submit, newsletter, scan, top5, dailyPV, lpRows };
 }
 
 function pct(cur, prev) {
@@ -119,6 +148,12 @@ function formatReport(start, end, w, p) {
     ? w.top5.map((x, i) => `  ${i+1}. ${x.path} (${x.count}PV)`).join('\n')
     : '  (アクセスなし)';
 
+  const padName = (s) => { const wd = [...s].reduce((a, c) => a + (c.charCodeAt(0) > 0xff ? 2 : 1), 0); return s + ' '.repeat(Math.max(0, 14 - wd)); };
+  const lpRows = w.lpRows || [];
+  const lpLines = lpRows.length > 0
+    ? lpRows.map((r) => `  ${r.emoji} ${padName(r.name)} ${r.pv}PV / ${r.uu}UU`).join('\n')
+    : '  (データなし)';
+
   const status = w.pv === 0 ? '📭 アクセスなし'
     : w.pv < 50 ? '🌱 立ち上がり期'
     : w.pv < 200 ? '☀️ ぼちぼち'
@@ -138,6 +173,9 @@ function formatReport(start, end, w, p) {
     ``,
     `━━━ 日別PV推移 ━━━`,
     dailyLines,
+    ``,
+    `━━━ サービスLP別 (PV/UU) ━━━`,
+    lpLines,
     ``,
     `━━━ 人気ページ TOP5 ━━━`,
     topLines,

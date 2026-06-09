@@ -9,11 +9,12 @@
 <meta property="og:description" content="BEYOND Holdings は、自分たちで9社を動かしている実業の会社。試して、転んで、越えてきた経験を、3つの入口 × 9つのテーマをあなたの隣で動かす。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://playbook.beyond-holdings.co.jp/">
-<meta property="og:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.svg">
+<link rel="canonical" href="https://playbook.beyond-holdings.co.jp/">
+<meta property="og:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.svg">
+<meta name="twitter:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.png">
 <title>BEYOND PLAYBOOK｜試して、転んで、越えてきた。</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='10' fill='%230a0a0a'/><text x='50' y='72' font-family='Cormorant Garamond,serif' font-style='italic' font-weight='700' font-size='68' fill='%23c9a961' text-anchor='middle' letter-spacing='-2'>P</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -533,8 +534,8 @@ header.site-header {
 .orbit-caption .label { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: var(--gold-deep); letter-spacing: 0.3em; }
 .orbit-caption .title { font-family: 'Noto Serif JP', serif; font-weight: 500; font-size: clamp(20px, 3vw, 28px); color: var(--gold-bright); margin-top: 6px; letter-spacing: 0.08em; }
 .orbit-stage {
-  position: relative; width: min(94vw, 820px); height: min(94vw, 820px);
-  margin: 24px auto 0; --r: clamp(190px, 34vw, 308px);
+  position: relative; width: min(98vw, 98vh, 1200px); height: min(98vw, 98vh, 1200px);
+  margin: 10px auto 0; --r: clamp(210px, min(45vw, 46vh), 462px);
 }
 .orbit-ring {
   position: absolute; top: 50%; left: 50%;
@@ -545,9 +546,19 @@ header.site-header {
   width: calc(var(--r) * 2 + 30px); height: calc(var(--r) * 2 + 30px);
   border-style: dashed; border-color: rgba(201,169,97,0.12);
 }
+/* 3つの型を分ける やわらか面（色のにじみ） */
+.orbit-glow {
+  position: absolute; top: 50%; left: 50%;
+  width: calc(var(--r) * 1.52); height: calc(var(--r) * 1.12); border-radius: 50%;
+  z-index: 0; pointer-events: none; opacity: 0.42;
+  background: radial-gradient(ellipse at center, var(--tc) 0%, var(--tc) 16%, transparent 70%);
+  transform: translate(-50%, -50%) rotate(var(--ang)) translateY(calc(-1 * var(--r) * 0.95)) rotate(calc(-1 * var(--ang)));
+}
+.orbit-div { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; overflow: visible; }
+.orbit-div path { stroke: rgba(201,169,97,0.6); stroke-width: 1.4; fill: none; }
 .orbit-spinner {
   position: absolute; top: 50%; left: 50%; width: 0; height: 0;
-  animation: orbitSpin 16s linear infinite;
+  animation: orbitSpin 16s linear infinite; z-index: 6;
 }
 .orbit-ball {
   position: absolute; left: 0; top: 0; width: 16px; height: 16px; border-radius: 50%;
@@ -558,43 +569,49 @@ header.site-header {
 @keyframes orbitSpin { to { transform: rotate(360deg); } }
 .orbit-core {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: clamp(150px, 26vw, 212px); height: clamp(150px, 26vw, 212px); border-radius: 50%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px;
+  width: clamp(104px, min(18vw, 17vh), 148px); height: clamp(104px, min(18vw, 17vh), 148px); border-radius: 50%; z-index: 5;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
   background: radial-gradient(circle at 38% 32%, #2c2c30 0%, #161616 46%, #050505 100%);
-  box-shadow: inset 0 0 44px rgba(0,0,0,0.85), 0 0 60px rgba(201,169,97,0.14), 0 0 0 1px var(--gold-line);
+  box-shadow: inset 0 0 38px rgba(0,0,0,0.85), 0 0 54px rgba(201,169,97,0.14), 0 0 0 1px var(--gold-line);
 }
 .orbit-core-label {
-  font-family: 'Bodoni Moda', 'Noto Serif JP', serif; font-weight: 500;
-  font-size: clamp(15px, 2.2vw, 21px); letter-spacing: 0.12em; color: var(--gold-bright); text-align: center;
+  font-family: 'Bodoni Moda', 'Noto Serif JP', serif; font-weight: 700;
+  font-size: clamp(12px, 1.8vw, 15px); letter-spacing: 0.12em; color: var(--gold-bright); text-align: center;
 }
-.orbit-core-book { width: clamp(42px, 7.5vw, 58px); height: auto; color: var(--gold-bright); opacity: 0.92; }
+.orbit-core-book { width: clamp(36px, 6.4vw, 50px); height: auto; color: var(--gold-bright); opacity: 0.92; }
 .orbit-node {
-  position: absolute; top: 50%; left: 50%; width: 184px;
+  position: absolute; top: 50%; left: 50%; width: 190px; z-index: 4;
   transform: translate(-50%, -50%) rotate(var(--ang)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--ang)));
   text-align: center; padding: 6px; transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
 }
 .on-name {
-  display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600;
-  font-size: 30px; color: var(--c, var(--gold-bright)); letter-spacing: 0.04em; line-height: 1.1;
+  display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 700;
+  font-size: clamp(26px, 3.4vw, 33px); color: var(--c, var(--gold-bright)); letter-spacing: 0.04em; line-height: 1.05;
 }
-.on-theme { display: block; font-size: 13px; color: var(--text-on-dark-soft); margin-top: 6px; line-height: 1.45; }
+.on-theme { display: block; font-size: 13.5px; font-weight: 600; color: #dcd7cb; margin-top: 5px; line-height: 1.4; }
 .on-status {
-  display: inline-block; margin-top: 7px; font-family: 'Inter', sans-serif; font-weight: 600;
-  font-size: 8px; letter-spacing: 0.22em; padding: 2px 8px; border-radius: 2px; text-transform: uppercase;
+  display: inline-block; margin-top: 6px; font-family: 'Inter', sans-serif; font-weight: 700;
+  font-size: 8.5px; letter-spacing: 0.22em; padding: 2px 9px; border-radius: 2px; text-transform: uppercase;
 }
 .on-status.live { background: var(--c, var(--gold)); color: var(--ink); }
 .on-status.soon { color: var(--text-on-dark-mute); border: 1px solid rgba(255,255,255,0.14); }
 .orbit-node.live { cursor: pointer; }
 .orbit-node.live:hover { transform: translate(-50%, -50%) rotate(var(--ang)) translateY(calc(-1 * var(--r) - 7px)) rotate(calc(-1 * var(--ang))); }
 .orbit-node.live:hover .on-name { text-shadow: 0 0 18px var(--c, var(--gold)); }
+/* 型エンブレム（PPT実物・各エリア内側） */
+.zlab {
+  position: absolute; top: 50%; left: 50%; z-index: 4; pointer-events: none;
+  transform: translate(-50%, -50%) rotate(var(--ang)) translateY(calc(-1 * var(--r) * 0.48)) rotate(calc(-1 * var(--ang)));
+}
+.zembl { display: block; height: calc(var(--r) * 0.42); width: auto; filter: drop-shadow(0 3px 10px rgba(0,0,0,0.55)); }
 @media (prefers-reduced-motion: reduce) { .orbit-spinner { animation: none; } }
 /* モバイル: 円をやめてリストへ */
 @media (max-width: 760px) {
   .orbit-stage { width: 100%; height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 40px; margin-top: 28px; }
-  .orbit-ring, .orbit-ring-2, .orbit-spinner, .orbit-core { display: none; }
+  .orbit-ring, .orbit-ring-2, .orbit-spinner, .orbit-core, .orbit-glow, .orbit-div, .zlab { display: none; }
   .orbit-node { position: static; transform: none; width: auto; text-align: left; padding: 16px 0; border-bottom: 1px dashed rgba(201,169,97,0.18); }
   .orbit-node.live:hover { transform: none; }
-  .on-name { font-size: 20px; }
+  .on-name { font-size: 21px; }
   .on-theme { font-size: 12.5px; }
 }
 @media (max-width: 480px) { .orbit-stage { grid-template-columns: 1fr; } }
@@ -1010,8 +1027,16 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
       </div>
 
       <div class="orbit-stage">
+        <div class="orbit-glow" aria-hidden="true" style="--ang: 0deg;   --tc: #c9a961;"></div>
+        <div class="orbit-glow" aria-hidden="true" style="--ang: 120deg; --tc: #6f6593;"></div>
+        <div class="orbit-glow" aria-hidden="true" style="--ang: 240deg; --tc: #66794d;"></div>
         <div class="orbit-ring" aria-hidden="true"></div>
         <div class="orbit-ring orbit-ring-2" aria-hidden="true"></div>
+        <svg class="orbit-div" viewBox="0 0 820 820" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <path d="M155.9 181.2 A 342 342 0 0 1 664.1 181.2"/>
+          <path d="M735.3 304.3 A 342 342 0 0 1 481.1 744.5"/>
+          <path d="M338.9 744.5 A 342 342 0 0 1 84.7 304.3"/>
+        </svg>
         <div class="orbit-spinner" aria-hidden="true"><span class="orbit-ball"></span></div>
         <div class="orbit-core" aria-hidden="true">
           <svg class="orbit-core-book" viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1023,59 +1048,63 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
           <span class="orbit-core-label">PLAYBOOK</span>
         </div>
 
-        <a href="https://flow.beyond-holdings.co.jp/" target="_blank" rel="noopener" class="orbit-node live" style="--ang: -90deg; --c: var(--c-flow);" data-track="service_click" data-track-service="flow">
+        <a href="https://flow.beyond-holdings.co.jp/" target="_blank" rel="noopener" class="orbit-node live" style="--ang: -40deg; --c: var(--c-flow);" data-track="service_click" data-track-service="flow">
           <span class="on-name">FLOW</span>
           <span class="on-theme">お金の流れを、止めない。</span>
           <span class="on-status live">Live</span>
         </a>
 
-        <a href="/surge/" class="orbit-node live" style="--ang: -50deg; --c: var(--c-surge);" data-track="service_click" data-track-service="surge">
+        <a href="/surge/" class="orbit-node live" style="--ang: 0deg; --c: var(--c-surge);" data-track="service_click" data-track-service="surge">
           <span class="on-name">SURGE</span>
           <span class="on-theme">売上の天井を、突き破る。</span>
           <span class="on-status live">Live</span>
         </a>
 
-        <a href="/magnet/" class="orbit-node live" style="--ang: -10deg; --c: var(--c-magnet);" data-track="service_click" data-track-service="magnet">
-          <span class="on-name">MAGNET</span>
-          <span class="on-theme">人が集まる会社に、なる。</span>
-          <span class="on-status live">Live</span>
-        </a>
-
-        <a href="/beacon/" class="orbit-node live" style="--ang: 30deg; --c: var(--c-beacon);" data-track="service_click" data-track-service="beacon">
-          <span class="on-name">BEACON</span>
-          <span class="on-theme">強みが、伝わる。</span>
-          <span class="on-status live">Live</span>
-        </a>
-
-        <a href="/lens/" class="orbit-node live" style="--ang: 70deg; --c: var(--c-lens);" data-track="service_click" data-track-service="lens">
-          <span class="on-name">LENS</span>
-          <span class="on-theme">判断のスピードを、上げる。</span>
-          <span class="on-status live">Live</span>
-        </a>
-
-        <a href="/north/" class="orbit-node live" style="--ang: 110deg; --c: var(--c-north);" data-track="service_click" data-track-service="north">
-          <span class="on-name">NORTH</span>
-          <span class="on-theme">会社の旗を、立てる。</span>
-          <span class="on-status live">Live</span>
-        </a>
-
-        <a href="/seed/" class="orbit-node live" style="--ang: 150deg; --c: var(--c-seed);" data-track="service_click" data-track-service="seed">
+        <a href="/seed/" class="orbit-node live" style="--ang: 40deg; --c: var(--c-seed);" data-track="service_click" data-track-service="seed">
           <span class="on-name">SEED</span>
           <span class="on-theme">次の事業の柱を、作る。</span>
           <span class="on-status live">Live</span>
         </a>
 
-        <a href="/pack/" class="orbit-node live" style="--ang: 190deg; --c: var(--c-pack);" data-track="service_click" data-track-service="pack">
+        <a href="/north/" class="orbit-node live" style="--ang: 80deg; --c: var(--c-north);" data-track="service_click" data-track-service="north">
+          <span class="on-name">NORTH</span>
+          <span class="on-theme">会社の旗を、立てる。</span>
+          <span class="on-status live">Live</span>
+        </a>
+
+        <a href="/lens/" class="orbit-node live" style="--ang: 120deg; --c: var(--c-lens);" data-track="service_click" data-track-service="lens">
+          <span class="on-name">LENS</span>
+          <span class="on-theme">判断のスピードを、上げる。</span>
+          <span class="on-status live">Live</span>
+        </a>
+
+        <a href="/beacon/" class="orbit-node live" style="--ang: 160deg; --c: var(--c-beacon);" data-track="service_click" data-track-service="beacon">
+          <span class="on-name">BEACON</span>
+          <span class="on-theme">強みが、伝わる。</span>
+          <span class="on-status live">Live</span>
+        </a>
+
+        <a href="/pack/" class="orbit-node live" style="--ang: 200deg; --c: var(--c-pack);" data-track="service_click" data-track-service="pack">
           <span class="on-name">PACK</span>
           <span class="on-theme">人で勝つ組織を、作る。</span>
           <span class="on-status live">Live</span>
         </a>
 
-        <a href="/gear/" class="orbit-node live" style="--ang: 230deg; --c: var(--c-gear);" data-track="service_click" data-track-service="gear">
+        <a href="/gear/" class="orbit-node live" style="--ang: 240deg; --c: var(--c-gear);" data-track="service_click" data-track-service="gear">
           <span class="on-name">GEAR</span>
           <span class="on-theme">現場を、回し切る。</span>
           <span class="on-status live">Live</span>
         </a>
+
+        <a href="/magnet/" class="orbit-node live" style="--ang: 280deg; --c: var(--c-magnet);" data-track="service_click" data-track-service="magnet">
+          <span class="on-name">MAGNET</span>
+          <span class="on-theme">人が集まる会社に、なる。</span>
+          <span class="on-status live">Live</span>
+        </a>
+
+        <div class="zlab" aria-hidden="true" style="--ang: 0deg;"><img class="zembl" src="/img/exec.png?v=2" alt="Execution Pack"></div>
+        <div class="zlab" aria-hidden="true" style="--ang: 120deg;"><img class="zembl" src="/img/mgmt.png?v=2" alt="Management Studio"></div>
+        <div class="zlab" aria-hidden="true" style="--ang: 240deg;"><img class="zembl" src="/img/oper.png?v=2" alt="Operation Partner"></div>
       </div>
     </div>
   </div>
