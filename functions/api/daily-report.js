@@ -108,6 +108,17 @@ export async function onRequestGet(context) {
   lpRows.push({ seg: 'flow', name: 'FLOW', emoji: '💧', pv: flowPv, uu: flowUu });
   lpRows.sort((a, b) => b.pv - a.pv);
 
+  // ★流入元別 (どこから来たか)★ : src:date:* を集計
+  const srcList = await env.PLAYBOOK_ANALYTICS.list({ prefix: `src:${targetDate}:` });
+  const srcStats = [];
+  for (const k of srcList.keys) {
+    const cnt = parseInt(await env.PLAYBOOK_ANALYTICS.get(k.name) || '0', 10);
+    const name = k.name.replace(`src:${targetDate}:`, '');
+    srcStats.push({ name, count: cnt });
+  }
+  srcStats.sort((a, b) => b.count - a.count);
+  const srcTop = srcStats.slice(0, 6);
+
   // 不正スキャン (.env/.git 等の探索・404) を別集計
   const scanTotal = parseInt((await env.PLAYBOOK_ANALYTICS.get(`scan:${targetDate}`)) || '0', 10);
   const scanList = await env.PLAYBOOK_ANALYTICS.list({ prefix: `scanpath:${targetDate}:` });
@@ -121,7 +132,7 @@ export async function onRequestGet(context) {
   const scanTop = scanStats.slice(0, 5);
 
   // メッセージ整形
-  const msg = formatReport(targetDate, pv, uu, submissions, top5, scanTotal, scanTop, submitTest, lpRows);
+  const msg = formatReport(targetDate, pv, uu, submissions, top5, scanTotal, scanTop, submitTest, lpRows, srcTop);
 
   // LINE WORKS Bot DM 送信
   const dryRun = url.searchParams.get('dry_run') === '1';
@@ -144,7 +155,16 @@ export async function onRequestGet(context) {
   }), { status: 200, headers: { 'Content-Type': 'application/json; charset=utf-8' }});
 }
 
-function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop, submitTest = 0, lpRows = []) {
+// 流入元の表示名 (内部キー → 日本語ラベル)
+const SRC_LABEL = {
+  direct: '直接(URL・ブックマーク)', google: 'Google検索', yahoo: 'Yahoo検索', bing: 'Bing検索',
+  line: 'LINE', x: 'X(Twitter)', facebook: 'Facebook', instagram: 'Instagram',
+  youtube: 'YouTube', mail: 'メール', email: 'メール', signature: 'メール署名',
+  qr: 'QRコード', card: '名刺QR', flyer: 'チラシ',
+};
+function srcLabel(name) { return SRC_LABEL[name] || name; }
+
+function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop, submitTest = 0, lpRows = [], srcTop = []) {
   const dayOfWeek = ['日','月','火','水','木','金','土'][new Date(date + 'T00:00:00+09:00').getDay()];
   const topLines = top5.length > 0
     ? top5.map((p, i) => `  ${i+1}. ${p.path} (${p.count}PV)`).join('\n')
@@ -178,6 +198,16 @@ function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop, submi
     `━━━ 人気ページ TOP5 ━━━`,
     topLines,
   ];
+
+  // ★流入元★ : どこから来たか (utm_source / 外部リファラ / 直接)
+  const srcLines = srcTop.length > 0
+    ? srcTop.map((s, i) => `  ${i+1}. ${srcLabel(s.name)} (${s.count})`).join('\n')
+    : '  (データなし)';
+  lines.push(
+    ``,
+    `━━━ 🚪 流入元（どこから来たか）━━━`,
+    srcLines,
+  );
 
   // 不正スキャンがあった日だけ可視化セクションを追加
   if (scanTotal > 0) {

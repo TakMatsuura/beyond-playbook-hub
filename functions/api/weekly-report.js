@@ -93,6 +93,7 @@ async function aggregateWeek(env, dates) {
   let pv = 0, uu = 0, submit = 0, newsletter = 0, scan = 0;
   let flowPv = 0, flowUu = 0;   // FLOW (別プロジェクト/別ドメイン) 週合算
   const pathMap = {};
+  const srcMap = {};  // 流入元別 (週合算)
   const segPv = {};   // LP別PV (週合算)
   const segUu = {};   // LP別UU (日毎のlpuucountを週合算)
   const dailyPV = [];
@@ -128,6 +129,12 @@ async function aggregateWeek(env, dates) {
       const lu = parseInt((await env.PLAYBOOK_ANALYTICS.get(`lpuucount:${date}:${lp.seg}`)) || '0', 10);
       segUu[lp.seg] = (segUu[lp.seg] || 0) + lu;
     }
+    const srcList = await env.PLAYBOOK_ANALYTICS.list({ prefix: `src:${date}:` });
+    for (const k of srcList.keys) {
+      const cnt = parseInt(await env.PLAYBOOK_ANALYTICS.get(k.name) || '0', 10);
+      const nm = k.name.replace(`src:${date}:`, '');
+      srcMap[nm] = (srcMap[nm] || 0) + cnt;
+    }
   }
   const top5 = Object.entries(pathMap).map(([path, count]) => ({ path, count }))
     .sort((a, b) => b.count - a.count).slice(0, 5);
@@ -136,7 +143,9 @@ async function aggregateWeek(env, dates) {
   // FLOW は別ドメインなので path: には乗らない。FLOW全体を1行として合流。
   lpRows.push({ seg: 'flow', name: 'FLOW', emoji: '💧', pv: flowPv, uu: flowUu });
   lpRows.sort((a, b) => b.pv - a.pv);
-  return { pv, uu, submit, newsletter, scan, top5, dailyPV, lpRows };
+  const srcTop = Object.entries(srcMap).map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count).slice(0, 6);
+  return { pv, uu, submit, newsletter, scan, top5, dailyPV, lpRows, srcTop };
 }
 
 function pct(cur, prev) {
@@ -168,6 +177,17 @@ function formatReport(start, end, w, p) {
     ? lpRows.map((r) => `  ${r.emoji} ${padName(r.name)} ${r.pv}PV / ${r.uu}UU`).join('\n')
     : '  (データなし)';
 
+  const SRC_LABEL = {
+    direct: '直接(URL・ブックマーク)', google: 'Google検索', yahoo: 'Yahoo検索', bing: 'Bing検索',
+    line: 'LINE', x: 'X(Twitter)', facebook: 'Facebook', instagram: 'Instagram',
+    youtube: 'YouTube', mail: 'メール', email: 'メール', signature: 'メール署名',
+    qr: 'QRコード', card: '名刺QR', flyer: 'チラシ',
+  };
+  const srcTop = w.srcTop || [];
+  const srcLines = srcTop.length > 0
+    ? srcTop.map((s, i) => `  ${i+1}. ${SRC_LABEL[s.name] || s.name} (${s.count})`).join('\n')
+    : '  (データなし)';
+
   const status = w.pv === 0 ? '📭 アクセスなし'
     : w.pv < 50 ? '🌱 立ち上がり期'
     : w.pv < 200 ? '☀️ ぼちぼち'
@@ -193,6 +213,9 @@ function formatReport(start, end, w, p) {
     ``,
     `━━━ 人気ページ TOP5 ━━━`,
     topLines,
+    ``,
+    `━━━ 🚪 流入元（どこから来たか）━━━`,
+    srcLines,
     ``,
     `━━━ 🛡️ 不正スキャン ━━━`,
     `🚫 ブロック: ${w.scan}件 (${pct(w.scan, p.scan)}) ※集計除外`,
