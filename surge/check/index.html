@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="60秒・8問でわかる「売上天井診断」。単価・客数・リピート・商品構成の4観点から、いま売上が頭打ちになっている"詰まり"を特定し、外し方を提案します。SURGE｜BEYOND PLAYBOOK。">
+<meta name="keywords" content="売上診断,売上 天井,単価,リピート,客数,SURGE,BEYOND PLAYBOOK,中小企業">
+<meta property="og:title" content="売上天井診断｜あなたの会社の天井は、どこ?｜SURGE">
+<meta property="og:description" content="60秒・8問。単価・客数・リピート・商品構成の4観点から、売上の"詰まり"をレーダーで特定。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://playbook.beyond-holdings.co.jp/surge/check/">
+<meta property="og:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://playbook.beyond-holdings.co.jp/surge/check/">
+<title>売上天井診断｜あなたの会社の天井は、どこ?｜SURGE｜BEYOND PLAYBOOK</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='10' fill='%230a0a0a'/><text x='50' y='72' font-family='Bodoni Moda,serif' font-weight='700' font-size='62' fill='%23e07c33' text-anchor='middle' letter-spacing='-2'>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;600;700&family=Shippori+Mincho+B1:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PJY2SKCX2L"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PJY2SKCX2L');</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org","@type":"WebApplication",
+  "name":"売上天井診断","url":"https://playbook.beyond-holdings.co.jp/surge/check/",
+  "applicationCategory":"BusinessApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},
+  "description":"60秒・8問で、単価・客数・リピート・商品構成の4観点から売上の天井(詰まり)を特定する無料診断。BEYOND PLAYBOOK SURGE が提供。"
+}
+</script>
+<!-- SURGE テーマ (朱赤) -->
+<style>
+  :root{
+    --accent:#e07c33; --accent-bright:#f29a52; --accent-deep:#a85420; --accent-line:rgba(224,124,51,0.34);
+  }
+  body{background:radial-gradient(ellipse at 50% 0%,#140a0a 0%,#0a0a0a 60%,#050505 100%);}
+</style>
+<link rel="stylesheet" href="/assets/diagnose/diagnose.css">
+</head>
+<body>
+<div id="dg-app"></div>
+
+<script>
+window.DIAGNOSE_CONFIG = {
+  lp: 'surge',
+  service: 'SURGE',
+  chartTitle: 'SURGE 売上天井診断',
+  eyebrow: 'SURGE · 売上天井診断',
+  hubUrl: '/surge/',
+  applyUrl: '/apply/?s=surge',
+  lineUrl: 'https://line.me/R/ti/p/@028kxddv',
+  startTitle: 'あなたの会社の<strong>売上の天井</strong>は、<br>どこにある?',
+  startLead: '8つの質問に答えるだけ。<br>単価・客数・リピート・商品構成の4つの観点から、<br>いま売上が頭打ちになっている"詰まり"を特定します。',
+  ctaTitle: 'この天井の外し方を、一緒に決めましょう。',
+  ctaText: 'ヒアリングは無料です。診断結果を見ながら、貴社で一番効く初手をその場でお持ちします。<br><strong>お問合せから1時間以内に折り返します。</strong>',
+  ctaLabel: '無料ヒアリングで相談する →',
+
+  axes: [
+    { key:'price',  label:'単価' },
+    { key:'acq',    label:'客数(新規)' },
+    { key:'repeat', label:'リピート' },
+    { key:'mix',    label:'商品構成' }
+  ],
+
+  questions: [
+    { axis:'price', title:'値引き交渉なしで、提示した価格のまま受注できていますか?', options:[
+      { label:'ほぼ提示通りで通る', score:5 },
+      { label:'たまに値引きを求められる', score:3 },
+      { label:'よく値引きしてしまう', score:1 },
+      { label:'価格で決まることが多い', score:0 } ]},
+    { axis:'price', title:'この3年で、主力商品・サービスを値上げしましたか?', options:[
+      { label:'値上げして、客数も維持できた', score:5 },
+      { label:'値上げした', score:4 },
+      { label:'ずっと据え置き', score:2 },
+      { label:'むしろ下げた／競合に合わせた', score:0 } ]},
+
+    { axis:'acq', title:'新規のお客様は、安定して増えていますか?', options:[
+      { label:'毎月、安定的に増えている', score:5 },
+      { label:'ほぼ横ばい', score:3 },
+      { label:'じわじわ減っている', score:1 },
+      { label:'紹介待ちで、運任せ', score:0 } ]},
+    { axis:'acq', title:'新規客が"どこから来るか"を、説明できますか?', options:[
+      { label:'経路も数字も把握している', score:5 },
+      { label:'なんとなく分かる', score:3 },
+      { label:'よく把握していない', score:1 },
+      { label:'ほぼ口コミ・紹介頼み', score:0 } ]},
+
+    { axis:'repeat', title:'一度買ったお客様は、また買ってくれますか?', options:[
+      { label:'高いリピート率がある', score:5 },
+      { label:'そこそこ戻ってくる', score:3 },
+      { label:'一度きりが多い', score:1 },
+      { label:'追えていない／分からない', score:0 } ]},
+    { axis:'repeat', title:'既存客への追加提案・アップセルの仕組みはありますか?', options:[
+      { label:'仕組みとして回っている', score:5 },
+      { label:'担当者の頑張り任せ', score:3 },
+      { label:'ほとんど無い', score:1 },
+      { label:'売りっぱなしになっている', score:0 } ]},
+
+    { axis:'mix', title:'売上は、特定の1商品・1顧客に依存していませんか?', options:[
+      { label:'複数の柱に分散している', score:5 },
+      { label:'やや偏りがある', score:3 },
+      { label:'実質1本足だ', score:1 },
+      { label:'1社依存で、危うさを感じる', score:0 } ]},
+    { axis:'mix', title:'粗利の高い商品を、意図して伸ばせていますか?', options:[
+      { label:'高粗利の商品を主力化できている', score:5 },
+      { label:'商品別の粗利は把握している', score:3 },
+      { label:'どんぶり勘定になりがち', score:1 },
+      { label:'商品別の粗利を見ていない', score:0 } ]}
+  ],
+
+  bands: [
+    { min:75, band:'土台は好調。あと一点を伸ばせば、天井は抜けられます' },
+    { min:45, band:'伸びしろ大。詰まりを1つ外すだけで、景色が変わります' },
+    { min:0,  band:'複数の天井が重なっています。優先順位をつけて一気に動くべき状態' }
+  ],
+
+  verdicts: {
+    _strong: {
+      title:'明確な「天井」は、見当たりません。',
+      ctaTitle:'次のギアへ。一緒に絵を描きましょう。',
+      comment:'4つの観点すべてで地力が高い、<strong>稀な状態</strong>です。いまの売上は、運ではなく仕組みで作れています。<br><br>この段階の伸びしろは「詰まりを外す」ではなく<strong>"次の天井をどこに作るか"</strong>──新商品・新チャネル・単価のさらなる引き上げといった攻めの設計にあります。SURGEは、いまの強さを土台に<strong>次の成長カーブ</strong>を一緒に描きます。',
+      playsTitle:'次のギアの作り方 — 打ち手の例',
+      plays:[
+        '新商品・新サービスで"2本目の収益柱"を作る',
+        '今の勝ちパターンを別の客層・エリア・チャネルへ横展開する',
+        'さらなる値上げの余地を、上位プラン(松竹梅の"竹")で取りにいく',
+        '仕組みを"見える化システム"に落として、自分が抜けても回る状態へ'
+      ]
+    },
+    price: {
+      title:'あなたの天井は「単価」にあります。',
+      comment:'いまの売上は、<strong>値引きや安い価格で成り立っている</strong>状態です。1件あたりの利益が薄く、「忙しいのに残らない」構造になりがち。<br><br>SURGEは、値引きで取るのではなく<strong>"価値で選ばれる"商談</strong>へ作り変えます。トーク・提案・見積りの出し方を型化し、値上げに耐えられる商品設計を一緒に組む。<strong>受注数は同じでも、残る利益が変わります。</strong>',
+      playsTitle:'単価を上げる — 打ち手の例',
+      plays:[
+        '見積りを"松竹梅"の3段階にして、狙いの「竹」へ誘導する',
+        '相見積り前提の商談を、価値で比べさせる商談に作り変える',
+        '一部の既存客で先行値上げ→離脱率を見てから全体へ広げる',
+        '「何が含まれるか」を見せて、価格の根拠(付加価値)を言語化する'
+      ]
+    },
+    acq: {
+      title:'あなたの天井は「客数(新規)」にあります。',
+      comment:'新規の入口が<strong>運任せ・紹介待ち</strong>になっています。いまの売上は既存客に支えられていますが、放置すると先細りのリスクが大きい状態。<br><br>SURGEは、<strong>再現性のある獲得導線</strong>(広告・紹介・既存掘り起こし)を貴社の現場で回る形に設計します。「どこから・いくらで・何件取れるか」が読める状態を作るのが初手です。',
+      playsTitle:'新規を増やす — 打ち手の例',
+      plays:[
+        'いまの問い合わせが"どこ経由か"をまず数値で可視化する',
+        '口コミ頼みを、再現できる1経路(紹介の仕組み化 or 広告)に置き換える',
+        '過去客リストへ再アプローチする(新規より速く・安く戻せる)',
+        '入口商品(お試し・フロント商品)を作って、接点の数を増やす'
+      ]
+    },
+    repeat: {
+      title:'あなたの天井は「リピート」にあります。',
+      comment:'せっかく獲得したお客様が<strong>売り切りで終わって</strong>います。新規獲得コストばかりかさみ、売上が積み上がらない構造です。<br><br>SURGEは、一度の関係を<strong>二度・三度に変える仕組み</strong>(追加提案・アップセル・継続化)を設計します。<strong>同じ新規数のままでも、売上が積み上がる</strong>状態に変えていきます。',
+      playsTitle:'リピートを増やす — 打ち手の例',
+      plays:[
+        '購入直後のフォロー動線(サンキュー→次回提案)を仕込む',
+        '単発メニューを、定期・継続プランに作り変える',
+        'アップセル/クロスセルを"担当任せ"から"型"にする',
+        '来なくなった客を早期に拾う(離脱の検知と再接触)'
+      ]
+    },
+    mix: {
+      title:'あなたの天井は「商品構成」にあります。',
+      comment:'特定の商品・顧客への<strong>依存</strong>、あるいは<strong>粗利の取りこぼし</strong>が起きています。1本足は、その柱が揺れた瞬間に売上が崩れる危うさを抱えます。<br><br>SURGEは、商品・顧客のポートフォリオを組み替え、<strong>高粗利の商品を意図的に主力化</strong>します。<strong>売上を無理に増やさなくても、利益を増やせる</strong>余地がここにあります。',
+      playsTitle:'商品構成を組み替える — 打ち手の例',
+      plays:[
+        '商品別の粗利を"見える化"する(どんぶり勘定をやめる)',
+        '高粗利の商品を、意図して主力に据え直す(売れる×儲かるの交点)',
+        '1社・1商品への依存をほぐす"第2の柱"を立てる',
+        '低粗利で手間ばかりの商品は、思い切って整理する'
+      ]
+    }
+  }
+};
+</script>
+<script src="/assets/diagnose/diagnose.js"></script>
+</body>
+</html>

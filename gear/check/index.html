@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="60秒・8問でわかる「業務ムダ診断」。手作業・流れの滞留・標準化・見える化の4観点から、現場に潜むムダを特定します。GEAR｜BEYOND PLAYBOOK。">
+<meta name="keywords" content="GEAR,業務ムダ診断,手作業,流れの滞留,標準化,見える化,BEYOND PLAYBOOK,中小企業">
+<meta property="og:title" content="業務ムダ診断｜あなたの会社は?｜GEAR">
+<meta property="og:description" content="60秒・8問。手作業・流れの滞留・標準化・見える化の4観点から、現場に潜むムダをレーダーで特定。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://playbook.beyond-holdings.co.jp/gear/check/">
+<meta property="og:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://playbook.beyond-holdings.co.jp/gear/check/">
+<title>業務ムダ診断｜GEAR｜BEYOND PLAYBOOK</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='10' fill='%230a0a0a'/><text x='50' y='72' font-family='Bodoni Moda,serif' font-weight='700' font-size='62' fill='%238a8a92' text-anchor='middle' letter-spacing='-2'>G</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;600;700&family=Shippori+Mincho+B1:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PJY2SKCX2L"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PJY2SKCX2L');</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org","@type":"WebApplication",
+  "name":"業務ムダ診断","url":"https://playbook.beyond-holdings.co.jp/gear/check/",
+  "applicationCategory":"BusinessApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},
+  "description":"60秒・8問。手作業・流れの滞留・標準化・見える化の4観点から、現場に潜むムダをレーダーで特定。"
+}
+</script>
+<!-- GEAR テーマ -->
+<style>
+  :root{
+    --accent:#8a8a92; --accent-bright:#b6b6bf; --accent-deep:#5c5c63; --accent-line:rgba(138,138,146,0.4);
+  }
+  body{background:radial-gradient(ellipse at 50% 0%,#0e0e10 0%,#0a0a0a 60%,#050505 100%);}
+</style>
+<link rel="stylesheet" href="/assets/diagnose/diagnose.css">
+</head>
+<body>
+<div id="dg-app"></div>
+
+<script>
+window.DIAGNOSE_CONFIG = {
+  "lp": "gear",
+  "service": "GEAR",
+  "chartTitle": "GEAR 業務ムダ診断",
+  "eyebrow": "GEAR · 業務ムダ診断",
+  "hubUrl": "/gear/",
+  "applyUrl": "/apply/?s=gear",
+  "lineUrl": "https://line.me/R/ti/p/@028kxddv",
+  "startTitle": "あなたの現場に潜む<strong>最大のムダ</strong>は、<br>どこ?",
+  "startLead": "8つの質問に答えるだけ。<br>手作業・流れの滞留・標準化・見える化の4つの観点から、<br>現場に潜む\"ムダ\"を特定します。",
+  "ctaTitle": "この現場のムダを、一緒に外しましょう。",
+  "ctaText": "ヒアリングは無料です。診断結果を見ながら、貴社で一番効く初手をその場でお持ちします。<br><strong>お問合せから1時間以内に折り返します。</strong>",
+  "ctaLabel": "無料ヒアリングで相談する →",
+  "axes": [
+    {
+      "key": "manual",
+      "label": "手作業"
+    },
+    {
+      "key": "stuck",
+      "label": "流れの滞留"
+    },
+    {
+      "key": "standard",
+      "label": "標準化"
+    },
+    {
+      "key": "visible",
+      "label": "見える化"
+    }
+  ],
+  "questions": [
+    {
+      "axis": "manual",
+      "title": "同じ情報を二度入力する作業はありませんか?",
+      "options": [
+        {
+          "label": "ほぼ無い",
+          "score": 5
+        },
+        {
+          "label": "少し",
+          "score": 3
+        },
+        {
+          "label": "多い",
+          "score": 1
+        },
+        {
+          "label": "常に",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "axis": "manual",
+      "title": "手作業・転記に時間を取られていませんか?",
+      "options": [
+        {
+          "label": "自動化済",
+          "score": 5
+        },
+        {
+          "label": "一部",
+          "score": 3
+        },
+        {
+          "label": "多い",
+          "score": 1
+        },
+        {
+          "label": "大半が手作業",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "axis": "stuck",
+      "title": "業務が特定の工程で詰まる(待ちが出る)ことは?",
+      "options": [
+        {
+          "label": "ほぼ無い",
+          "score": 5
+        },
+        {
+          "label": "たまに",
+          "score": 3
+        },
+        {
+          "label": "よくある",
+          "score": 1
+        },
+        {
+          "label": "常に",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "axis": "stuck",
+      "title": "仕事の流れ(誰が次に何を)は決まっていますか?",
+      "options": [
+        {
+          "label": "明確",
+          "score": 5
+        },
+        {
+          "label": "だいたい",
+          "score": 3
+        },
+        {
+          "label": "曖昧",
+          "score": 1
+        },
+        {
+          "label": "その都度",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "axis": "standard",
+      "title": "誰がやっても同じ品質・やり方になりますか?",
+      "options": [
+        {
+          "label": "標準化",
+          "score": 5
+        },
+        {
+          "label": "だいたい",
+          "score": 3
+        },
+        {
+          "label": "人による",
+          "score": 1
+        },
+        {
+          "label": "バラバラ",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "axis": "standard",
+      "title": "手順書・マニュアルは整備されていますか?",
+      "options": [
+        {
+          "label": "整備",
+          "score": 5
+        },
+        {
+          "label": "一部",
+          "score": 3
+        },
+        {
+          "label": "ほぼ無い",
+          "score": 1
+        },
+        {
+          "label": "無い",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "axis": "visible",
+      "title": "各業務の進捗・状況が一目で分かりますか?",
+      "options": [
+        {
+          "label": "見える",
+          "score": 5
+        },
+        {
+          "label": "聞けば分かる",
+          "score": 3
+        },
+        {
+          "label": "分かりにくい",
+          "score": 1
+        },
+        {
+          "label": "不明",
+          "score": 0
+        }
+      ]
+    },
+    {
+      "axis": "visible",
+      "title": "ミス・遅れに早く気づける仕組みがありますか?",
+      "options": [
+        {
+          "label": "ある",
+          "score": 5
+        },
+        {
+          "label": "たまに",
+          "score": 3
+        },
+        {
+          "label": "事後に",
+          "score": 1
+        },
+        {
+          "label": "無い",
+          "score": 0
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "min": 75,
+      "band": "土台は好調。あと一歩で抜けられます"
+    },
+    {
+      "min": 45,
+      "band": "伸びしろ大。ムダを1つ外すだけで景色が変わります"
+    },
+    {
+      "min": 0,
+      "band": "複数のムダが重なる。優先順位をつけて動くべき"
+    }
+  ],
+  "verdicts": {
+    "manual": {
+      "title": "最大のムダは「手作業」に潜んでいます。",
+      "comment": "二重入力・手作業に時間が溶けています。<br><br><strong>GEARの伴走では、ムダ削減と自動化を設計します。</strong>",
+      "playsTitle": "手作業のムダを減らす — 打ち手の例",
+      "plays": [
+        "ムダ作業を洗い出す",
+        "二重入力をなくす",
+        "定型を自動化",
+        "削減時間を試算"
+      ]
+    },
+    "stuck": {
+      "title": "最大のムダは「流れの滞留」にあります。",
+      "comment": "特定工程で詰まり、全体が遅れています。<br><br><strong>GEARの伴走では、業務フロー再設計(ボトルネック解消)を行います。</strong>",
+      "playsTitle": "流れを通す — 打ち手の例",
+      "plays": [
+        "工程ごとの滞留を可視化",
+        "ボトルネックを特定",
+        "流れを再設計",
+        "手待ちをなくす"
+      ]
+    },
+    "standard": {
+      "title": "最大のムダは「標準化」の欠如にあります。",
+      "comment": "人によってやり方も品質もバラバラです。<br><br><strong>GEARの伴走では、標準化(SOP)を整備します。</strong>",
+      "playsTitle": "標準化する — 打ち手の例",
+      "plays": [
+        "標準のやり方を決める",
+        "手順書・SOP化",
+        "チェックリスト導入",
+        "品質を揃える"
+      ]
+    },
+    "visible": {
+      "title": "最大のムダは「見える化」の不足にあります。",
+      "comment": "進捗が見えず、遅れに後から気づいています。<br><br><strong>GEARの伴走では、オペレーション可視化を構築します。</strong>",
+      "playsTitle": "見える化する — 打ち手の例",
+      "plays": [
+        "進捗を一目で見える化",
+        "工程のリードタイム可視化",
+        "遅れ・ミスの早期検知",
+        "オペダッシュボード"
+      ]
+    },
+    "_strong": {
+      "title": "明確な「ムダ」は、見当たりません。",
+      "ctaTitle": "次のギアへ。一緒に絵を描きましょう。",
+      "comment": "現場が無駄なく回っている稀な状態です。<br><br><strong>GEARの伴走では、生産性を成長投資に振り向ける設計を行います。</strong>",
+      "playsTitle": "次のギアの作り方 — 打ち手の例",
+      "plays": [
+        "さらなる自動化で人を空ける",
+        "空いた力を成長業務へ",
+        "横展開で標準を広げる",
+        "改善を文化に"
+      ]
+    }
+  }
+};
+</script>
+<script src="/assets/diagnose/diagnose.js"></script>
+</body>
+</html>

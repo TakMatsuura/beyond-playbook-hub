@@ -161,6 +161,19 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
 @media(max-width:720px){.sec{padding:90px 24px;}.site-header{padding:14px 20px;}}
 @media(max-height:820px){.scroll-cue{display:none;}}
 </style>
+<!-- 診断への導線 (auto) -->
+<style>
+.lp-check-band{background:linear-gradient(180deg,#0d0d0d,#0a0a0a);text-align:center;padding:clamp(64px,9vw,96px) 24px;border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05);}
+.lp-check-inner{max-width:680px;margin:0 auto;}
+.lp-check-badge{display:inline-block;margin-bottom:20px;font-family:'Inter',sans-serif;font-weight:600;font-size:10.5px;letter-spacing:0.34em;color:var(--accent-bright);text-transform:uppercase;border:1px solid var(--accent-line);border-radius:999px;padding:7px 18px;}
+.lp-check-title{font-family:'Shippori Mincho B1','Noto Serif JP',serif;font-weight:600;font-size:clamp(22px,4.5vw,32px);line-height:1.55;color:#f3f0ea;margin:0 0 18px;}
+.lp-check-title span{color:var(--accent-bright);}
+.lp-check-lead{font-family:'Noto Serif JP',serif;font-size:14.5px;line-height:1.95;color:rgba(232,229,220,0.72);margin:0 0 36px;}
+.lp-check-cta{display:inline-block;font-family:'Inter','Noto Serif JP',sans-serif;font-weight:600;font-size:15px;letter-spacing:0.04em;color:#0a0a0a;background:linear-gradient(135deg,var(--accent-bright),var(--accent));padding:17px 40px;border-radius:999px;text-decoration:none;transition:transform .3s,box-shadow .3s;box-shadow:0 8px 30px -8px var(--accent-line);}
+.lp-check-cta:hover{transform:translateY(-2px);box-shadow:0 14px 40px -6px var(--accent-line);}
+.lp-cover-cta2{display:inline-block;font-family:'Inter',sans-serif;font-weight:500;font-size:12px;letter-spacing:0.1em;color:var(--accent-bright);border-bottom:1px solid var(--accent-line);padding-bottom:3px;text-decoration:none;transition:all .3s;}
+.lp-cover-cta2:hover{color:var(--accent);border-color:var(--accent);}
+</style>
 </head>
 <body>
 
@@ -173,6 +186,7 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
   </a>
   <nav class="nav">
     <a href="/" class="plain">← PLAYBOOK</a>
+    <a href="https://line.me/R/ti/p/@028kxddv" target="_blank" rel="noopener" class="cta" data-track="cta_header_line">💬 LINE</a>
     <a href="/apply/?s=lens" class="cta" data-track="cta_header_contact">Contact</a>
   </nav>
 </header>
@@ -191,9 +205,21 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
       速く正しく決められる経営を一緒につくる、伴走型パートナーです。
     </p>
     <a href="/apply/?s=lens" class="cover-cta" data-track="cta_hero_contact">無料ヒアリングへ</a>
+    <div style="margin-top:18px;"><a href="/lens/check/" class="lp-cover-cta2" data-track="cta_hero_check">▶ まず60秒で「判断スピード」を診断する（無料）</a></div>
   </div>
   <div class="scroll-cue">Scroll</div>
 </section>
+
+<!-- 診断バナー (auto) -->
+<section class="lp-check-band" id="check">
+  <div class="lp-check-inner">
+    <span class="lp-check-badge">60秒・無料診断</span>
+    <h2 class="lp-check-title">で、あなたの<span>詰まり</span>は、どれ?</h2>
+    <p class="lp-check-lead">可視化・鮮度・活用・仕組み化の<strong>4観点</strong>から、いま判断が詰まっている一点を<strong>レーダーで特定</strong>します。<br>登録不要・その場で結果が出ます。</p>
+    <a href="/lens/check/" class="lp-check-cta" data-track="cta_band_check">▶ 意思決定スピード診断をはじめる</a>
+  </div>
+</section>
+
 
 <!-- 問題提起 -->
 <section class="sec" id="problem" style="background:linear-gradient(180deg,var(--ink),#0c0a14 50%,var(--ink));">
@@ -283,6 +309,7 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
     <p>合うと分かったら、一生、仲間です。<br>お問合せから <strong>1時間以内に折り返します</strong>。</p>
     <div>
       <a href="/apply/?s=lens" class="closing-cta" data-track="cta_closing_contact">無料ヒアリングへ進む</a>
+      <a href="https://line.me/R/ti/p/@028kxddv" target="_blank" rel="noopener" class="closing-sec" data-track="cta_closing_line">💬 LINEで相談</a>
       <a href="/" class="closing-sec" data-track="cta_closing_hub">PLAYBOOK ↗</a>
     </div>
   </div>
@@ -292,6 +319,7 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
   <div class="fb">LENS</div>
   <div class="fl"><a href="/">BEYOND PLAYBOOK</a> &nbsp;·&nbsp; <a href="/apply/?s=lens">お問合せ</a> &nbsp;·&nbsp; <a href="/privacy/">プライバシー</a></div>
   <div class="cp">© 2026 BEYOND Holdings 株式会社</div>
+  <div class="cp">代表取締役 松浦 貴大 ／ 設立 2023年10月 ／ 〒158-0086 東京都世田谷区尾山台3-9-1 ／ TEL 03-6820-9321</div>
 </footer>
 
 <script>

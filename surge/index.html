@@ -80,6 +80,12 @@ header.site-header{position:fixed;top:0;left:0;right:0;z-index:50;padding:18px 3
 .cover-lead{font-family:'Shippori Mincho B1','Noto Serif JP',serif;font-size:clamp(14px,1.5vw,16px);line-height:2.1;letter-spacing:0.06em;color:var(--text-soft);max-width:780px;margin:0 auto 50px;text-wrap:pretty;opacity:0;animation:rise 1.4s 1.2s cubic-bezier(0.22,1,0.36,1) forwards;}
 .cover-cta{display:inline-block;padding:19px 52px;font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:0.3em;text-transform:uppercase;background:linear-gradient(135deg,var(--accent-deep),var(--accent-bright),var(--accent));color:#fff;transition:all .3s;opacity:0;animation:rise 1.4s 1.4s cubic-bezier(0.22,1,0.36,1) forwards;}
 .cover-cta:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(224,124,51,0.32);}
+.cover-cta2{display:inline-block;margin-top:20px;font-family:'Inter',sans-serif;font-weight:500;font-size:12px;letter-spacing:0.14em;color:var(--accent-bright);border-bottom:1px solid var(--accent-line);padding-bottom:3px;transition:all .3s;opacity:0;animation:rise 1.4s 1.6s cubic-bezier(0.22,1,0.36,1) forwards;}
+.cover-cta2:hover{color:var(--accent);border-color:var(--accent);}
+/* 診断バナー */
+.check-band{background:linear-gradient(180deg,#100808,#0d0808);text-align:center;}
+.check-band .sec-title{margin-bottom:18px;}
+.check-band .badge{display:inline-block;margin-bottom:18px;font-family:'Inter',sans-serif;font-weight:600;font-size:10.5px;letter-spacing:0.34em;color:var(--accent);text-transform:uppercase;border:1px solid var(--accent-line);border-radius:999px;padding:7px 18px;}
 .scroll-cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-family:'Inter',sans-serif;font-size:9px;letter-spacing:0.5em;color:var(--accent-deep);text-transform:uppercase;opacity:0;animation:rise 1.4s 1.9s forwards;z-index:6;}
 .scroll-cue::after{content:'';display:block;width:1px;height:34px;background:linear-gradient(180deg,var(--accent),transparent);margin:12px auto 0;animation:pulse 2.4s 3s infinite;}
 @keyframes rise{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
@@ -186,6 +192,7 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
   </a>
   <nav class="nav">
     <a href="/" class="plain">← PLAYBOOK</a>
+    <a href="https://line.me/R/ti/p/@028kxddv" target="_blank" rel="noopener" class="cta" data-track="cta_header_line">💬 LINE</a>
     <a href="/apply/?s=surge" class="cta" data-track="cta_header_contact">Contact</a>
   </nav>
 </header>
@@ -204,6 +211,7 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
       売れる仕組みを一緒につくる、伴走型パートナーです。
     </p>
     <a href="/apply/?s=surge" class="cover-cta" data-track="cta_hero_contact">無料ヒアリングへ</a>
+    <div><a href="/surge/check/" class="cover-cta2" data-track="cta_hero_check">▶ まず60秒で「売上の天井」を診断する（無料）</a></div>
   </div>
   <div class="scroll-cue">Scroll</div>
 </section>
@@ -222,6 +230,16 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
       <div class="prob-item"><div class="q">何から手をつけるか、決まらない</div></div>
       <div class="prob-item"><div class="q">施策はやったが、続かない</div></div>
     </div>
+  </div>
+</section>
+
+<!-- 診断バナー -->
+<section class="sec check-band" id="check">
+  <div class="sec-narrow">
+    <span class="badge reveal">60秒・無料診断</span>
+    <h2 class="sec-title reveal">で、<span class="ac">あなたの天井</span>は、どれ?</h2>
+    <p class="sec-lead reveal" style="margin-bottom:40px;">単価・客数・リピート・商品構成の<strong>4観点</strong>から、いま売上が詰まっている一点を<strong>レーダーで特定</strong>します。<br>登録不要・その場で結果が出ます。</p>
+    <a href="/surge/check/" class="closing-cta" data-track="cta_band_check">▶ 売上天井診断をはじめる</a>
   </div>
 </section>
 
@@ -296,6 +314,7 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
     <p>合うと分かったら、一生、仲間です。<br>お問合せから <strong>1時間以内に折り返します</strong>。</p>
     <div>
       <a href="/apply/?s=surge" class="closing-cta" data-track="cta_closing_contact">無料ヒアリングへ進む</a>
+      <a href="https://line.me/R/ti/p/@028kxddv" target="_blank" rel="noopener" class="closing-sec" data-track="cta_closing_line">💬 LINEで相談</a>
       <a href="/" class="closing-sec" data-track="cta_closing_hub">PLAYBOOK ↗</a>
     </div>
   </div>
@@ -305,6 +324,7 @@ footer .cp{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.1em;co
   <div class="fb">SURGE</div>
   <div class="fl"><a href="/">BEYOND PLAYBOOK</a> &nbsp;·&nbsp; <a href="/apply/?s=surge">お問合せ</a> &nbsp;·&nbsp; <a href="/privacy/">プライバシー</a></div>
   <div class="cp">© 2026 BEYOND Holdings 株式会社</div>
+  <div class="cp">代表取締役 松浦 貴大 ／ 設立 2023年10月 ／ 〒158-0086 東京都世田谷区尾山台3-9-1 ／ TEL 03-6820-9321</div>
 </footer>
 
 <script>
