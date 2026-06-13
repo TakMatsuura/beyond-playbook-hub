@@ -5,3 +5,10 @@ pages_build_output_dir = "."
 [[kv_namespaces]]
 binding = "PLAYBOOK_ANALYTICS"
 id = "2ad08b7ca5974674a56025bba6defd2a"
+
+# FLOW は別プロジェクト(flow-beyond-playbook)だが、日次/週次レポートで
+# FLOWのPV/UUも同じ1通のDMに合流させるため、FLOWのKVを読み取り参照する。
+# (KVネームスペースは複数Pagesプロジェクトから参照可能)
+[[kv_namespaces]]
+binding = "FLOW_ANALYTICS"
+id = "d5f6a0a06f0e4682a865a475d12a0395"

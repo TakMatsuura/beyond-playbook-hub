@@ -60,11 +60,28 @@ export async function onRequestGet(context) {
     }).format(yesterday);
   }
 
-  // 集計
-  const pv = parseInt((await env.PLAYBOOK_ANALYTICS.get(`pv:${targetDate}`)) || '0', 10);
-  const uu = parseInt((await env.PLAYBOOK_ANALYTICS.get(`uucount:${targetDate}`)) || '0', 10);
-  const submissions = parseInt((await env.PLAYBOOK_ANALYTICS.get(`submit:${targetDate}`)) || '0', 10);
-  const submitTest = parseInt((await env.PLAYBOOK_ANALYTICS.get(`submittest:${targetDate}`)) || '0', 10);
+  // 集計 (ハブ = PLAYBOOK_ANALYTICS)
+  const hubPv = parseInt((await env.PLAYBOOK_ANALYTICS.get(`pv:${targetDate}`)) || '0', 10);
+  const hubUu = parseInt((await env.PLAYBOOK_ANALYTICS.get(`uucount:${targetDate}`)) || '0', 10);
+  const hubSubmissions = parseInt((await env.PLAYBOOK_ANALYTICS.get(`submit:${targetDate}`)) || '0', 10);
+  const hubSubmitTest = parseInt((await env.PLAYBOOK_ANALYTICS.get(`submittest:${targetDate}`)) || '0', 10);
+
+  // ★FLOW (別プロジェクト/別ドメイン) も同じ1通に合流★
+  //   FLOW_ANALYTICS を読み取り参照。未バインド時は 0 で握りつぶす(レポートは止めない)。
+  let flowPv = 0, flowUu = 0, flowSubmissions = 0, flowSubmitTest = 0;
+  if (env.FLOW_ANALYTICS) {
+    flowPv = parseInt((await env.FLOW_ANALYTICS.get(`pv:${targetDate}`)) || '0', 10);
+    flowUu = parseInt((await env.FLOW_ANALYTICS.get(`uucount:${targetDate}`)) || '0', 10);
+    flowSubmissions = parseInt((await env.FLOW_ANALYTICS.get(`submit:${targetDate}`)) || '0', 10);
+    flowSubmitTest = parseInt((await env.FLOW_ANALYTICS.get(`submittest:${targetDate}`)) || '0', 10);
+  }
+
+  // トップのサマリは ハブ + FLOW の合算 (PVは厳密に加算可。UUはドメイン跨ぎの重複を
+  // 完全には排除できないが、日次KPIの目安として両ドメインの実人数を合算)
+  const pv = hubPv + flowPv;
+  const uu = hubUu + flowUu;
+  const submissions = hubSubmissions + flowSubmissions;
+  const submitTest = hubSubmitTest + flowSubmitTest;
 
   // パス別 PV (上位5) + LP別PV集計 (先頭セグメントで合算)
   const pathList = await env.PLAYBOOK_ANALYTICS.list({ prefix: `path:${targetDate}:` });
@@ -87,6 +104,8 @@ export async function onRequestGet(context) {
     const lpUu = parseInt((await env.PLAYBOOK_ANALYTICS.get(`lpuucount:${targetDate}:${lp.seg}`)) || '0', 10);
     lpRows.push({ ...lp, pv: lpPv, uu: lpUu });
   }
+  // FLOW は別ドメインなので path: には乗らない。FLOW全体のPV/UUを1行として合流。
+  lpRows.push({ seg: 'flow', name: 'FLOW', emoji: '💧', pv: flowPv, uu: flowUu });
   lpRows.sort((a, b) => b.pv - a.pv);
 
   // 不正スキャン (.env/.git 等の探索・404) を別集計
@@ -149,11 +168,11 @@ function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop, submi
     `${status}`,
     ``,
     `━━━ アクセス (実ユーザー) ━━━`,
-    `👀 PV: ${pv}`,
-    `👤 UU: ${uu}`,
+    `👀 PV（ページ閲覧数・延べ）: ${pv}`,
+    `👤 UU（訪問した実人数）: ${uu}`,
     `✉️ 申込: ${submissions}件${submitTest > 0 ? `（別途テスト${submitTest}件）` : ''}`,
     ``,
-    `━━━ サービスLP別 (PV/UU) ━━━`,
+    `━━━ サービスLP別（PV=閲覧数 / UU=訪問人数）━━━`,
     lpLines,
     ``,
     `━━━ 人気ページ TOP5 ━━━`,
@@ -177,6 +196,7 @@ function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop, submi
   lines.push(
     ``,
     `🌐 https://playbook.beyond-holdings.co.jp/`,
+    `💧 https://flow.beyond-holdings.co.jp/`,
   );
 
   return lines.filter(l => l !== undefined).join('\n');

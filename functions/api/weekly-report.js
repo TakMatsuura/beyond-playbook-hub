@@ -91,6 +91,7 @@ function fmtDate(d) {
 
 async function aggregateWeek(env, dates) {
   let pv = 0, uu = 0, submit = 0, newsletter = 0, scan = 0;
+  let flowPv = 0, flowUu = 0;   // FLOW (別プロジェクト/別ドメイン) 週合算
   const pathMap = {};
   const segPv = {};   // LP別PV (週合算)
   const segUu = {};   // LP別UU (日毎のlpuucountを週合算)
@@ -101,8 +102,19 @@ async function aggregateWeek(env, dates) {
     const s = parseInt((await env.PLAYBOOK_ANALYTICS.get(`submit:${date}`)) || '0', 10);
     const n = parseInt((await env.PLAYBOOK_ANALYTICS.get(`newsletter_count:${date}`)) || '0', 10);
     const sc = parseInt((await env.PLAYBOOK_ANALYTICS.get(`scan:${date}`)) || '0', 10);
-    pv += p; uu += u; submit += s; newsletter += n; scan += sc;
-    dailyPV.push({ date, pv: p });
+
+    // FLOW 日次 (未バインド時は 0)
+    let fp = 0, fu = 0, fs = 0;
+    if (env.FLOW_ANALYTICS) {
+      fp = parseInt((await env.FLOW_ANALYTICS.get(`pv:${date}`)) || '0', 10);
+      fu = parseInt((await env.FLOW_ANALYTICS.get(`uucount:${date}`)) || '0', 10);
+      fs = parseInt((await env.FLOW_ANALYTICS.get(`submit:${date}`)) || '0', 10);
+    }
+    flowPv += fp; flowUu += fu;
+
+    // トップサマリ・日別PVは ハブ + FLOW の合算
+    pv += p + fp; uu += u + fu; submit += s + fs; newsletter += n; scan += sc;
+    dailyPV.push({ date, pv: p + fp });
 
     const pathList = await env.PLAYBOOK_ANALYTICS.list({ prefix: `path:${date}:` });
     for (const k of pathList.keys) {
@@ -120,8 +132,10 @@ async function aggregateWeek(env, dates) {
   const top5 = Object.entries(pathMap).map(([path, count]) => ({ path, count }))
     .sort((a, b) => b.count - a.count).slice(0, 5);
   // LP別行 (週合算UUはユニーク重複排除ではなく日次UUの和=延べ。目安として表示)
-  const lpRows = SERVICE_LPS.map((lp) => ({ ...lp, pv: segPv[lp.seg] || 0, uu: segUu[lp.seg] || 0 }))
-    .sort((a, b) => b.pv - a.pv);
+  const lpRows = SERVICE_LPS.map((lp) => ({ ...lp, pv: segPv[lp.seg] || 0, uu: segUu[lp.seg] || 0 }));
+  // FLOW は別ドメインなので path: には乗らない。FLOW全体を1行として合流。
+  lpRows.push({ seg: 'flow', name: 'FLOW', emoji: '💧', pv: flowPv, uu: flowUu });
+  lpRows.sort((a, b) => b.pv - a.pv);
   return { pv, uu, submit, newsletter, scan, top5, dailyPV, lpRows };
 }
 
@@ -166,15 +180,15 @@ function formatReport(start, end, w, p) {
     `${status}`,
     ``,
     `━━━ 今週サマリ (前週比) ━━━`,
-    `👀 PV: ${w.pv} (${pct(w.pv, p.pv)})`,
-    `👤 UU: ${w.uu} (${pct(w.uu, p.uu)})`,
+    `👀 PV（ページ閲覧数・延べ）: ${w.pv} (${pct(w.pv, p.pv)})`,
+    `👤 UU（訪問した実人数）: ${w.uu} (${pct(w.uu, p.uu)})`,
     `✉️ 申込: ${w.submit}件 (${pct(w.submit, p.submit)})`,
     `📬 メルマガ: ${w.newsletter}件 (${pct(w.newsletter, p.newsletter)})`,
     ``,
     `━━━ 日別PV推移 ━━━`,
     dailyLines,
     ``,
-    `━━━ サービスLP別 (PV/UU) ━━━`,
+    `━━━ サービスLP別（PV=閲覧数 / UU=訪問人数）━━━`,
     lpLines,
     ``,
     `━━━ 人気ページ TOP5 ━━━`,
@@ -184,6 +198,7 @@ function formatReport(start, end, w, p) {
     `🚫 ブロック: ${w.scan}件 (${pct(w.scan, p.scan)}) ※集計除外`,
     ``,
     `🌐 https://playbook.beyond-holdings.co.jp/`,
+    `💧 https://flow.beyond-holdings.co.jp/`,
     `📊 https://playbook.beyond-holdings.co.jp/admin/`,
   ].join('\n');
 }
