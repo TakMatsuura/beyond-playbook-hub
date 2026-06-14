@@ -1,6 +1,6 @@
 {
  "generated": "build",
- "count": 11,
+ "count": 12,
  "articles": [
   {
    "url": "https://playbook.beyond-holdings.co.jp/lens/articles/slow-decisions-5-bottlenecks/",
@@ -69,6 +69,20 @@
     "価格・値上げ",
     "売上アップ",
     "人手不足"
+   ],
+   "date": "2026-06-14"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/articles/value-not-price/",
+   "lp": "playbook",
+   "lpName": "PLAYBOOK",
+   "emoji": "🏠",
+   "title": "価値は、変わる。価格は、ただの指標だ ── 砂漠の水と、夜中の電話",
+   "desc": "砂漠で喉が渇いて死にそうなとき、水が1000円でも『高い』とは言わない。価値は環境で変動する本質、価格はこの金銭社会の一指標にすぎない。価値とは、困ったときに頼りになるか。値段で戦わない経営観を、中小企業の経営者に向けて。BEYOND PLAYBOOK。",
+   "tags": [
+    "経営理念",
+    "差別化",
+    "意思決定"
    ],
    "date": "2026-06-14"
   },
