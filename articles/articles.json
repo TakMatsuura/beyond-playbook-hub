@@ -1,6 +1,6 @@
 {
  "generated": "build",
- "count": 10,
+ "count": 11,
  "articles": [
   {
    "url": "https://playbook.beyond-holdings.co.jp/lens/articles/slow-decisions-5-bottlenecks/",
@@ -93,6 +93,20 @@
    "emoji": "🏠",
    "title": "スピードは、情熱だ ── 本気で欲しいなら、人はヘリでも飛ばす",
    "desc": "後回しにする、は本気じゃない証拠。水に顔をつけて一分すれば、人は何より『息が吸いたい』と思う。本気とは本来それくらい切実なもの。スピードを情熱と呼ぶBEYOND代表の経営哲学を、中小企業の経営者に向けて。BEYOND PLAYBOOK。",
+   "tags": [
+    "経営理念",
+    "意思決定",
+    "差別化"
+   ],
+   "date": "2026-06-14"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/articles/realistic-idealism/",
+   "lp": "playbook",
+   "lpName": "PLAYBOOK",
+   "emoji": "🏠",
+   "title": "『現実的な理想論』を、成り立たせろ ── ピンチこそ、いちばん面白い",
+   "desc": "ピンチこそ面白い。本当の理想に届かないなら、今あるリソース全部で届く『最高の理想形』を探す。理想論でも諦めでもない、現実的な理想論という矛盾を成り立たせる瞬間。リソース不足を言い訳にしない経営観を、中小企業の経営者に向けて。BEYOND PLAYBOOK。",
    "tags": [
     "経営理念",
     "意思決定",
