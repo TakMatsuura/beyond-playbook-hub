@@ -19,6 +19,17 @@ const PROTECTED_PREFIXES = ['/admin', '/api/admin-stats'];
 //   これらは「人間アクセス」から除外し、別枠 (scan:) で可視化する。
 const SCAN_PATTERN = /^\/\.(git|env|aws|ssh|svn|hg|vscode|idea|ds_store)|^\/wp-|^\/vendor\/|^\/(phpmyadmin|phpinfo|xmlrpc|administrator|backup|config)\b|\.(bak|backup|old|sql|zip|tar|gz|tgz|env|log|swp|orig)$/i;
 
+// ★bot/クローラー/スキャナーUA (2026-06-15 強化)★ : 実ユーザーだけを数えるため広めに弾く。
+const BOT_UA_PATTERN = /bot|crawler|spider|monitor|preview|fetch|wget|curl|httpie|scrap|axios|python|headless|phantom|slurp|facebookexternalhit|embedly|go-http|okhttp|libwww|java\/|perl|ruby|scrapy|semrush|ahrefs|mj12|dotbot|petalbot|bytespider|gptbot|ccbot|claudebot|anthropic|google-extended|dataforseo|censys|zgrab|masscan|nuclei|yandex|baidu|bingpreview|sogou|exabot|seznam|archive\.org|ia_archiver|node-fetch|undici|http-client/i;
+
+// ★実ページのセグメント許可リスト (2026-06-15)★ : 先頭セグメントがこれ以外 = 実在しない
+//   探索パス(/.git, /wp, /phpinfo, ランダム文字列 等)。PV/UUに数えず scan: へ回す。
+//   '' (= ルート '/') は home として許可。FLOWは別ドメインなので対象外。
+const REAL_SEGMENTS = new Set([
+  'home', 'surge', 'magnet', 'pack', 'gear', 'lens', 'north', 'beacon', 'seed',
+  'articles', 'apply', 'privacy',
+]);
+
 export async function onRequest(context) {
   const url = new URL(context.request.url);
   const path = url.pathname;
@@ -47,12 +58,13 @@ export async function onRequest(context) {
     if (!COUNTED_HOST_PATTERN.test(host)) return response;
     if (path.startsWith('/api/')) return response;
     if (path.startsWith('/admin')) return response;
+    if (path.startsWith('/lab')) return response;        // 社内ロゴ検討プレビュー = 実ユーザーではない
     if (path.startsWith('/assets/')) return response;
     if (path.includes('/favicon')) return response;
     if (path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.svg') || path.endsWith('.css') || path.endsWith('.js')) return response;
     if (EXCLUDE_PATHS.has(path)) return response;
     if (path.startsWith('/wp-')) return response;
-    if (/bot|crawler|spider|monitor|preview|fetch|wget|curl|httpie|scrap|index|axios|python/i.test(userAgent)) return response;
+    if (BOT_UA_PATTERN.test(userAgent) || !userAgent) return response;  // bot/スキャナー/UA無し除外(強化)
     if (cookieHeader.includes('playbook_internal=1')) return response;
 
     const jstDate = new Intl.DateTimeFormat('en-CA', {
@@ -109,9 +121,11 @@ async function recordHit(env, date, path, ip, status, source) {
   const TTL = 90 * 24 * 60 * 60;
   const cleanPath = path.split('?')[0].replace(/\/+$/, '/');
 
-  // ── 不正スキャン or エラー応答 (404等) は人間アクセスに含めない ──
+  // ── 不正スキャン or エラー応答 (404等) or 実在しないパス は人間アクセスに含めない ──
+  //   ★2026-06-15★ 先頭セグメントが実ページ許可リスト外 = 探索/誤爆。PV/UUを汚さないよう scan: へ。
+  const firstSeg = segmentOf(cleanPath);
   const isError = status >= 400;
-  const isScan = SCAN_PATTERN.test(cleanPath);
+  const isScan = SCAN_PATTERN.test(cleanPath) || !REAL_SEGMENTS.has(firstSeg);
   if (isError || isScan) {
     const scanKey = `scan:${date}`;
     const scanCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(scanKey)) || '0', 10);

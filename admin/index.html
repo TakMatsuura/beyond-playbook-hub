@@ -4,66 +4,76 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>PLAYBOOK 管理ダッシュボード</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23060b1a'/><text x='50' y='75' font-family='Inter,sans-serif' font-weight='900' font-size='70' fill='%23f5c542' text-anchor='middle'>📊</text></svg>">
+<title>PLAYBOOK 管理ダッシュボード(LP別・実ユーザー)</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230a0a0a'/><text x='50' y='74' font-family='Inter,sans-serif' font-weight='900' font-size='62' fill='%23c9a961' text-anchor='middle'>P</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root { --bg:#0a0e1a; --panel:#111826; --line:#1f2937; --text:#e5e7eb; --soft:#9ca3af; --gold:#f5c542; --gold-deep:#a07d2c; --accent:#3b82f6; --green:#10b981; --red:#ef4444; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); padding: 20px; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
-.brand { font-family:'Inter',sans-serif; font-weight:900; font-size:22px; letter-spacing:0.05em; color: var(--gold); }
-.brand .sub { font-size: 11px; color: var(--soft); margin-left: 10px; letter-spacing: 0.2em; }
+:root { --bg:#0c0a06; --panel:#15120b; --panel2:#1c1810; --line:#2a2417; --text:#ece7da; --soft:#a59c84; --gold:#e8c474; --gold-deep:#8b7a3c; --accent:#c9a961; --green:#4fae8b; --blue:#5a8cc0; --pink:#c98fb0; --red:#e07a6a; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Noto Sans JP',sans-serif; background:radial-gradient(ellipse at 50% 0%,#15120a 0%,#0a0a0a 70%); color:var(--text); padding:20px; min-height:100vh; -webkit-font-smoothing:antialiased; }
+header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding-bottom:16px; border-bottom:1px solid var(--line); margin-bottom:20px; }
+.brand { font-family:'Inter',sans-serif; font-weight:900; font-size:22px; letter-spacing:0.04em; color:var(--gold); }
+.brand .sub { font-size:11px; color:var(--soft); margin-left:10px; letter-spacing:0.2em; }
 .controls { display:flex; gap:8px; align-items:center; font-size:13px; }
-.controls select, .controls button { background: var(--panel); color: var(--text); border:1px solid var(--line); padding:8px 14px; border-radius:6px; font-family:inherit; font-size:13px; cursor:pointer; }
-.controls button:hover { border-color: var(--gold); }
-.controls a { color: var(--soft); text-decoration:none; padding: 8px 14px; }
-.controls a:hover { color: var(--gold); }
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
-.kpi .label { font-size: 11px; letter-spacing: 0.15em; color: var(--soft); margin-bottom: 8px; font-weight: 600; }
-.kpi .value { font-family:'Inter',sans-serif; font-weight: 800; font-size: 36px; color: var(--gold); }
-.kpi .unit { font-size: 14px; color: var(--soft); margin-left: 4px; }
-.kpi .sub { font-size: 12px; color: var(--soft); margin-top: 6px; }
-.section { background: var(--panel); border:1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
-.section h2 { font-size: 14px; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 16px; font-weight: 600; }
-table { width:100%; border-collapse: collapse; font-size: 13px; }
-th, td { text-align:left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
-th { color: var(--soft); font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
-td.num { text-align:right; font-family:'Inter',sans-serif; font-weight:600; }
-.bar-cell { position:relative; }
-.bar-cell .bar { display:inline-block; height: 6px; background: linear-gradient(90deg, var(--gold-deep), var(--gold)); border-radius: 3px; vertical-align: middle; margin-right: 8px; }
-.chart-wrap { overflow-x: auto; }
-.chart { display: flex; align-items: flex-end; gap: 4px; height: 180px; min-width: 600px; padding: 12px 0; border-bottom: 1px solid var(--line); }
-.chart .bar { flex: 1; background: linear-gradient(180deg, var(--gold), var(--gold-deep)); border-radius: 3px 3px 0 0; min-height: 2px; position: relative; transition: opacity 0.2s; }
-.chart .bar:hover { opacity: 0.7; }
-.chart .bar .tip { display:none; position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:#000; color:#fff; padding:6px 10px; border-radius:4px; font-size:11px; white-space:nowrap; margin-bottom: 4px; }
+.controls select,.controls button { background:var(--panel2); color:var(--text); border:1px solid var(--line); padding:8px 14px; border-radius:7px; font-family:inherit; font-size:13px; cursor:pointer; }
+.controls button:hover,.controls select:hover { border-color:var(--gold); }
+.controls a { color:var(--soft); text-decoration:none; padding:8px 12px; }
+.controls a:hover { color:var(--gold); }
+.note { font-size:12px; color:var(--soft); margin-bottom:18px; }
+.note b { color:var(--gold); font-weight:600; }
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:22px; }
+.kpi { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px; }
+.kpi .label { font-size:11px; letter-spacing:0.12em; color:var(--soft); margin-bottom:8px; font-weight:600; }
+.kpi .value { font-family:'Inter',sans-serif; font-weight:800; font-size:34px; color:var(--gold); line-height:1; }
+.kpi .unit { font-size:13px; color:var(--soft); margin-left:4px; }
+.kpi .sub { font-size:12px; color:var(--soft); margin-top:7px; }
+.section { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:18px; }
+.section h2 { font-size:13px; letter-spacing:0.14em; color:var(--gold); margin-bottom:16px; font-weight:600; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th,td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); vertical-align:middle; }
+th { color:var(--soft); font-weight:600; font-size:11px; letter-spacing:0.08em; }
+td.num { text-align:right; font-family:'Inter',sans-serif; font-weight:700; }
+.lp-name { font-weight:700; white-space:nowrap; }
+.lp-name .emo { margin-right:6px; }
+.split { display:flex; height:8px; border-radius:4px; overflow:hidden; background:var(--panel2); min-width:90px; }
+.split i { display:block; height:100%; }
+.split .s-top { background:var(--gold); } .split .s-check { background:var(--blue); } .split .s-art { background:var(--pink); }
+.legend { display:flex; gap:14px; font-size:11px; color:var(--soft); margin-top:10px; flex-wrap:wrap; }
+.legend span { display:flex; align-items:center; gap:5px; } .legend i { width:10px; height:10px; border-radius:2px; display:inline-block; }
+.spark { display:flex; align-items:flex-end; gap:1px; height:30px; min-width:80px; }
+.spark i { flex:1; background:linear-gradient(180deg,var(--gold),var(--gold-deep)); border-radius:1px; min-height:1px; }
+.chart-wrap { overflow-x:auto; }
+.chart { display:flex; align-items:flex-end; gap:3px; height:170px; min-width:560px; padding:10px 0; border-bottom:1px solid var(--line); }
+.chart .bar { flex:1; background:linear-gradient(180deg,var(--gold),var(--gold-deep)); border-radius:3px 3px 0 0; min-height:2px; position:relative; }
+.chart .bar:hover { opacity:0.7; }
+.chart .bar .tip { display:none; position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:#000; color:#fff; padding:6px 10px; border-radius:5px; font-size:11px; white-space:nowrap; margin-bottom:4px; z-index:2; }
 .chart .bar:hover .tip { display:block; }
-.chart-x { display:flex; gap:4px; font-size: 10px; color: var(--soft); margin-top: 6px; min-width: 600px; }
-.chart-x span { flex: 1; text-align:center; }
-.loading { text-align: center; padding: 40px; color: var(--soft); }
-.error { color: var(--red); padding: 20px; text-align: center; }
-footer { text-align:center; margin-top: 32px; color: var(--soft); font-size: 11px; letter-spacing: 0.1em; }
+.chart-x { display:flex; gap:3px; font-size:10px; color:var(--soft); margin-top:6px; min-width:560px; }
+.chart-x span { flex:1; text-align:center; }
+.loading,.error { text-align:center; padding:40px; color:var(--soft); }
+.error { color:var(--red); }
+footer { text-align:center; margin-top:28px; color:var(--soft); font-size:11px; letter-spacing:0.08em; }
 </style>
 </head>
 <body>
   <header>
-    <div class="brand">PLAYBOOK 管理 <span class="sub">ANALYTICS DASHBOARD</span></div>
+    <div class="brand">PLAYBOOK 管理 <span class="sub">LP別 · 実ユーザー分析</span></div>
     <div class="controls">
       <select id="days">
         <option value="7">過去7日</option>
+        <option value="14">過去14日</option>
         <option value="30" selected>過去30日</option>
         <option value="90">過去90日</option>
       </select>
       <button id="reload">🔄 更新</button>
+      <a href="/api/analytics-health?days=14" target="_blank">🩺 計測健全性</a>
       <a href="/" target="_blank">↗ サイト</a>
     </div>
   </header>
 
   <div id="content"><div class="loading">読み込み中...</div></div>
-
-  <footer>BEYOND PLAYBOOK ─ PLAYBOOK Internal Dashboard ─ JST</footer>
+  <footer>BEYOND PLAYBOOK ─ Internal Dashboard ─ 実ユーザーのみ(bot/社内端末除外) ─ JST</footer>
 
 <script>
 async function load() {
@@ -73,64 +83,65 @@ async function load() {
   try {
     const res = await fetch('/api/admin-stats?days=' + days, { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    render(data);
+    render(await res.json());
   } catch (e) {
     content.innerHTML = '<div class="error">読み込みエラー: ' + e.message + '</div>';
   }
 }
 
-function render(d) {
-  const t = d.totals, daily = d.daily, paths = d.paths;
-  const maxPV = Math.max(1, ...daily.map(x => x.pv));
-  const cvr = d.cvr;
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function spark(series){const mx=Math.max(1,...series);return '<div class="spark">'+series.map(v=>'<i style="height:'+Math.max(1,(v/mx)*30)+'px"></i>').join('')+'</div>';}
+function splitBar(top,check,art){const t=top+check+art||1;const pct=v=>(v/t*100);return '<div class="split" title="直下'+top+' / 診断'+check+' / 記事'+art+'"><i class="s-top" style="width:'+pct(top)+'%"></i><i class="s-check" style="width:'+pct(check)+'%"></i><i class="s-art" style="width:'+pct(art)+'%"></i></div>';}
 
+function render(d){
+  const t=d.totals, daily=d.daily, byLp=d.byLp, sources=d.sources||[];
   const kpi = `
     <div class="kpi-grid">
-      <div class="kpi"><div class="label">PV (合計)</div><div class="value">${t.pv.toLocaleString()}</div><div class="sub">${d.range.from} 〜 ${d.range.to}</div></div>
-      <div class="kpi"><div class="label">UU (合計)</div><div class="value">${t.uu.toLocaleString()}</div><div class="sub">ユニーク訪問</div></div>
-      <div class="kpi"><div class="label">申込</div><div class="value">${t.submit}<span class="unit">件</span></div><div class="sub">CVR ${cvr}%</div></div>
-      <div class="kpi"><div class="label">メルマガ登録</div><div class="value">${t.newsletter}<span class="unit">件</span></div><div class="sub">中間CV</div></div>
-    </div>
-  `;
+      <div class="kpi"><div class="label">実PV (合計)</div><div class="value">${t.pv.toLocaleString()}</div><div class="sub">${d.range.from} 〜 ${d.range.to}</div></div>
+      <div class="kpi"><div class="label">実UU (LP訪問 延べ)</div><div class="value">${t.uu.toLocaleString()}</div><div class="sub">LP別ユニークの合計</div></div>
+      <div class="kpi"><div class="label">診断完了</div><div class="value">${t.diag}<span class="unit">件</span></div><div class="sub">対UU ${d.diag_cvr}%</div></div>
+      <div class="kpi"><div class="label">申込</div><div class="value">${t.submit}<span class="unit">件</span></div><div class="sub">CVR ${d.cvr}%</div></div>
+    </div>`;
 
-  const chartBars = daily.map(x => {
-    const h = Math.max(2, (x.pv / maxPV) * 160);
-    return `<div class="bar" style="height:${h}px"><div class="tip">${x.date}<br>PV:${x.pv} UU:${x.uu} 申込:${x.submit}</div></div>`;
-  }).join('');
-  const chartX = daily.map((x, i) => {
-    const show = daily.length <= 14 || i % Math.ceil(daily.length / 10) === 0;
-    return '<span>' + (show ? x.date.slice(5) : '') + '</span>';
-  }).join('');
+  const lpRows = byLp.map(l=>{
+    const diag = l.check===false && l.seg!=='flow' ? '—' : (l.seg==='home'||l.seg==='articles'||l.seg==='flow' ? '—' : l.diag);
+    return `<tr>
+      <td class="lp-name"><span class="emo">${l.emoji}</span>${esc(l.name)}</td>
+      <td class="num">${l.pv.toLocaleString()}</td>
+      <td class="num">${l.uu.toLocaleString()}</td>
+      <td class="num">${diag}</td>
+      <td>${splitBar(l.top||0,l.check||0,l.articles||0)}</td>
+      <td>${spark(l.series||[])}</td>
+    </tr>`;}).join('');
 
-  const pathRows = paths.length === 0
-    ? '<tr><td colspan="2" style="text-align:center;color:var(--soft);">データなし</td></tr>'
-    : paths.map(p => {
-        const ratio = (p.count / paths[0].count) * 100;
-        return `<tr><td class="bar-cell"><span class="bar" style="width:${Math.max(8, ratio * 0.8)}px"></span>${escapeHtml(p.path)}</td><td class="num">${p.count.toLocaleString()}</td></tr>`;
-      }).join('');
+  const maxPV=Math.max(1,...daily.map(x=>x.pv));
+  const bars=daily.map(x=>`<div class="bar" style="height:${Math.max(2,(x.pv/maxPV)*150)}px"><div class="tip">${x.date}<br>PV:${x.pv} UU:${x.uu} 診断:${x.diag} 申込:${x.submit}</div></div>`).join('');
+  const xs=daily.map((x,i)=>{const show=daily.length<=14||i%Math.ceil(daily.length/10)===0;return '<span>'+(show?x.date.slice(5):'')+'</span>';}).join('');
+
+  const srcRows = sources.length? sources.map(s=>`<tr><td>${esc(srcLabel(s.name))}</td><td class="num">${s.count.toLocaleString()}</td></tr>`).join('') : '<tr><td colspan="2" style="text-align:center;color:var(--soft)">データなし</td></tr>';
 
   document.getElementById('content').innerHTML = kpi + `
+    <div class="note"><b>実ユーザーのみ</b>を表示(bot・スキャナー・社内端末は除外)。PV=実ページの閲覧数 / UU=LP別の訪問人数 / 診断完了=各LPの診断ツール完了数。</div>
     <div class="section">
-      <h2>📈 日別PV推移</h2>
-      <div class="chart-wrap">
-        <div class="chart">${chartBars}</div>
-        <div class="chart-x">${chartX}</div>
-      </div>
-    </div>
-    <div class="section">
-      <h2>🏆 人気ページ TOP20</h2>
+      <h2>🎯 LP別パフォーマンス(PV順)</h2>
       <table>
-        <thead><tr><th>パス</th><th class="num">PV</th></tr></thead>
-        <tbody>${pathRows}</tbody>
+        <thead><tr><th>LP</th><th class="num">PV</th><th class="num">UU</th><th class="num">診断完了</th><th>内訳(直下/診断/記事)</th><th>推移</th></tr></thead>
+        <tbody>${lpRows}</tbody>
       </table>
+      <div class="legend"><span><i style="background:var(--gold)"></i>LP直下</span><span><i style="background:var(--blue)"></i>診断ページ</span><span><i style="background:var(--pink)"></i>記事</span></div>
     </div>
-  `;
+    <div class="section">
+      <h2>📈 日別 実PV推移(全LP合算)</h2>
+      <div class="chart-wrap"><div class="chart">${bars}</div><div class="chart-x">${xs}</div></div>
+    </div>
+    <div class="section">
+      <h2>🚪 流入元(どこから来たか)</h2>
+      <table><thead><tr><th>流入元</th><th class="num">件数</th></tr></thead><tbody>${srcRows}</tbody></table>
+    </div>`;
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
+const SRC={direct:'直接(URL・ブックマーク)',google:'Google検索',yahoo:'Yahoo検索',bing:'Bing検索',line:'LINE',x:'X(Twitter)',facebook:'Facebook',instagram:'Instagram',youtube:'YouTube',mail:'メール'};
+function srcLabel(n){return SRC[n]||n;}
 
 document.getElementById('days').addEventListener('change', load);
 document.getElementById('reload').addEventListener('click', load);
