@@ -131,8 +131,28 @@ export async function onRequestGet(context) {
   scanStats.sort((a, b) => b.count - a.count);
   const scanTop = scanStats.slice(0, 5);
 
+  // ★計測の自己診断★ : KVに実際に書けて読めるかを毎朝確認し、DMに健全性を1行で出す。
+  //   「計測が黙って壊れていた」事故を、人の目視ではなく機械が毎日チェックする。
+  let healthLine = '🩺 計測: ✅ 正常';
+  try {
+    const probe = `health:${targetDate}:${Date.now()}`;
+    await env.PLAYBOOK_ANALYTICS.put(probe, 'ok', { expirationTtl: 600 });
+    const back = await env.PLAYBOOK_ANALYTICS.get(probe);
+    await env.PLAYBOOK_ANALYTICS.delete(probe);
+    const flowOk = !env.FLOW_ANALYTICS ? true : await (async () => {
+      const p2 = `health:${targetDate}:f:${Date.now()}`;
+      await env.FLOW_ANALYTICS.put(p2, 'ok', { expirationTtl: 600 });
+      const b2 = await env.FLOW_ANALYTICS.get(p2);
+      await env.FLOW_ANALYTICS.delete(p2);
+      return b2 === 'ok';
+    })();
+    if (back !== 'ok' || !flowOk) healthLine = '🩺 計測: 🚨 KV読み書き異常（要確認）';
+  } catch (e) {
+    healthLine = `🩺 計測: 🚨 異常 ${(e && e.message ? e.message : '').slice(0, 60)}`;
+  }
+
   // メッセージ整形
-  const msg = formatReport(targetDate, pv, uu, submissions, top5, scanTotal, scanTop, submitTest, lpRows, srcTop);
+  const msg = formatReport(targetDate, pv, uu, submissions, top5, scanTotal, scanTop, submitTest, lpRows, srcTop, healthLine);
 
   // LINE WORKS Bot DM 送信
   const dryRun = url.searchParams.get('dry_run') === '1';
@@ -164,7 +184,7 @@ const SRC_LABEL = {
 };
 function srcLabel(name) { return SRC_LABEL[name] || name; }
 
-function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop, submitTest = 0, lpRows = [], srcTop = []) {
+function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop, submitTest = 0, lpRows = [], srcTop = [], healthLine = '') {
   const dayOfWeek = ['日','月','火','水','木','金','土'][new Date(date + 'T00:00:00+09:00').getDay()];
   const topLines = top5.length > 0
     ? top5.map((p, i) => `  ${i+1}. ${p.path} (${p.count}PV)`).join('\n')
@@ -186,6 +206,7 @@ function formatReport(date, pv, uu, submissions, top5, scanTotal, scanTop, submi
     `📊 PLAYBOOK 日次レポート`,
     `📅 ${date} (${dayOfWeek}) JST`,
     `${status}`,
+    ...(healthLine ? [healthLine] : []),
     ``,
     `━━━ アクセス (実ユーザー) ━━━`,
     `👀 PV（ページ閲覧数・延べ）: ${pv}`,

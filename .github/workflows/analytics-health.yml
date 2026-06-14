@@ -1,0 +1,30 @@
+name: Analytics Health Check
+
+on:
+  schedule:
+    # 3時間ごと。計測が黙って壊れていないか機械が常時見張る。
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping analytics-health (auto-alert on failure)
+        run: |
+          # notify=1 で異常時に LINE WORKS へ自動アラート(エンドポイント側・1日1回dedupe)
+          status=$(curl -sS -m 30 -w "%{http_code}" -o /tmp/health.json \
+            "https://playbook.beyond-holdings.co.jp/api/analytics-health?notify=1&days=3")
+          echo "HTTP: $status"
+          cat /tmp/health.json || true
+          echo ""
+          # KV書込/読戻し失敗(=計測が死んでいる)なら 500 が返る → ジョブを赤くして二重検知
+          if [ "$status" != "200" ]; then
+            echo "::error::Analytics health check FAILED (HTTP $status) — KV計測が壊れている可能性"
+            exit 1
+          fi
+          # ストール(N日PVゼロ)は 200 だが alert フィールドで警告として可視化
+          if grep -q '"alert": "stale"' /tmp/health.json; then
+            echo "::warning::Analytics stale — 直近数日PVゼロ。LINE WORKSへ通知済み"
+          fi
+          echo "Analytics health OK"
