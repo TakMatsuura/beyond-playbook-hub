@@ -82,6 +82,12 @@ export async function onRequestGet(context) {
   srcLists.forEach(lst => (lst.keys || []).forEach(k => srcKeys.push(k.name)));
   const srcVals = await Promise.all(srcKeys.map(k => P.get(k)));
 
+  // ===== 7. evt: list → values (ファネル中間: 診断開始・申込クリック) =====
+  const evtLists = await Promise.all(dates.map(date => P.list({ prefix: `evt:${date}:` })));
+  const evtKeys = [];
+  evtLists.forEach(lst => (lst.keys || []).forEach(k => evtKeys.push(k.name)));
+  const evtVals = await Promise.all(evtKeys.map(k => P.get(k)));
+
   // ---- 集計 ----
   const daily = [];
   let totSubmit = 0, totDiag = 0, totNews = 0;
@@ -96,8 +102,8 @@ export async function onRequestGet(context) {
 
   // LP別 初期化
   const lp = {};
-  for (const l of LPS) lp[l.seg] = { ...l, pv: 0, uu: 0, diag: 0, top: 0, check: 0, articles: 0, series: dates.map(() => 0) };
-  lp.flow = { seg: 'flow', name: 'FLOW', emoji: '💧', check: false, pv: 0, uu: 0, diag: 0, top: 0, check_pv: 0, articles: 0, series: dates.map(() => 0) };
+  for (const l of LPS) lp[l.seg] = { ...l, pv: 0, uu: 0, diag: 0, start: 0, apply: 0, top: 0, check: 0, articles: 0, series: dates.map(() => 0) };
+  lp.flow = { seg: 'flow', name: 'FLOW', emoji: '💧', check: false, pv: 0, uu: 0, diag: 0, start: 0, apply: 0, top: 0, check_pv: 0, articles: 0, series: dates.map(() => 0) };
 
   // PV / サブページ (実ページのセグメントだけ)
   let cleanPvHub = 0;
@@ -145,6 +151,18 @@ export async function onRequestGet(context) {
     }
   }
 
+  // ファネル中間イベント (evt:date:type:lp)
+  let totStart = 0, totApply = 0;
+  for (let i = 0; i < evtKeys.length; i++) {
+    const cnt = parseInt(evtVals[i] || '0', 10);
+    const m = evtKeys[i].match(/^evt:\d{4}-\d{2}-\d{2}:(diag_start|apply_click):([a-z0-9_-]+)$/);
+    if (!m) continue;
+    const seg = m[2];
+    if (!lp[seg]) continue;
+    if (m[1] === 'diag_start') { lp[seg].start += cnt; totStart += cnt; }
+    else { lp[seg].apply += cnt; totApply += cnt; }
+  }
+
   // 流入元
   const srcMap = {};
   for (let i = 0; i < srcKeys.length; i++) {
@@ -164,7 +182,7 @@ export async function onRequestGet(context) {
     range: { from: dates[0], to: dates[dates.length - 1], days },
     totals: {
       pv: cleanPvTotal, uu: uuTotal, submit: totSubmit, diag: totDiag, newsletter: totNews,
-      flow_pv: flowPvTot,
+      diag_start: totStart, apply_click: totApply, flow_pv: flowPvTot,
     },
     cvr: uuTotal > 0 ? Math.round((totSubmit / uuTotal) * 10000) / 100 : 0,
     diag_cvr: uuTotal > 0 ? Math.round((totDiag / uuTotal) * 10000) / 100 : 0,

@@ -103,13 +103,16 @@ function render(d){
       <div class="kpi"><div class="label">申込</div><div class="value">${t.submit}<span class="unit">件</span></div><div class="sub">CVR ${d.cvr}%</div></div>
     </div>`;
 
+  const hasCheck = l => !(l.seg==='home'||l.seg==='articles'||l.seg==='flow');
   const lpRows = byLp.map(l=>{
-    const diag = l.check===false && l.seg!=='flow' ? '—' : (l.seg==='home'||l.seg==='articles'||l.seg==='flow' ? '—' : l.diag);
+    const dash = hasCheck(l) ? null : '—';
     return `<tr>
       <td class="lp-name"><span class="emo">${l.emoji}</span>${esc(l.name)}</td>
       <td class="num">${l.pv.toLocaleString()}</td>
       <td class="num">${l.uu.toLocaleString()}</td>
-      <td class="num">${diag}</td>
+      <td class="num">${dash ?? (l.start||0)}</td>
+      <td class="num">${dash ?? (l.diag||0)}</td>
+      <td class="num">${dash ?? (l.apply||0)}</td>
       <td>${splitBar(l.top||0,l.check||0,l.articles||0)}</td>
       <td>${spark(l.series||[])}</td>
     </tr>`;}).join('');
@@ -125,7 +128,7 @@ function render(d){
     <div class="section">
       <h2>🎯 LP別パフォーマンス(PV順)</h2>
       <table>
-        <thead><tr><th>LP</th><th class="num">PV</th><th class="num">UU</th><th class="num">診断完了</th><th>内訳(直下/診断/記事)</th><th>推移</th></tr></thead>
+        <thead><tr><th>LP</th><th class="num">PV</th><th class="num">UU</th><th class="num">診断開始</th><th class="num">診断完了</th><th class="num">申込click</th><th>内訳(直下/診断/記事)</th><th>推移</th></tr></thead>
         <tbody>${lpRows}</tbody>
       </table>
       <div class="legend"><span><i style="background:var(--gold)"></i>LP直下</span><span><i style="background:var(--blue)"></i>診断ページ</span><span><i style="background:var(--pink)"></i>記事</span></div>

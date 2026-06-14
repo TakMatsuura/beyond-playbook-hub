@@ -69,7 +69,17 @@
     state = { i:0, answers:[] };
     $prog.classList.add('show');
     track('dg_start_click');
+    beacon('diag_start');   // ★ファネル計測: 診断を実際に開始した
     renderQuestion();
+  }
+
+  // サーバ側ファネル計測 (bot/社内端末はサーバ側で除外)。応答は見ない軽量送信。
+  function beacon(t){
+    try {
+      var url = '/api/event?t='+encodeURIComponent(t)+'&lp='+encodeURIComponent(C.lp||'');
+      if(navigator.sendBeacon){ navigator.sendBeacon(url); }
+      else { fetch(url, {method:'POST', keepalive:true}).catch(function(){}); }
+    } catch(e){}
   }
 
   // ---- 設問画面 ----
@@ -303,10 +313,13 @@
 
   // CTAクリックの汎用トラッキング
   document.addEventListener('click', function(e){
+    // ★ファネル計測: 申込(/apply)へのクリックを拾う
+    var a = e.target.closest('a[href]');
+    if(a && /\/apply(\/|\?|$)/.test(a.getAttribute('href')||'')) beacon('apply_click');
     var el = e.target.closest('[data-track]'); if(!el) return;
     var p={service:C.lp};
-    Array.prototype.forEach.call(el.attributes, function(a){
-      if(a.name.indexOf('data-track-')===0) p[a.name.slice(11).replace(/-/g,'_')]=a.value;
+    Array.prototype.forEach.call(el.attributes, function(b){
+      if(b.name.indexOf('data-track-')===0) p[b.name.slice(11).replace(/-/g,'_')]=b.value;
     });
     track(el.getAttribute('data-track'), p);
   });
