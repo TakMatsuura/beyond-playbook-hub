@@ -1,0 +1,27 @@
+name: Deploy to Cloudflare Pages
+
+# main へ push されるたびに本番(playbook-beyond)へ自動デプロイ。
+# これにより、毎日の記事生成ジョブは commit & push するだけで公開まで完了する。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=playbook-beyond --branch=main --commit-dirty=true
