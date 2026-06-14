@@ -1,6 +1,6 @@
 {
  "generated": "build",
- "count": 8,
+ "count": 9,
  "articles": [
   {
    "url": "https://playbook.beyond-holdings.co.jp/lens/articles/slow-decisions-5-bottlenecks/",
@@ -97,6 +97,20 @@
     "経営理念",
     "採用",
     "定着・離職"
+   ],
+   "date": "2026-06-14"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/magnet/articles/chosen-not-by-price/",
+   "lp": "magnet",
+   "lpName": "MAGNET",
+   "emoji": "🧲",
+   "title": "「値段で選ばれない仕事」をしていますか",
+   "desc": "銅もメーカー価格も上がり、電材は商品も値段も横並びになった。それでも選ばれる会社がある。電気工事は1日の遅れが命取り──だから値段ではなく『止めない信用』で選ばれる。仕事は準備が9割という視点で、選ばれ続ける条件を解説。MAGNET",
+   "tags": [
+    "差別化",
+    "価格・値上げ",
+    "ブランディング"
    ],
    "date": "2026-06-14"
   },
