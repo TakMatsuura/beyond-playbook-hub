@@ -53,16 +53,26 @@ footer { text-align:center; margin-top:28px; color:var(--soft); font-size:11px; 
   <div id="content"><div class="loading">チェック中...</div></div>
   <footer>BEYOND PLAYBOOK ─ 計測が壊れていないかの自己診断 ─ JST</footer>
 <script>
-// プレビュー枠(srcdoc=相対URL不可)でも動くよう、http(s)でなければ本番originを基準にする
-var API_BASE = (location.protocol === 'http:' || location.protocol === 'https:') ? '' : 'https://playbook.beyond-holdings.co.jp';
+var LIVE_URL='https://playbook.beyond-holdings.co.jp/admin/health/';
+var isLive=(location.protocol==='http:'||location.protocol==='https:');
+function openInBrowserCard(extra){
+  return '<div class="banner ng" style="display:block;text-align:center">'
+    +'<div class="ic" style="font-size:30px">🖥️</div>'
+    +'<div class="t" style="margin-top:8px">この画面はプレビュー枠では表示できません</div>'
+    +'<div class="s" style="margin:8px 0 16px">管理画面はセキュリティ(外部通信制限+ログイン)があるため、<b>ブラウザのタブ</b>で開いてください。</div>'
+    +'<a href="'+LIVE_URL+'" target="_blank" style="display:inline-block;background:var(--gold);color:#0a0a0a;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none">▶ ブラウザで開く</a>'
+    +(extra?'<div class="s" style="margin-top:12px;opacity:.7">'+extra+'</div>':'')
+    +'</div>';
+}
 async function load(){
   const c=document.getElementById('content');
+  if(!isLive){ c.innerHTML=openInBrowserCard(); return; }
   c.innerHTML='<div class="loading">チェック中...</div>';
   try{
-    const res=await fetch(API_BASE+'/api/analytics-health?days=14',{cache:'no-store'});
+    const res=await fetch('/api/analytics-health?days=14',{cache:'no-store'});
     const d=await res.json();
     render(d);
-  }catch(e){ c.innerHTML='<div class="error">読み込みエラー: '+e.message+'</div>'; }
+  }catch(e){ c.innerHTML=openInBrowserCard('技術詳細: '+e.message); }
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function render(d){
