@@ -123,6 +123,36 @@ export async function onRequestGet(context) {
     })());
   }
 
+  // ── LP別 日別内訳 (?lp=1) : PVはpath:キーをセグメント別に集計、UUはlpuucount:から ──
+  if (url.searchParams.get('lp') === '1' && pkv) {
+    const segOf = (p) => { const f = (p.replace(/^\/+/, '').split('/')[0] || '').toLowerCase(); return f === '' ? 'home' : f; };
+    const knownSegs = ['home','surge','magnet','pack','gear','lens','north','beacon','seed','articles'];
+    const daily = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = jstDateNDaysAgo(i);
+      const lps = {};
+      const lst = await pkv.list({ prefix: `path:${d}:` });
+      for (const k of (lst.keys || [])) {
+        const cnt = parseInt((await pkv.get(k.name)) || '0', 10);
+        const s = segOf(k.name.slice(`path:${d}:`.length));
+        if (!lps[s]) lps[s] = { pv: 0, uu: 0 };
+        lps[s].pv += cnt;
+      }
+      for (const s of Object.keys(lps)) {
+        lps[s].uu = parseInt((await pkv.get(`lpuucount:${d}:${s}`)) || '0', 10);
+      }
+      if (fkv) {
+        lps['flow'] = {
+          pv: parseInt((await fkv.get(`pv:${d}`)) || '0', 10),
+          uu: parseInt((await fkv.get(`uucount:${d}`)) || '0', 10),
+        };
+      }
+      daily.push({ date: d, lps });
+    }
+    result.lp_daily = daily;
+    result.lp_known_segments = knownSegs.concat(['flow']);
+  }
+
   return new Response(JSON.stringify(result, null, 1), {
     status: (kvBroken) ? 500 : 200,
     headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
