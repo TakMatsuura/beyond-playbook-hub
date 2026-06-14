@@ -1,6 +1,6 @@
 {
  "generated": "build",
- "count": 9,
+ "count": 10,
  "articles": [
   {
    "url": "https://playbook.beyond-holdings.co.jp/lens/articles/slow-decisions-5-bottlenecks/",
@@ -83,6 +83,20 @@
     "業務効率化",
     "DX・AI",
     "数字・見える化"
+   ],
+   "date": "2026-06-14"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/articles/speed-is-passion/",
+   "lp": "playbook",
+   "lpName": "PLAYBOOK",
+   "emoji": "🏠",
+   "title": "スピードは、情熱だ ── 本気で欲しいなら、人はヘリでも飛ばす",
+   "desc": "後回しにする、は本気じゃない証拠。水に顔をつけて一分すれば、人は何より『息が吸いたい』と思う。本気とは本来それくらい切実なもの。スピードを情熱と呼ぶBEYOND代表の経営哲学を、中小企業の経営者に向けて。BEYOND PLAYBOOK。",
+   "tags": [
+    "経営理念",
+    "意思決定",
+    "差別化"
    ],
    "date": "2026-06-14"
   },
