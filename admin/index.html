@@ -51,6 +51,10 @@ td.num { text-align:right; font-family:'Inter',sans-serif; font-weight:700; }
 .chart .bar:hover .tip { display:block; }
 .chart-x { display:flex; gap:3px; font-size:10px; color:var(--soft); margin-top:6px; min-width:560px; }
 .chart-x span { flex:1; text-align:center; }
+.hours { display:flex; align-items:flex-end; gap:3px; height:100px; }
+.hours .hbar { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+.hours .hf { width:100%; background:linear-gradient(180deg,var(--gold),var(--gold-deep)); border-radius:2px 2px 0 0; min-height:1px; }
+.hours .hl { font-size:9px; color:var(--soft); margin-top:4px; height:12px; }
 .loading,.error { text-align:center; padding:40px; color:var(--soft); }
 .error { color:var(--red); }
 footer { text-align:center; margin-top:28px; color:var(--soft); font-size:11px; letter-spacing:0.08em; }
@@ -67,7 +71,7 @@ footer { text-align:center; margin-top:28px; color:var(--soft); font-size:11px; 
         <option value="90">過去90日</option>
       </select>
       <button id="reload">🔄 更新</button>
-      <a href="/api/analytics-health?days=14" target="_blank">🩺 計測健全性</a>
+      <a href="/admin/health/">🩺 計測健全性</a>
       <a href="/" target="_blank">↗ サイト</a>
     </div>
   </header>
@@ -123,6 +127,13 @@ function render(d){
 
   const srcRows = sources.length? sources.map(s=>`<tr><td>${esc(srcLabel(s.name))}</td><td class="num">${s.count.toLocaleString()}</td></tr>`).join('') : '<tr><td colspan="2" style="text-align:center;color:var(--soft)">データなし</td></tr>';
 
+  const geo=d.geo||[], devices=d.devices||[], hours=d.hours||[];
+  const geoRows = geo.length? geo.slice(0,12).map(g=>`<tr><td>${esc(geoLabel(g.name))}</td><td class="num">${g.count.toLocaleString()}</td></tr>`).join('') : '<tr><td colspan="2" style="text-align:center;color:var(--soft)">データなし</td></tr>';
+  const devTot=devices.reduce((s,x)=>s+x.count,0)||1;
+  const devRows = devices.length? devices.map(x=>`<tr><td>${esc(devLabel(x.name))}</td><td class="num">${x.count.toLocaleString()}</td><td class="num">${Math.round(x.count/devTot*100)}%</td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center;color:var(--soft)">データなし</td></tr>';
+  const hMax=Math.max(1,...hours);
+  const hourBars = hours.map((v,h)=>`<div class="hbar" title="${h}時台: ${v}件"><div class="hf" style="height:${Math.max(1,v/hMax*70)}px"></div><div class="hl">${h%3===0?h:''}</div></div>`).join('');
+
   document.getElementById('content').innerHTML = kpi + `
     <div class="note"><b>実ユーザーのみ</b>を表示(bot・スキャナー・社内端末は除外)。PV=実ページの閲覧数 / UU=LP別の訪問人数 / 診断完了=各LPの診断ツール完了数。</div>
     <div class="section">
@@ -140,11 +151,29 @@ function render(d){
     <div class="section">
       <h2>🚪 流入元(どこから来たか)</h2>
       <table><thead><tr><th>流入元</th><th class="num">件数</th></tr></thead><tbody>${srcRows}</tbody></table>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;">
+      <div class="section" style="margin:0;">
+        <h2>📱 デバイス</h2>
+        <table><thead><tr><th>種別</th><th class="num">PV</th><th class="num">比率</th></tr></thead><tbody>${devRows}</tbody></table>
+      </div>
+      <div class="section" style="margin:0;">
+        <h2>🌏 地域(国)</h2>
+        <table><thead><tr><th>国</th><th class="num">PV</th></tr></thead><tbody>${geoRows}</tbody></table>
+      </div>
+    </div>
+    <div class="section">
+      <h2>🕒 時間帯(JST・いつ来るか=投稿の最適時刻)</h2>
+      <div class="hours">${hourBars}</div>
     </div>`;
 }
 
 const SRC={direct:'直接(URL・ブックマーク)',google:'Google検索',yahoo:'Yahoo検索',bing:'Bing検索',line:'LINE',x:'X(Twitter)',facebook:'Facebook',instagram:'Instagram',youtube:'YouTube',mail:'メール'};
 function srcLabel(n){return SRC[n]||n;}
+const DEV={mobile:'📱 スマホ',desktop:'💻 PC',tablet:'📋 タブレット',other:'その他'};
+function devLabel(n){return DEV[n]||n;}
+const GEO={JP:'🇯🇵 日本',US:'🇺🇸 アメリカ',CN:'🇨🇳 中国',KR:'🇰🇷 韓国',TW:'🇹🇼 台湾',GB:'🇬🇧 イギリス',DE:'🇩🇪 ドイツ',SG:'🇸🇬 シンガポール',XX:'不明'};
+function geoLabel(n){return GEO[n]||n;}
 
 document.getElementById('days').addEventListener('change', load);
 document.getElementById('reload').addEventListener('click', load);

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>PLAYBOOK 計測健全性</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230a0a0a'/><text x='50' y='74' font-family='Inter,sans-serif' font-weight='900' font-size='62' fill='%23c9a961' text-anchor='middle'>P</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#0c0a06; --panel:#15120b; --panel2:#1c1810; --line:#2a2417; --text:#ece7da; --soft:#a59c84; --gold:#e8c474; --gold-deep:#8b7a3c; --green:#4fae8b; --red:#e07a6a; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Noto Sans JP',sans-serif; background:radial-gradient(ellipse at 50% 0%,#15120a 0%,#0a0a0a 70%); color:var(--text); padding:20px; min-height:100vh; -webkit-font-smoothing:antialiased; }
+header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding-bottom:16px; border-bottom:1px solid var(--line); margin-bottom:20px; }
+.brand { font-family:'Inter',sans-serif; font-weight:900; font-size:22px; letter-spacing:0.04em; color:var(--gold); }
+.brand .sub { font-size:11px; color:var(--soft); margin-left:10px; letter-spacing:0.2em; }
+.controls a,.controls button { background:var(--panel2); color:var(--text); border:1px solid var(--line); padding:8px 14px; border-radius:7px; font:inherit; font-size:13px; cursor:pointer; text-decoration:none; }
+.controls a:hover,.controls button:hover { border-color:var(--gold); }
+.banner { border-radius:12px; padding:22px 24px; margin-bottom:20px; display:flex; align-items:center; gap:16px; }
+.banner.ok { background:rgba(79,174,139,0.12); border:1px solid rgba(79,174,139,0.4); }
+.banner.ng { background:rgba(224,122,106,0.12); border:1px solid rgba(224,122,106,0.4); }
+.banner .ic { font-size:38px; }
+.banner .t { font-size:20px; font-weight:700; }
+.banner .s { font-size:13px; color:var(--soft); margin-top:4px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-bottom:20px; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px; }
+.card h3 { font-size:13px; color:var(--gold); margin-bottom:14px; letter-spacing:0.08em; }
+.row { display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--line); font-size:13px; }
+.row:last-child { border-bottom:none; }
+.row .k { color:var(--soft); }
+.ok-pill { color:var(--green); font-weight:700; } .ng-pill { color:var(--red); font-weight:700; }
+.section { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:18px; }
+.section h2 { font-size:13px; letter-spacing:0.12em; color:var(--gold); margin-bottom:14px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); }
+th { color:var(--soft); font-weight:600; font-size:11px; }
+td.num { text-align:right; font-family:'Inter',sans-serif; font-weight:600; }
+.zero { color:var(--soft); }
+.loading,.error { text-align:center; padding:40px; color:var(--soft); }
+.error { color:var(--red); }
+footer { text-align:center; margin-top:28px; color:var(--soft); font-size:11px; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">PLAYBOOK 計測健全性 <span class="sub">ANALYTICS HEALTH</span></div>
+    <div class="controls">
+      <button id="reload">🔄 再チェック</button>
+      <a href="/admin/">← ダッシュボード</a>
+    </div>
+  </header>
+  <div id="content"><div class="loading">チェック中...</div></div>
+  <footer>BEYOND PLAYBOOK ─ 計測が壊れていないかの自己診断 ─ JST</footer>
+<script>
+async function load(){
+  const c=document.getElementById('content');
+  c.innerHTML='<div class="loading">チェック中...</div>';
+  try{
+    const res=await fetch('/api/analytics-health?days=14',{cache:'no-store'});
+    const d=await res.json();
+    render(d);
+  }catch(e){ c.innerHTML='<div class="error">読み込みエラー: '+e.message+'</div>'; }
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function render(d){
+  const ok=d.ok && d.alert===null;
+  const banner = ok
+    ? '<div class="banner ok"><div class="ic">✅</div><div><div class="t">計測は正常に動いています</div><div class="s">KVへの書き込み・読み戻しOK。データは記録されています。</div></div></div>'
+    : (d.alert==='down'
+      ? '<div class="banner ng"><div class="ic">🚨</div><div><div class="t">計測に異常があります(KV書込/読戻し失敗)</div><div class="s">PV/UUが記録されていない可能性。下の詳細を確認してください。</div></div></div>'
+      : '<div class="banner ng"><div class="ic">🚨</div><div><div class="t">計測がストールしています</div><div class="s">直近数日PVが0です。流入が途絶えたか計測が止まっています。</div></div></div>');
+
+  const cards = (d.checks||[]).map(c=>{
+    const good=c.bound&&c.write_ok&&c.read_ok;
+    return '<div class="card"><h3>'+esc(c.name)+'</h3>'
+      +'<div class="row"><span class="k">バインド</span><span class="'+(c.bound?'ok-pill':'ng-pill')+'">'+(c.bound?'OK':'NG')+'</span></div>'
+      +'<div class="row"><span class="k">書き込み</span><span class="'+(c.write_ok?'ok-pill':'ng-pill')+'">'+(c.write_ok?'OK':'NG')+'</span></div>'
+      +'<div class="row"><span class="k">読み戻し</span><span class="'+(c.read_ok?'ok-pill':'ng-pill')+'">'+(c.read_ok?'OK':'NG')+'</span></div>'
+      +'<div class="row"><span class="k">今日のPV / UU</span><span>'+c.pv_today+' / '+c.uu_today+'</span></div>'
+      +'<div class="row"><span class="k">PV記録日数</span><span>'+c.pv_keys_total+'日</span></div>'
+      +(c.error?'<div class="row"><span class="k">エラー</span><span class="ng-pill">'+esc(c.error)+'</span></div>':'')
+      +'</div>';
+  }).join('');
+
+  const s=d.summary||{};
+  const sum='<div class="section"><h2>📊 直近'+(s.window_days||14)+'日サマリ</h2>'
+    +'<div class="grid">'
+    +'<div class="card"><h3>PV合計</h3><div class="row"><span class="k">実ユーザー</span><span>'+(s.pv_total||0).toLocaleString()+'</span></div></div>'
+    +'<div class="card"><h3>UU合計</h3><div class="row"><span class="k">延べ</span><span>'+(s.uu_total||0).toLocaleString()+'</span></div></div>'
+    +'<div class="card"><h3>最終アクティブ</h3><div class="row"><span class="k">最後にPVがあった日</span><span>'+(s.last_active_date||'なし')+'</span></div></div>'
+    +'</div></div>';
+
+  const rows=(d.recent||[]).slice().reverse().map(r=>'<tr><td>'+r.date+'</td><td class="num'+(r.pv?'':' zero')+'">'+r.pv+'</td><td class="num'+(r.uu?'':' zero')+'">'+r.uu+'</td><td class="num">'+r.hub_pv+'</td><td class="num">'+r.flow_pv+'</td></tr>').join('');
+  const recent='<div class="section"><h2>🗓 日別(新しい順)</h2><table><thead><tr><th>日付</th><th class="num">PV</th><th class="num">UU</th><th class="num">ハブ</th><th class="num">FLOW</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+
+  document.getElementById('content').innerHTML = banner
+    + '<div class="grid">'+cards+'</div>'
+    + sum + recent
+    + '<div class="section" style="font-size:12px;color:var(--soft)">この画面は <code>/api/analytics-health</code> の自己診断結果です。異常時は3時間ごとのcron + 毎朝のLINE WORKS DMでも自動通知されます。</div>';
+}
+document.getElementById('reload').addEventListener('click', load);
+load();
+</script>
+</body>
+</html>

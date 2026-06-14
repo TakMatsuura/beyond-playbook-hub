@@ -71,13 +71,22 @@ export async function onRequest(context) {
       timeZone: 'Asia/Tokyo',
       year: 'numeric', month: '2-digit', day: '2-digit',
     }).format(new Date());
+    // ★時間帯(JST 00〜23)★ : いつ来訪が多いか = SNS投稿の最適時刻の根拠
+    const jstHour = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Asia/Tokyo', hour: '2-digit', hour12: false,
+    }).format(new Date()).slice(0, 2);
 
     // ★流入元(2026-06-14)★: utm_source 優先 → 外部リファラのホスト → 直接 の順で判定。
     //   内部ページ間の遷移(同一ホストのリファラ)は流入ではないので null=記録しない。
     const referer = context.request.headers.get('referer') || '';
     const source = sourceOf(url, referer, host);
 
-    context.waitUntil(recordHit(context.env, jstDate, path, ip, response.status, source));
+    // ★取れるものは全部取る(2026-06-15)★: 地域・デバイスも記録(実ユーザーのみ)
+    const country = context.request.headers.get('cf-ipcountry')
+      || (context.request.cf && context.request.cf.country) || 'XX';
+    const device = deviceOf(userAgent);
+
+    context.waitUntil(recordHit(context.env, jstDate, path, ip, response.status, source, country, device, jstHour));
   } catch (e) {
     console.error('[_middleware] hit recording error:', e.message);
   }
@@ -116,7 +125,7 @@ function checkBasicAuth(request, env) {
 // ★ver0.4 (2026-06-06): 「人間の実アクセス」と「不正スキャン/404」を分離。
 //   - 200で実際に表示できたページのみ PV/UU/人気ページに計上
 //   - 404 や .env/.git 等の探索は scan: 系キーに別計上 (レポートで可視化)
-async function recordHit(env, date, path, ip, status, source) {
+async function recordHit(env, date, path, ip, status, source, country, device, hour) {
   if (!env.PLAYBOOK_ANALYTICS) return;
   const TTL = 90 * 24 * 60 * 60;
   const cleanPath = path.split('?')[0].replace(/\/+$/, '/');
@@ -174,6 +183,26 @@ async function recordHit(env, date, path, ip, status, source) {
     const lpUuCur = parseInt((await env.PLAYBOOK_ANALYTICS.get(lpUuCountKey)) || '0', 10);
     await env.PLAYBOOK_ANALYTICS.put(lpUuCountKey, String(lpUuCur + 1), { expirationTtl: TTL });
   }
+
+  // ★取れるものは全部取る(2026-06-15)★: 地域(国)・デバイス・時間帯 を別カウンタで集計。
+  //   PVと同じ「実ユーザーの実ページ」基準。ダッシュボードで内訳を可視化する。
+  await bump(env, `geo:${date}:${(country || 'XX')}`, TTL);
+  await bump(env, `dev:${date}:${(device || 'other')}`, TTL);
+  await bump(env, `hour:${date}:${(hour || '00')}`, TTL);
+}
+
+// カウンタ +1 の共通ヘルパー
+async function bump(env, key, ttl) {
+  const cur = parseInt((await env.PLAYBOOK_ANALYTICS.get(key)) || '0', 10);
+  await env.PLAYBOOK_ANALYTICS.put(key, String(cur + 1), { expirationTtl: ttl });
+}
+
+// UA からデバイス種別を判定 (mobile / tablet / desktop)。
+function deviceOf(ua) {
+  if (!ua) return 'other';
+  if (/iPad|Tablet|PlayBook|Silk/i.test(ua)) return 'tablet';
+  if (/Mobi|Android|iPhone|iPod|Windows Phone|webOS|BlackBerry/i.test(ua)) return 'mobile';
+  return 'desktop';
 }
 
 // クリーンなパスから先頭セグメント (= LP識別子) を取り出す。'/' は 'home'。

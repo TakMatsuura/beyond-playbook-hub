@@ -88,6 +88,14 @@ export async function onRequestGet(context) {
   evtLists.forEach(lst => (lst.keys || []).forEach(k => evtKeys.push(k.name)));
   const evtVals = await Promise.all(evtKeys.map(k => P.get(k)));
 
+  // ===== 8. geo / dev / hour (取れるものは全部) =====
+  const dimLists = await Promise.all(dates.flatMap(date => [
+    P.list({ prefix: `geo:${date}:` }), P.list({ prefix: `dev:${date}:` }), P.list({ prefix: `hour:${date}:` }),
+  ]));
+  const dimKeys = [];
+  dimLists.forEach(lst => (lst.keys || []).forEach(k => dimKeys.push(k.name)));
+  const dimVals = await Promise.all(dimKeys.map(k => P.get(k)));
+
   // ---- 集計 ----
   const daily = [];
   let totSubmit = 0, totDiag = 0, totNews = 0;
@@ -173,6 +181,18 @@ export async function onRequestGet(context) {
   }
   const sources = Object.entries(srcMap).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
 
+  // geo / dev / hour 集計
+  const geoMap = {}, devMap = {}, hourArr = Array.from({ length: 24 }, () => 0);
+  for (let i = 0; i < dimKeys.length; i++) {
+    const cnt = parseInt(dimVals[i] || '0', 10);
+    let m;
+    if ((m = dimKeys[i].match(/^geo:\d{4}-\d{2}-\d{2}:(.+)$/))) geoMap[m[1]] = (geoMap[m[1]] || 0) + cnt;
+    else if ((m = dimKeys[i].match(/^dev:\d{4}-\d{2}-\d{2}:(.+)$/))) devMap[m[1]] = (devMap[m[1]] || 0) + cnt;
+    else if ((m = dimKeys[i].match(/^hour:\d{4}-\d{2}-\d{2}:(\d{2})$/))) hourArr[parseInt(m[1], 10)] += cnt;
+  }
+  const geo = Object.entries(geoMap).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+  const devices = Object.entries(devMap).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+
   const byLp = Object.values(lp).sort((a, b) => b.pv - a.pv);
   const cleanPvTotal = cleanPvHub + flowPvTot;
   const uuTotal = byLp.reduce((s, l) => s + l.uu, 0);
@@ -189,6 +209,9 @@ export async function onRequestGet(context) {
     daily,
     byLp,
     sources,
+    geo,
+    devices,
+    hours: hourArr,
     note: '実ユーザーのみ(bot/スキャナー/社内端末を除外)。PV=実ページのセグメント集計、UU=LP別ユニーク。',
   }, 200);
 }
