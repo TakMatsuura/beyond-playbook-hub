@@ -53,11 +53,13 @@ footer { text-align:center; margin-top:28px; color:var(--soft); font-size:11px; 
   <div id="content"><div class="loading">チェック中...</div></div>
   <footer>BEYOND PLAYBOOK ─ 計測が壊れていないかの自己診断 ─ JST</footer>
 <script>
+// プレビュー枠(srcdoc=相対URL不可)でも動くよう、http(s)でなければ本番originを基準にする
+var API_BASE = (location.protocol === 'http:' || location.protocol === 'https:') ? '' : 'https://playbook.beyond-holdings.co.jp';
 async function load(){
   const c=document.getElementById('content');
   c.innerHTML='<div class="loading">チェック中...</div>';
   try{
-    const res=await fetch('/api/analytics-health?days=14',{cache:'no-store'});
+    const res=await fetch(API_BASE+'/api/analytics-health?days=14',{cache:'no-store'});
     const d=await res.json();
     render(d);
   }catch(e){ c.innerHTML='<div class="error">読み込みエラー: '+e.message+'</div>'; }

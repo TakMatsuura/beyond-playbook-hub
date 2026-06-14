@@ -155,7 +155,7 @@ export async function onRequestGet(context) {
 
   return new Response(JSON.stringify(result, null, 1), {
     status: (kvBroken) ? 500 : 200,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*' },
   });
 }
 
