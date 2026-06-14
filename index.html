@@ -127,6 +127,8 @@ header.site-header {
   border-radius: 0; transition: all 0.3s;
 }
 .site-header .nav-cta:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.site-header .nav-actions { display: flex; align-items: center; gap: 10px; }
+@media (max-width: 480px) { .site-header { padding: 16px 18px; } .site-header .nav-cta { padding: 9px 14px; letter-spacing: 0.15em; } }
 
 /* === COVER (Hero) ─ ラグジュアリー静寂派 === */
 .cover {
@@ -141,7 +143,7 @@ header.site-header {
 
   position: relative; min-height: 100vh; min-height: 100svh;
   display: flex; align-items: center; justify-content: center;
-  padding: 120px 24px 60px;
+  padding: 120px 24px 88px;
   background:
     radial-gradient(ellipse at 50% 45%, #0B0B0B 0%, var(--c-bg-2) 50%, var(--c-bg-1) 100%);
   overflow: hidden;
@@ -265,16 +267,20 @@ header.site-header {
 .cover-cta:hover { background: var(--c-gold); color: var(--c-bg-1); letter-spacing: 0.5em; }
 .cover-cta:hover::before { transform: translateX(100%); }
 .scroll-cue {
-  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
-  font-family: 'Inter', sans-serif; font-size: 9px; letter-spacing: 0.5em;
+  position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+  font-family: 'Inter', sans-serif; font-size: 9px;
   color: var(--c-gold-deep); text-transform: uppercase;
   opacity: 0; animation: rise 1.4s 3.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   z-index: 6;
 }
+.scroll-cue span {
+  letter-spacing: 0.5em; margin-right: -0.5em; /* 末尾の字間を打ち消し、文字と縦線を同じ中心軸へ揃える */
+}
 .scroll-cue::after {
-  content: ''; display: block; width: 1px; height: 36px;
+  content: ''; display: block; width: 1px; height: 26px;
   background: linear-gradient(180deg, var(--c-gold), transparent);
-  margin: 14px auto 0; animation: scrollPulse 2.4s 4.0s infinite;
+  margin: 9px auto 0; animation: scrollPulse 2.4s 4.0s infinite;
 }
 @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes scrollPulse { 0%, 100% { opacity: 0.4; transform: scaleY(0.7); } 50% { opacity: 1; transform: scaleY(1); } }
@@ -842,7 +848,11 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
     <img src="assets/beyond_logo.png" alt="BEYOND Holdings">
     <span class="brand-name">Playbook</span>
   </a>
-  <a href="#closing" class="nav-cta" data-track="cta_header_contact">CONTACT</a>
+  <nav class="nav-actions">
+    <a href="/articles/" class="nav-cta" data-track="cta_header_library">📚 記事</a>
+    <a href="https://line.me/R/ti/p/@028kxddv" target="_blank" rel="noopener" class="nav-cta nav-line" data-track="cta_header_line">💬 LINE</a>
+    <a href="#closing" class="nav-cta" data-track="cta_header_contact">CONTACT</a>
+  </nav>
 </header>
 
 <!-- ====== COVER (Hero) ─ 黒い章が静かに開き、金のラインが走る ====== -->
@@ -869,7 +879,7 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
     <a href="#chap-i" class="cover-cta" data-track="cta_hero_playbook">中身を見てみる</a>
   </div>
 
-  <div class="scroll-cue">Scroll</div>
+  <div class="scroll-cue"><span>Scroll</span></div>
 </section>
 
 <!-- ====== CHAPTER I : BEYOND Operating System ====== -->
@@ -1249,6 +1259,7 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
     </p>
     <div>
       <a href="/apply/" class="closing-cta" data-track="cta_closing_apply">お問合せに進む</a>
+      <a href="https://line.me/R/ti/p/@028kxddv" target="_blank" rel="noopener" class="closing-secondary" data-track="cta_closing_line">💬 LINEで相談</a>
       <a href="https://flow.beyond-holdings.co.jp/" target="_blank" rel="noopener" class="closing-secondary" data-track="cta_closing_flow">FLOWを見る ↗</a>
     </div>
   </div>
@@ -1286,8 +1297,8 @@ footer.site-footer { background: var(--ink); padding: 80px 24px 32px; border-top
       </div>
     </div>
     <div class="footer-bottom">
-      <div>© 2026 BEYOND Holdings 株式会社</div>
-      <div>東京都世田谷区尾山台3-9-1 &nbsp;·&nbsp; 03-6820-9321</div>
+      <div>© 2026 BEYOND Holdings 株式会社 &nbsp;·&nbsp; 代表取締役 松浦 貴大 &nbsp;·&nbsp; 設立 2023年10月</div>
+      <div>〒158-0086 東京都世田谷区尾山台3-9-1 &nbsp;·&nbsp; TEL 03-6820-9321</div>
     </div>
   </div>
 </footer>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="中小企業の経営に効く記事を、テーマ(タグ)と検索で横断的に探せる BEYOND PLAYBOOK のライブラリ。売上・集客・組織・業務・財務・新規事業まで、実業当事者の視点で。">
+<meta name="keywords" content="中小企業,経営,記事,コラム,BEYOND PLAYBOOK,業務効率化,採用,売上,DX">
+<meta property="og:title" content="PLAYBOOK ライブラリ｜経営に効く記事を、テーマで探す">
+<meta property="og:description" content="売上・集客・組織・業務・財務・新規事業。中小企業の経営に効く記事を横断検索。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://playbook.beyond-holdings.co.jp/articles/">
+<meta property="og:image" content="https://playbook.beyond-holdings.co.jp/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://playbook.beyond-holdings.co.jp/articles/">
+<title>PLAYBOOK ライブラリ｜経営に効く記事を、テーマで探す｜BEYOND PLAYBOOK</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='10' fill='%230a0a0a'/><text x='50' y='72' font-family='Bodoni Moda,serif' font-weight='700' font-size='60' fill='%23c9a961' text-anchor='middle' letter-spacing='-2'>P</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600;700&family=Cormorant+Garamond:ital@0;1&family=Inter:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500;600;700&family=Shippori+Mincho+B1:wght@500;600;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PJY2SKCX2L"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-PJY2SKCX2L');</script>
+<style>
+  :root{ --gold:#c9a961; --gold-bright:#e8c474; --gold-deep:#8b7a3c; --gold-line:rgba(201,169,97,0.32); --ink:#0a0a0a; --paper:#f4efe1; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:radial-gradient(ellipse at 50% 0%,#15120a 0%,#0a0a0a 58%,#050505 100%);color:var(--paper);font-family:'Noto Serif JP',serif;line-height:1.85;-webkit-font-smoothing:antialiased;min-height:100vh;}
+  a{color:inherit;text-decoration:none;}
+  .site-header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 28px;background:rgba(10,10,10,0.82);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);}
+  .brand{font-family:'Bodoni Moda',serif;font-weight:700;font-size:19px;letter-spacing:0.04em;color:var(--paper);}
+  .brand span{color:var(--gold-bright);}
+  .nav-cta{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:0.18em;color:var(--gold-bright);border:1px solid var(--gold-line);border-radius:999px;padding:9px 16px;transition:all .3s;}
+  .nav-cta:hover{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px;}
+  .hero{text-align:center;padding:64px 24px 30px;}
+  .hero .eyebrow{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;letter-spacing:0.3em;color:var(--gold-deep);}
+  .hero h1{font-family:'Shippori Mincho B1',serif;font-weight:600;font-size:clamp(26px,5vw,42px);color:var(--gold-bright);margin:10px 0 14px;letter-spacing:0.04em;}
+  .hero p{font-size:15px;color:rgba(244,239,225,0.7);max-width:560px;margin:0 auto;}
+  .search-wrap{max-width:560px;margin:30px auto 0;position:relative;}
+  #q{width:100%;font-family:'Noto Serif JP',serif;font-size:16px;color:var(--paper);background:rgba(255,255,255,0.04);border:1px solid var(--gold-line);border-radius:999px;padding:15px 22px 15px 48px;outline:none;transition:border-color .3s;}
+  #q:focus{border-color:var(--gold);}
+  #q::placeholder{color:rgba(244,239,225,0.4);}
+  .search-ico{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--gold-deep);font-size:16px;}
+  .tagbar{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:880px;margin:26px auto 0;}
+  .tagchip{font-family:'Inter','Noto Serif JP',sans-serif;font-size:12.5px;color:rgba(244,239,225,0.72);background:transparent;border:1px solid var(--gold-line);border-radius:999px;padding:7px 15px;cursor:pointer;transition:all .25s;}
+  .tagchip:hover{color:var(--gold-bright);border-color:var(--gold);}
+  .tagchip.active{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:600;}
+  .tagchip .cnt{opacity:0.55;font-size:11px;margin-left:3px;}
+  .meta-row{display:flex;justify-content:center;align-items:center;gap:10px;margin:30px 0 18px;font-family:'Inter',sans-serif;font-size:12px;letter-spacing:0.06em;color:rgba(244,239,225,0.5);}
+  .meta-row b{color:var(--gold-bright);font-weight:600;}
+  #clear{cursor:pointer;color:var(--gold-deep);border-bottom:1px solid transparent;}
+  #clear:hover{color:var(--gold-bright);border-color:var(--gold-line);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;padding-bottom:70px;}
+  .acard{display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.015));border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px 22px 18px;transition:transform .25s,border-color .25s,box-shadow .25s;}
+  .acard:hover{transform:translateY(-3px);border-color:var(--gold-line);box-shadow:0 14px 38px -16px rgba(201,169,97,0.4);}
+  .acard-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;}
+  .lp-badge{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--gold-bright);}
+  .adate{font-family:'Inter',sans-serif;font-size:11px;color:rgba(244,239,225,0.4);}
+  .acard-title{font-family:'Shippori Mincho B1',serif;font-weight:600;font-size:17px;line-height:1.55;color:#f6f1e6;margin-bottom:10px;}
+  .acard-desc{font-size:13px;line-height:1.85;color:rgba(244,239,225,0.62);margin-bottom:15px;flex-grow:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .acard-tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .acard-tags span{font-family:'Inter',sans-serif;font-size:10.5px;color:rgba(244,239,225,0.5);border:1px solid rgba(255,255,255,0.08);border-radius:999px;padding:3px 9px;}
+  .empty{text-align:center;padding:60px 20px;color:rgba(244,239,225,0.5);font-size:14px;}
+  .footer{border-top:1px solid rgba(255,255,255,0.06);padding:32px 24px;text-align:center;}
+  .footer .links{font-family:'Inter',sans-serif;font-size:12px;}
+  .footer a{color:rgba(244,239,225,0.6);margin:0 8px;}
+  .footer .cp{font-family:'Inter',sans-serif;font-size:11px;color:rgba(244,239,225,0.35);margin-top:12px;}
+  @media(max-width:560px){ .grid{grid-template-columns:1fr;} .hero{padding-top:44px;} }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="brand">PLAYBOOK<span>·Library</span></a>
+  <a href="/#closing" class="nav-cta">無料相談</a>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Library</div>
+  <h1>経営に効く記事を、テーマで探す</h1>
+  <p>売上・集客・組織・業務・財務・新規事業まで。中小企業の経営に効く記事を、実業をやっている当事者の視点で。タグや検索で横断的に探せます。</p>
+  <div class="search-wrap">
+    <span class="search-ico">🔍</span>
+    <input id="q" type="search" placeholder="キーワードで探す（例：人手不足、値上げ、DX…）" autocomplete="off">
+  </div>
+  <div class="tagbar" id="tagbar">
+    <!--TAGS_START-->
+    <button class="tagchip active" data-tag="">すべて</button>
+    <button class="tagchip" data-tag="採用">#採用 <span class="cnt">3</span></button>
+    <button class="tagchip" data-tag="数字・見える化">#数字・見える化 <span class="cnt">2</span></button>
+    <button class="tagchip" data-tag="DX・AI">#DX・AI <span class="cnt">2</span></button>
+    <button class="tagchip" data-tag="定着・離職">#定着・離職 <span class="cnt">2</span></button>
+    <button class="tagchip" data-tag="人手不足">#人手不足 <span class="cnt">2</span></button>
+    <button class="tagchip" data-tag="ブランディング">#ブランディング <span class="cnt">2</span></button>
+    <button class="tagchip" data-tag="意思決定">#意思決定 <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="人材育成">#人材育成 <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="新規事業">#新規事業 <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="補助金・制度">#補助金・制度 <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="差別化">#差別化 <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="集客・新規">#集客・新規 <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="価格・値上げ">#価格・値上げ <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="売上アップ">#売上アップ <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="業務効率化">#業務効率化 <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="経営理念">#経営理念 <span class="cnt">1</span></button>
+    <button class="tagchip" data-tag="情報発信">#情報発信 <span class="cnt">1</span></button>
+    <!--TAGS_END-->
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="meta-row"><span><b id="count">0</b> 件</span><span id="clear">絞り込みをリセット</span></div>
+  <div class="grid" id="grid">
+    <!--CARDS_START-->
+    <a class="acard" href="https://playbook.beyond-holdings.co.jp/lens/articles/slow-decisions-5-bottlenecks/" data-tags="数字・見える化,意思決定,DX・AI" data-search="数字が即時に見える時代、意思決定で差がつく会社の動き方 生成ai・クラウド会計・biで経営数字がほぼリアルタイムに見える時代。中小企業の意思決定スピードはどこで差がつくのか。可視化→クローズ高速化→数字で決める仕組み化まで、見える化システムを自分たちで作るbeyondの実業視点で解説。lens 数字・見える化 意思決定 dx・ai lens"><div class="acard-top"><span class="lp-badge">🔍 LENS</span><span class="adate">2026.06.14</span></div><h3 class="acard-title">数字が即時に見える時代、意思決定で差がつく会社の動き方</h3><p class="acard-desc">生成AI・クラウド会計・BIで経営数字がほぼリアルタイムに見える時代。中小企業の意思決定スピードはどこで差がつくのか。可視化→クローズ高速化→数字で決める仕組み化まで、見える化システムを自分たちで作るBEYONDの実業視点で解説。LENS</p><div class="acard-tags"><span>#数字・見える化</span><span>#意思決定</span><span>#DX・AI</span></div></a>
+    <a class="acard" href="https://playbook.beyond-holdings.co.jp/pack/articles/people-leave-5-signs/" data-tags="採用,定着・離職,人手不足,人材育成" data-search="採用難・最賃上昇の2025年 2025年の人手不足倒産は過去最多397件、最低賃金は全国平均1,121円。採るより辞めさせない・育てる・属人化を解く方が効く。定着・属人化・採用・育成評価の4観点で人が辞める組織の5つのサインと最初の一手を解説。pack 採用 定着・離職 人手不足 人材育成 pack"><div class="acard-top"><span class="lp-badge">👥 PACK</span><span class="adate">2026.06.14</span></div><h3 class="acard-title">採用難・最賃上昇の2025年</h3><p class="acard-desc">2025年の人手不足倒産は過去最多397件、最低賃金は全国平均1,121円。採るより辞めさせない・育てる・属人化を解く方が効く。定着・属人化・採用・育成評価の4観点で人が辞める組織の5つのサインと最初の一手を解説。PACK</p><div class="acard-tags"><span>#採用</span><span>#定着・離職</span><span>#人手不足</span><span>#人材育成</span></div></a>
+    <a class="acard" href="https://playbook.beyond-holdings.co.jp/seed/articles/new-business-5-pitfalls/" data-tags="新規事業,補助金・制度" data-search="思いつきで始めた新規事業を、立て直した話 社長の思いつきで始めた新規事業が頓挫しかけた中小企業が、既存資産を起点に練り直し、最小投資のテスト販売と撤退基準で立て直すまでを想定事例で解説。seed 新規事業 補助金・制度 seed"><div class="acard-top"><span class="lp-badge">🌱 SEED</span><span class="adate">2026.06.14</span></div><h3 class="acard-title">思いつきで始めた新規事業を、立て直した話</h3><p class="acard-desc">社長の思いつきで始めた新規事業が頓挫しかけた中小企業が、既存資産を起点に練り直し、最小投資のテスト販売と撤退基準で立て直すまでを想定事例で解説。SEED</p><div class="acard-tags"><span>#新規事業</span><span>#補助金・制度</span></div></a>
+    <a class="acard" href="https://playbook.beyond-holdings.co.jp/magnet/articles/why-not-chosen-5-reasons/" data-tags="差別化,ブランディング,集客・新規" data-search="差別化＝「特徴を増やす・値下げ」は逆効果 「差別化＝特徴を増やす・価格を下げる」は実は逆効果。コモディティ化と消耗を招くだけです。本質は『選ばれる理由を一言で言語化し、伝える』こと。価格競争と人手不足の今だからこそ効く打ち手を、実業を回す当事者目線で手順まで解説。magnet 差別化 ブランディング 集客・新規 magnet"><div class="acard-top"><span class="lp-badge">🧲 MAGNET</span><span class="adate">2026.06.14</span></div><h3 class="acard-title">差別化＝「特徴を増やす・値下げ」は逆効果</h3><p class="acard-desc">「差別化＝特徴を増やす・価格を下げる」は実は逆効果。コモディティ化と消耗を招くだけです。本質は『選ばれる理由を一言で言語化し、伝える』こと。価格競争と人手不足の今だからこそ効く打ち手を、実業を回す当事者目線で手順まで解説。MAGNET</p><div class="acard-tags"><span>#差別化</span><span>#ブランディング</span><span>#集客・新規</span></div></a>
+    <a class="acard" href="https://playbook.beyond-holdings.co.jp/surge/articles/sales-ceiling-5-causes/" data-tags="価格・値上げ,売上アップ,人手不足" data-search="価格転嫁が「53.5%」の今、売上の天井をどう外すか 価格転嫁率は2025年9月時点で53.5%。物価高・人件費上昇のいま、値上げと単価改善ができる会社とできない会社で売上の天井が分かれます。中小企業の現場で実際にどう値上げを通すか、surgeの単価・客数・リピート・商品構成の観点から解説。surge 価格・値上げ 売上アップ 人手不足 surge"><div class="acard-top"><span class="lp-badge">📈 SURGE</span><span class="adate">2026.06.14</span></div><h3 class="acard-title">価格転嫁が「53.5%」の今、売上の天井をどう外すか</h3><p class="acard-desc">価格転嫁率は2025年9月時点で53.5%。物価高・人件費上昇のいま、値上げと単価改善ができる会社とできない会社で売上の天井が分かれます。中小企業の現場で実際にどう値上げを通すか、SURGEの単価・客数・リピート・商品構成の観点から解説。SURGE</p><div class="acard-tags"><span>#価格・値上げ</span><span>#売上アップ</span><span>#人手不足</span></div></a>
+    <a class="acard" href="https://playbook.beyond-holdings.co.jp/gear/articles/business-waste-5-signs/" data-tags="業務効率化,DX・AI,数字・見える化" data-search="二重入力で残業まみれだった現場が、利益を取り戻すまで 受注メモ→excel→基幹システムへの二重・三重入力で、忙しいのに利益が残らなかった中小企業の現場。想定事例で、業務の棚卸し→一点集中の自動化・標準化・見える化までを、実業当事者の視点で解説します。gear 業務効率化 dx・ai 数字・見える化 gear"><div class="acard-top"><span class="lp-badge">⚙️ GEAR</span><span class="adate">2026.06.14</span></div><h3 class="acard-title">二重入力で残業まみれだった現場が、利益を取り戻すまで</h3><p class="acard-desc">受注メモ→Excel→基幹システムへの二重・三重入力で、忙しいのに利益が残らなかった中小企業の現場。想定事例で、業務の棚卸し→一点集中の自動化・標準化・見える化までを、実業当事者の視点で解説します。GEAR</p><div class="acard-tags"><span>#業務効率化</span><span>#DX・AI</span><span>#数字・見える化</span></div></a>
+    <a class="acard" href="https://playbook.beyond-holdings.co.jp/north/articles/vision-not-shared-5-signs/" data-tags="経営理念,採用,定着・離職" data-search="「理念は中小企業に不要」は逆。今ほど旗が効く時代はない 「理念は大企業の綺麗事、中小には不要」は逆。人手不足倒産が過去最多の今こそ、旗が採用・定着・判断軸として効く。誤解を解き、言語化→明文化→共有→採用評価への接続まで実装手順で解説。north 経営理念 採用 定着・離職 north"><div class="acard-top"><span class="lp-badge">🧭 NORTH</span><span class="adate">2026.06.14</span></div><h3 class="acard-title">「理念は中小企業に不要」は逆。今ほど旗が効く時代はない</h3><p class="acard-desc">「理念は大企業の綺麗事、中小には不要」は逆。人手不足倒産が過去最多の今こそ、旗が採用・定着・判断軸として効く。誤解を解き、言語化→明文化→共有→採用評価への接続まで実装手順で解説。NORTH</p><div class="acard-tags"><span>#経営理念</span><span>#採用</span><span>#定着・離職</span></div></a>
+    <a class="acard" href="https://playbook.beyond-holdings.co.jp/beacon/articles/strength-not-conveyed-5-signs/" data-tags="情報発信,ブランディング,採用" data-search="“良い仕事”が知られない会社は、何を変えたのか 技術も品質も高いのに知られていない町工場。強みを“お客様の言葉”で言語化し発信を仕組み化したら、問い合わせと採用の反応が変わった——想定事例で読み解く、強みが伝わる会社になる5つの兆候と最初の一手。beacon 情報発信 ブランディング 採用 beacon"><div class="acard-top"><span class="lp-badge">📡 BEACON</span><span class="adate">2026.06.14</span></div><h3 class="acard-title">“良い仕事”が知られない会社は、何を変えたのか</h3><p class="acard-desc">技術も品質も高いのに知られていない町工場。強みを“お客様の言葉”で言語化し発信を仕組み化したら、問い合わせと採用の反応が変わった——想定事例で読み解く、強みが伝わる会社になる5つの兆候と最初の一手。BEACON</p><div class="acard-tags"><span>#情報発信</span><span>#ブランディング</span><span>#採用</span></div></a>
+    <!--CARDS_END-->
+  </div>
+  <div class="empty" id="empty" style="display:none;">該当する記事が見つかりませんでした。別のキーワードやタグをお試しください。</div>
+</div>
+
+<footer class="footer">
+  <div class="links"><a href="/">BEYOND PLAYBOOK</a> · <a href="/articles/">ライブラリ</a> · <a href="/#closing">お問合せ</a> · <a href="/privacy/">プライバシー</a></div>
+  <div class="cp">© 2026 BEYOND Holdings 株式会社</div>
+</footer>
+
+<script>
+(function(){
+  var grid=document.getElementById('grid');
+  var cards=[].slice.call(grid.querySelectorAll('.acard'));
+  var search=document.getElementById('q');
+  var params=new URLSearchParams(location.search);
+  var activeTag=params.get('tag')||'';
+  var q=params.get('q')||'';
+  search.value=q;
+  function tagbtns(){ return [].slice.call(document.querySelectorAll('.tagchip')); }
+  function apply(){
+    var ql=q.trim().toLowerCase(), n=0;
+    cards.forEach(function(c){
+      var tags=(c.getAttribute('data-tags')||'').split(',');
+      var okTag=!activeTag||tags.indexOf(activeTag)>=0;
+      var okQ=!ql||(c.getAttribute('data-search')||'').indexOf(ql)>=0;
+      var show=okTag&&okQ; c.style.display=show?'':'none'; if(show)n++;
+    });
+    document.getElementById('count').textContent=n;
+    document.getElementById('empty').style.display=n?'none':'';
+    tagbtns().forEach(function(b){ b.classList.toggle('active', (b.getAttribute('data-tag')||'')===activeTag); });
+    var p=new URLSearchParams(); if(activeTag)p.set('tag',activeTag); if(ql)p.set('q',q);
+    history.replaceState(null,'',location.pathname+(p.toString()?'?'+p.toString():''));
+  }
+  search.addEventListener('input',function(){ q=search.value; apply(); });
+  document.getElementById('tagbar').addEventListener('click',function(e){
+    var b=e.target.closest('.tagchip'); if(!b)return;
+    var t=b.getAttribute('data-tag')||'';
+    activeTag=(activeTag===t)?'':t; apply();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  document.getElementById('clear').addEventListener('click',function(){ activeTag=''; q=''; search.value=''; apply(); });
+  apply();
+})();
+</script>
+</body>
+</html>
