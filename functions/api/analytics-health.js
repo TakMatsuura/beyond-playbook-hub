@@ -44,7 +44,8 @@ export async function onRequestGet(context) {
 
   const result = { ok: true, date: today, checks: [], recent: [], summary: {}, alert: null };
 
-  for (const [name, kv] of targets) {
+  // 2つのKVチェックを並列実行(直列だと遅い)
+  result.checks = await Promise.all(targets.map(async ([name, kv]) => {
     const c = {
       name, bound: !!kv, write_ok: false, read_ok: false,
       pv_today: null, uu_today: null, pv_keys_total: null, error: null,
@@ -53,33 +54,42 @@ export async function onRequestGet(context) {
       try {
         const probe = `health:${today}:${Date.now()}`;
         await kv.put(probe, 'ok', { expirationTtl: 600 });
+        const [back, pvT, uuT, lst] = await Promise.all([
+          kv.get(probe), kv.get(`pv:${today}`), kv.get(`uucount:${today}`), kv.list({ prefix: 'pv:' }),
+        ]);
         c.write_ok = true;
-        c.read_ok = (await kv.get(probe)) === 'ok';
-        c.pv_today = parseInt((await kv.get(`pv:${today}`)) || '0', 10);
-        c.uu_today = parseInt((await kv.get(`uucount:${today}`)) || '0', 10);
-        c.pv_keys_total = ((await kv.list({ prefix: 'pv:' })).keys || []).length;
+        c.read_ok = back === 'ok';
+        c.pv_today = parseInt(pvT || '0', 10);
+        c.uu_today = parseInt(uuT || '0', 10);
+        c.pv_keys_total = (lst.keys || []).length;
         await kv.delete(probe);
       } catch (e) {
         c.error = (e && e.message) ? e.message : String(e);
       }
     }
-    if (!c.bound || !c.write_ok || !c.read_ok) result.ok = false;
-    result.checks.push(c);
-  }
+    return c;
+  }));
+  if (result.checks.some(c => !c.bound || !c.write_ok || !c.read_ok)) result.ok = false;
 
   const pkv = env.PLAYBOOK_ANALYTICS, fkv = env.FLOW_ANALYTICS;
   let pvSum = 0, uuSum = 0, subSum = 0, lastActiveDate = null;
-  for (let i = days - 1; i >= 0; i--) {
-    const d = jstDateNDaysAgo(i);
-    const get = async (kv, k) => kv ? parseInt((await kv.get(k)) || '0', 10) : 0;
-    const pPv = await get(pkv, `pv:${d}`), fPv = await get(fkv, `pv:${d}`);
-    const pUu = await get(pkv, `uucount:${d}`), fUu = await get(fkv, `uucount:${d}`);
-    const pSub = await get(pkv, `submit:${d}`), fSub = await get(fkv, `submit:${d}`);
-    const pv = pPv + fPv, uu = pUu + fUu, sub = pSub + fSub;
+  // ★全KV読みを並列化(2026-06-15)★: 日数ぶんを直列で待つと遅い → Promise.allで一括取得。
+  const recentDates = [];
+  for (let i = days - 1; i >= 0; i--) recentDates.push(jstDateNDaysAgo(i));
+  const g = (kv, k) => kv ? kv.get(k) : Promise.resolve(null);
+  const recentVals = await Promise.all(recentDates.flatMap(d => [
+    g(pkv, `pv:${d}`), g(fkv, `pv:${d}`),
+    g(pkv, `uucount:${d}`), g(fkv, `uucount:${d}`),
+    g(pkv, `submit:${d}`), g(fkv, `submit:${d}`),
+  ]));
+  recentDates.forEach((d, i) => {
+    const n = j => parseInt(recentVals[i * 6 + j] || '0', 10);
+    const pPv = n(0), fPv = n(1), pv = pPv + fPv;
+    const uu = n(2) + n(3), sub = n(4) + n(5);
     pvSum += pv; uuSum += uu; subSum += sub;
     if (pv > 0) lastActiveDate = d;
     result.recent.push({ date: d, pv, uu, submit: sub, hub_pv: pPv, flow_pv: fPv });
-  }
+  });
   const daysSince = lastActiveDate
     ? Math.round((new Date(today) - new Date(lastActiveDate)) / 86400000) : null;
   result.summary = {
