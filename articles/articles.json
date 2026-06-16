@@ -1,7 +1,35 @@
 {
  "generated": "build",
- "count": 12,
+ "count": 14,
  "articles": [
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/surge/articles/repeat-rate-howto/",
+   "lp": "surge",
+   "lpName": "SURGE",
+   "emoji": "📈",
+   "title": "一度きりの客を常連に変える",
+   "desc": "新規獲得は既存維持の5倍コスト(1:5の法則)、顧客離れを5%減らせば利益は最低25%改善(5:25の法則)。人手不足倒産が過去最多442件、広告も人も回らない今こそ『一度きりの客を常連に』。想定事例で、リピート率の上げ方を実業当事者目線で解説。SURGE",
+   "tags": [
+    "売上アップ",
+    "集客・新規",
+    "数字・見える化"
+   ],
+   "date": "2026-06-16"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/surge/articles/price-increase-5-steps/",
+   "lp": "surge",
+   "lpName": "SURGE",
+   "emoji": "📈",
+   "title": "『値上げ＝客が離れる』は本当か",
+   "desc": "『値上げすると客が離れる』は、半分正しく半分間違いです。離れる客と残る客は値上げ前にほぼ決まっている。最低賃金1,121円(+6.3%)・人手不足倒産442件の今、既存客を失わず単価を上げる5ステップを、実業を回す当事者目線で解説。SURGE",
+   "tags": [
+    "価格・値上げ",
+    "売上アップ",
+    "意思決定"
+   ],
+   "date": "2026-06-16"
+  },
   {
    "url": "https://playbook.beyond-holdings.co.jp/lens/articles/slow-decisions-5-bottlenecks/",
    "lp": "lens",
