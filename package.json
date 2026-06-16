@@ -4,6 +4,10 @@
   "private": true,
   "description": "BEYOND PLAYBOOK ハブサイト ─ 中小企業を加速する。9サービスを束ねる",
   "dependencies": {
-    "jose": "^5.9.6"
+    "jose": "^5.9.6",
+    "twitter-api-v2": "^1.18.2"
+  },
+  "scripts": {
+    "post-x": "node scripts/post-to-x.mjs"
   }
 }

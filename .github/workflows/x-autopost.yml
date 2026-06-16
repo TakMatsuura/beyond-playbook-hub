@@ -1,0 +1,62 @@
+name: X Auto Post
+
+# PLAYBOOK 公式X(@beyond_playbook)へ毎日1本、画像付き+utm付きで自動投稿。
+# content/x-queue/queue.json の pending を date 昇順で1本→published に更新しコミット。
+on:
+  schedule:
+    # 03:00 UTC = 12:00 JST。将来ダッシュボードの🕒時間帯データで最適化。
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '送らず内容だけ確認 (1=dry-run)'
+        required: false
+        default: '1'
+
+permissions:
+  contents: write   # queue.json の status 更新を push するため
+
+concurrency:
+  group: x-autopost
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    # 安全ゲート: 毎日の自動投稿は変数 X_AUTOPOST_ENABLED=true のときだけ動く。
+    # 手動実行(workflow_dispatch / dry-run・1本テスト用)は常に許可。
+    # → 鍵登録 → dry-run確認 → 1本テスト投稿で目視 → 変数を true にして初めて常時稼働。
+    if: ${{ github.event_name != 'schedule' || vars.X_AUTOPOST_ENABLED == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm install --no-audit --no-fund
+
+      - name: Post to X
+        id: post
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+          # スケジュール実行=本番投稿。手動実行は入力(既定 dry_run=1)に従う。
+          DRY_RUN: ${{ github.event_name == 'schedule' && '' || inputs.dry_run }}
+        run: node scripts/post-to-x.mjs
+
+      - name: Commit queue status
+        if: ${{ success() }}
+        run: |
+          if git diff --quiet -- content/x-queue/queue.json; then
+            echo "queue.json に変更なし(dry-run or 投稿対象なし)。コミットしません。"
+            exit 0
+          fi
+          git config user.name  "playbook-x-bot"
+          git config user.email "bot@beyond-holdings.co.jp"
+          git add content/x-queue/queue.json
+          git commit -m "X: mark ${{ steps.post.outputs.published_id }} published [skip ci]"
+          git push

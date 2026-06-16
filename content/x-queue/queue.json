@@ -1,0 +1,76 @@
+{
+  "config": {
+    "account": "@beyond_playbook",
+    "lowStockThreshold": 3,
+    "note": "自動投稿キュー。status=pending を date 昇順で1日1本投稿し published に更新。Box 070_X投稿 が人間用の正本ミラー。補充手順は Box 030_SNS運用資料 の手順書参照。"
+  },
+  "items": [
+    {
+      "id": "2026-06-15_001",
+      "date": "2026-06-15",
+      "title": "初投稿 売上天井診断",
+      "text": "はじめまして。BEYOND PLAYBOOKです。\n\n9つの実業を自分たちで回すBEYOND Holdingsが、中小企業の経営を“当事者”として一緒に動かす実装型OSです。コンサルではありません。\n\nまずは「売上の天井」が4つのどこにあるか、60秒の無料診断から👇\nhttps://playbook.beyond-holdings.co.jp/surge/check/?utm_source=x&utm_medium=social&utm_campaign=surge",
+      "image": "img/2026-06-15_001.png",
+      "pinAfterPost": true,
+      "status": "pending",
+      "publishedAt": null,
+      "tweetId": null
+    },
+    {
+      "id": "2026-06-16_002",
+      "date": "2026-06-16",
+      "title": "診断へ 構造フック",
+      "text": "「いい商品なのに、売上がある所で止まる」\n\nそれ、能力でも気合でもなく\"構造\"です。\n単価・客数・リピート・商品構成 ── どこが天井かで打ち手は真逆になる。\n\n自社の天井、60秒で出ます👇(無料)\nhttps://playbook.beyond-holdings.co.jp/surge/check/?utm_source=x&utm_medium=social&utm_campaign=surge\n#中小企業 #売上 #経営",
+      "image": "img/2026-06-16_002.png",
+      "status": "pending",
+      "publishedAt": null,
+      "tweetId": null
+    },
+    {
+      "id": "2026-06-17_003",
+      "date": "2026-06-17",
+      "title": "診断へ 逆張り",
+      "text": "売上を伸ばしたいとき、多くの社長が真っ先に「新規」を増やそうとする。\n\nでも天井が\"単価\"や\"リピート\"にあるなら、新規を足すほど忙しくなって利益は薄くなる。\nまず効く一手は、天井の場所で決まる。\n\nどこが天井か、60秒👇\nhttps://playbook.beyond-holdings.co.jp/surge/check/?utm_source=x&utm_medium=social&utm_campaign=surge\n#経営 #中小企業",
+      "image": "img/2026-06-17_003.png",
+      "status": "pending",
+      "publishedAt": null,
+      "tweetId": null
+    },
+    {
+      "id": "2026-06-18_004",
+      "date": "2026-06-18",
+      "title": "哲学 価値と価格",
+      "text": "砂漠で喉がカラカラのとき、水が1000円でも「高い」とは言わない。\n\n価値は環境で変わる。価格はただの指標。\n\"値段で選ばれない\"会社の作り方を書きました。\nhttps://playbook.beyond-holdings.co.jp/articles/value-not-price/?utm_source=x&utm_medium=social&utm_campaign=surge\n#経営 #価格 #中小企業",
+      "image": "img/2026-06-18_004.png",
+      "status": "pending",
+      "publishedAt": null,
+      "tweetId": null
+    },
+    {
+      "id": "2026-06-19_005",
+      "date": "2026-06-19",
+      "title": "哲学 スピード",
+      "text": "返事が速い会社を見ると「お、本気だ」と感じる。\n速さは能力じゃない。どれだけ欲しているかのバロメーターだ。\n\nスピードを\"情熱\"と呼ぶ理由👇\nhttps://playbook.beyond-holdings.co.jp/articles/speed-is-passion/?utm_source=x&utm_medium=social&utm_campaign=surge\n#経営 #中小企業",
+      "image": "img/2026-06-19_005.png",
+      "status": "pending",
+      "publishedAt": null,
+      "tweetId": null
+    },
+    {
+      "id": "2026-06-20_006",
+      "date": "2026-06-20",
+      "title": "連投スレ 天井4つ",
+      "thread": [
+        "(1/5) 「売上の天井」は気合では破れない。場所を特定して、そこだけ押す。よくある天井は4つ👇\n自社の天井は60秒で出ます👇\nhttps://playbook.beyond-holdings.co.jp/surge/check/?utm_source=x&utm_medium=social&utm_campaign=surge",
+        "(2/5) ①単価が低い:数をこなしても利益が残らない。値づけと提供価値の再設計が効く。",
+        "(3/5) ②客数が新規頼み:広告を止めると止まる。導線と紹介の仕組みが要る。",
+        "(4/5) ③売り切り(リピートなし):一番もったいない。既存客の2回目を設計する。",
+        "(5/5) ④1本足依存:主力がコケると会社が傾く。次の柱の種をまく。"
+      ],
+      "image": "img/2026-06-20_006.png",
+      "status": "pending",
+      "publishedAt": null,
+      "tweetId": null
+    }
+  ]
+}
