@@ -1,7 +1,49 @@
 {
  "generated": "build",
- "count": 14,
+ "count": 17,
  "articles": [
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/surge/articles/new-customer-channel/",
+   "lp": "surge",
+   "lpName": "SURGE",
+   "emoji": "📈",
+   "title": "新規開拓が続かない原因と、再現できる集客導線の作り方",
+   "desc": "ネット広告費は2025年に初の4兆円超、媒体単価も上昇。人手不足倒産はFY2025で441件と過去最多。広告も人も回らない今、新規開拓を運任せにせず『再現できる集客導線』に変える方法を、実業当事者の目線で想定事例つきで解説。SURGE",
+   "tags": [
+    "集客・新規",
+    "売上アップ",
+    "数字・見える化"
+   ],
+   "date": "2026-06-17"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/beacon/articles/content-not-running-out/",
+   "lp": "beacon",
+   "lpName": "BEACON",
+   "emoji": "📡",
+   "title": "情報発信が続かない会社は、ネタをどこで探しているか",
+   "desc": "情報発信が三日坊主で終わる中小企業の想定事例から、ネタ切れの真因と、現場の仕事そのものをネタ源にして続く仕組みを分解。毎回ゼロから探すのをやめ、型化と蓄積で発信を回す方法。BEACON",
+   "tags": [
+    "情報発信",
+    "ブランディング",
+    "DX・AI"
+   ],
+   "date": "2026-06-17"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/magnet/articles/differentiation-howto/",
+   "lp": "magnet",
+   "lpName": "MAGNET",
+   "emoji": "🧲",
+   "title": "中小企業の差別化のやり方",
+   "desc": "中小企業の差別化は『新しい強みを作る』ことではありません。それは消耗と価格競争への近道。本質は、既にある強みを『お客様が選んだ理由』から言語化すること。価格転嫁も進まず人手不足倒産が過去最多の今だからこそ、価格競争から抜ける具体手順を実業当事者の目線で解説。MAGNET",
+   "tags": [
+    "差別化",
+    "価格・値上げ",
+    "集客・新規"
+   ],
+   "date": "2026-06-17"
+  },
   {
    "url": "https://playbook.beyond-holdings.co.jp/surge/articles/repeat-rate-howto/",
    "lp": "surge",
