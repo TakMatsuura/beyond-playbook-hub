@@ -1,7 +1,7 @@
 {
   "version": "0.1",
-  "updated": "2026-06-15",
-  "perDay": 2,
+  "updated": "2026-06-17",
+  "perDay": 3,
   "note": "1日2〜3本・質重視。毎日の定期ジョブがこの台帳から status=pending を上から取り、各LPの既存コラム(<lp>/articles/ の1本目)を雛形にテーマ/CSS/構造を踏襲して本文だけ書き換え、フルの記事を生成する。生成したら status を published に、publishedAt を当日(JST)に更新。sitemap.xml に追記し、commit & push(CIが自動デプロイ)。重複防止のため必ず status を更新すること。 ★2026-06-15: SURGEビーチヘッド集中。台帳先頭をSURGEに寄せた(当面はSURGE系を優先生成)。SURGEで型ができたら他LPへ。",
   "houseStyle": "中小企業の社長目線・共感から入り、痛点→気づき→診断CTA(/<lp>/check/)→伴走(/apply/?s=<lp>)へ。各記事はArticle schema・breadcrumb・LP本体への内部リンクを含む。1000〜1500字。テンプレ感を出さず、トピックごとに独自の中身にする。",
   "topics": [
@@ -29,62 +29,6 @@
       "title": "新規開拓が続かない原因と、再現できる集客導線の作り方",
       "keyword": "新規開拓 集客",
       "angle": "経路の可視化と再現性",
-      "status": "pending"
-    },
-    {
-      "lp": "surge",
-      "slug": "product-mix-review",
-      "title": "売上が伸びない時に見直すべき「商品構成」の考え方",
-      "keyword": "商品構成 見直し",
-      "angle": "高粗利の主力化とABC分析",
-      "status": "pending"
-    },
-    {
-      "lp": "surge",
-      "slug": "quote-that-wins",
-      "title": "値引き交渉に負けない見積りの作り方(松竹梅)",
-      "keyword": "見積り 値引き",
-      "angle": "3段階で竹へ誘導",
-      "status": "pending"
-    },
-    {
-      "lp": "surge",
-      "slug": "unit-price-or-volume",
-      "title": "客単価と客数、どちらを先に上げるべきか",
-      "keyword": "客単価 客数",
-      "angle": "利益インパクトの順番",
-      "status": "pending"
-    },
-    {
-      "lp": "surge",
-      "slug": "busy-but-no-profit",
-      "title": "「忙しいのに儲からない」を抜け出す利益の作り方",
-      "keyword": "忙しいのに儲からない",
-      "angle": "粗利の見える化と値決め",
-      "status": "pending"
-    },
-    {
-      "lp": "surge",
-      "slug": "sales-ceiling-5-causes",
-      "title": "売上が頭打ちになる5つの構造｜あなたの天井はどれか",
-      "keyword": "売上 頭打ち 原因",
-      "angle": "値引き依存/新規運任せ/売り切り/1本足/数字を見ていない の5類型と最初の一手",
-      "status": "pending"
-    },
-    {
-      "lp": "surge",
-      "slug": "second-purchase-design",
-      "title": "2回目を設計する｜売り切りからリピートへ変える具体策",
-      "keyword": "リピート 増やす 方法",
-      "angle": "既存客の2回目導線=最も低コストな売上の伸ばし方",
-      "status": "pending"
-    },
-    {
-      "lp": "surge",
-      "slug": "referral-system-smb",
-      "title": "紹介が自然に増える仕組み｜広告に頼らない新規の作り方",
-      "keyword": "紹介 増やす 中小企業",
-      "angle": "客数の天井を紹介の仕組み化で破る",
       "status": "pending"
     },
     {
@@ -144,6 +88,23 @@
       "status": "pending"
     },
     {
+      "lp": "flow",
+      "repo": "flow",
+      "slug": "cashflow-basics",
+      "title": "資金繰り表の作り方｜どんぶり勘定から抜ける第一歩",
+      "keyword": "資金繰り表 作り方",
+      "angle": "入金出金の見える化→先読み",
+      "status": "pending"
+    },
+    {
+      "lp": "surge",
+      "slug": "product-mix-review",
+      "title": "売上が伸びない時に見直すべき「商品構成」の考え方",
+      "keyword": "商品構成 見直し",
+      "angle": "高粗利の主力化とABC分析",
+      "status": "pending"
+    },
+    {
       "lp": "magnet",
       "slug": "find-your-strength",
       "title": "自社の強みの見つけ方｜お客様目線で言語化する手順",
@@ -197,6 +158,23 @@
       "title": "二重入力をなくす方法｜手作業の自動化入門",
       "keyword": "二重入力 なくす",
       "angle": "連携と自動化のROI",
+      "status": "pending"
+    },
+    {
+      "lp": "flow",
+      "repo": "flow",
+      "slug": "profit-but-no-cash",
+      "title": "黒字なのにお金がない理由と、キャッシュの詰まりの見つけ方",
+      "keyword": "黒字倒産 資金繰り",
+      "angle": "利益とキャッシュのズレを特定",
+      "status": "pending"
+    },
+    {
+      "lp": "surge",
+      "slug": "quote-that-wins",
+      "title": "値引き交渉に負けない見積りの作り方(松竹梅)",
+      "keyword": "見積り 値引き",
+      "angle": "3段階で竹へ誘導",
       "status": "pending"
     },
     {
@@ -256,6 +234,23 @@
       "status": "pending"
     },
     {
+      "lp": "flow",
+      "repo": "flow",
+      "slug": "when-to-talk-to-bank",
+      "title": "銀行に相談すべきタイミング｜手遅れにしないサイン",
+      "keyword": "銀行 相談 タイミング",
+      "angle": "早めの相談で選択肢を残す",
+      "status": "pending"
+    },
+    {
+      "lp": "surge",
+      "slug": "unit-price-or-volume",
+      "title": "客単価と客数、どちらを先に上げるべきか",
+      "keyword": "客単価 客数",
+      "angle": "利益インパクトの順番",
+      "status": "pending"
+    },
+    {
       "lp": "magnet",
       "slug": "collect-show-testimonials",
       "title": "お客様の声・事例の集め方と見せ方",
@@ -309,6 +304,23 @@
       "title": "標準化(SOP)の作り方｜品質のバラつきを無くす",
       "keyword": "SOP 作り方",
       "angle": "手順書とチェックリスト",
+      "status": "pending"
+    },
+    {
+      "lp": "flow",
+      "repo": "flow",
+      "slug": "cost-structure-review",
+      "title": "固定費の見直し手順｜利益が残る体質への変え方",
+      "keyword": "固定費 見直し",
+      "angle": "損益分岐を下げる順番",
+      "status": "pending"
+    },
+    {
+      "lp": "surge",
+      "slug": "busy-but-no-profit",
+      "title": "「忙しいのに儲からない」を抜け出す利益の作り方",
+      "keyword": "忙しいのに儲からない",
+      "angle": "粗利の見える化と値決め",
       "status": "pending"
     },
     {
@@ -368,6 +380,23 @@
       "status": "pending"
     },
     {
+      "lp": "flow",
+      "repo": "flow",
+      "slug": "working-capital",
+      "title": "運転資金はいくら必要か｜資金ショートを防ぐ考え方",
+      "keyword": "運転資金 計算",
+      "angle": "必要運転資金の把握",
+      "status": "pending"
+    },
+    {
+      "lp": "surge",
+      "slug": "sales-ceiling-5-causes",
+      "title": "売上が頭打ちになる5つの構造｜あなたの天井はどれか",
+      "keyword": "売上 頭打ち 原因",
+      "angle": "値引き依存/新規運任せ/売り切り/1本足/数字を見ていない の5類型と最初の一手",
+      "status": "pending"
+    },
+    {
       "lp": "magnet",
       "slug": "one-line-positioning",
       "title": "「何が違うの?」に一言で答えるポジショニングの作り方",
@@ -421,6 +450,23 @@
       "title": "業務マニュアルの作り方と運用のコツ",
       "keyword": "業務マニュアル 作り方",
       "angle": "更新が回る運用",
+      "status": "pending"
+    },
+    {
+      "lp": "flow",
+      "repo": "flow",
+      "slug": "price-and-cashflow",
+      "title": "値上げとキャッシュフロー｜資金繰りを楽にする価格の打ち手",
+      "keyword": "値上げ 資金繰り",
+      "angle": "価格改定で入金を厚く",
+      "status": "pending"
+    },
+    {
+      "lp": "surge",
+      "slug": "second-purchase-design",
+      "title": "2回目を設計する｜売り切りからリピートへ変える具体策",
+      "keyword": "リピート 増やす 方法",
+      "angle": "既存客の2回目導線=最も低コストな売上の伸ばし方",
       "status": "pending"
     },
     {
@@ -478,7 +524,24 @@
       "keyword": "ボトルネック 改善",
       "angle": "リードタイム分析",
       "status": "pending"
+    },
+    {
+      "lp": "flow",
+      "repo": "flow",
+      "slug": "emergency-cash-plan",
+      "title": "資金が足りない時の打ち手の順番｜慌てて借りる前に",
+      "keyword": "資金繰り 危機 対応",
+      "angle": "借入前に打てる手の優先順位",
+      "status": "pending"
+    },
+    {
+      "lp": "surge",
+      "slug": "referral-system-smb",
+      "title": "紹介が自然に増える仕組み｜広告に頼らない新規の作り方",
+      "keyword": "紹介 増やす 中小企業",
+      "angle": "客数の天井を紹介の仕組み化で破る",
+      "status": "pending"
     }
   ],
-  "focusLp": "surge"
+  "focusLp": null
 }
