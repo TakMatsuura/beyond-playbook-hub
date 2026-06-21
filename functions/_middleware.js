@@ -35,7 +35,7 @@ export async function onRequest(context) {
   const path = url.pathname;
 
   if (PROTECTED_PREFIXES.some(p => path === p || path.startsWith(p + '/') || path.startsWith(p + '?'))) {
-    const auth = checkBasicAuth(context.request, context.env);
+    const auth = await checkBasicAuth(context.request, context.env);
     if (auth !== true) return auth;
   }
 
@@ -66,6 +66,10 @@ export async function onRequest(context) {
     if (path.startsWith('/wp-')) return response;
     if (BOT_UA_PATTERN.test(userAgent) || !userAgent) return response;  // bot/スキャナー/UA無し除外(強化)
     if (cookieHeader.includes('playbook_internal=1')) return response;
+    // ★社内IP除外 (2026-06-22)★ : env INTERNAL_IPS (カンマ/空白区切り) に一致するIPは
+    //   オフィス/自宅/社内端末とみなし、cookie の有無に関係なく丸ごと集計から外す。
+    //   各エントリは完全一致、または末尾 '*' で前方一致 (例 "203.0.113.*" = その/24)。
+    if (isInternalIp(ip, context.env.INTERNAL_IPS)) return response;
 
     const jstDate = new Intl.DateTimeFormat('en-CA', {
       timeZone: 'Asia/Tokyo',
@@ -94,7 +98,7 @@ export async function onRequest(context) {
   return response;
 }
 
-function checkBasicAuth(request, env) {
+async function checkBasicAuth(request, env) {
   const user = env.ADMIN_USER;
   const pass = env.ADMIN_PASS;
   if (!user || !pass) {
@@ -113,12 +117,29 @@ function checkBasicAuth(request, env) {
     if (idx < 0) throw new Error('bad');
     const u = decoded.slice(0, idx);
     const p = decoded.slice(idx + 1);
-    if (u === user && p === pass) return true;
+    // ★タイミング攻撃対策★ : 文字列の === ではなく定数時間比較 (SHA-256ダイジェストのXOR比較)
+    const [uOk, pOk] = await Promise.all([timingSafeEqual(u, user), timingSafeEqual(p, pass)]);
+    if (uOk && pOk) return true;
   } catch {}
   return new Response('Invalid credentials', {
     status: 401,
     headers: { 'WWW-Authenticate': 'Basic realm="PLAYBOOK Admin"' },
   });
+}
+
+// ★定数時間比較★ : 両辺を SHA-256 でハッシュしてから1バイトずつ XOR 比較する。
+//   入力長や先頭一致から秘密を推測される (タイミング攻撃) のを防ぐ。
+async function timingSafeEqual(a, b) {
+  const enc = new TextEncoder();
+  const [ha, hb] = await Promise.all([
+    crypto.subtle.digest('SHA-256', enc.encode(String(a))),
+    crypto.subtle.digest('SHA-256', enc.encode(String(b))),
+  ]);
+  const va = new Uint8Array(ha);
+  const vb = new Uint8Array(hb);
+  let diff = 0;
+  for (let i = 0; i < va.length; i++) diff |= va[i] ^ vb[i];
+  return diff === 0;
 }
 
 // ★ver0.3 (2026-05-28): KV PV計測を★復活★ (Paidプラン加入後・余裕あり)
@@ -195,6 +216,20 @@ async function recordHit(env, date, path, ip, status, source, country, device, h
 async function bump(env, key, ttl) {
   const cur = parseInt((await env.PLAYBOOK_ANALYTICS.get(key)) || '0', 10);
   await env.PLAYBOOK_ANALYTICS.put(key, String(cur + 1), { expirationTtl: ttl });
+}
+
+// ★社内IP判定★ : INTERNAL_IPS (カンマ/空白区切り) のどれかに一致したら true。
+//   "203.0.113.7" = 完全一致 / "203.0.113.*" = 前方一致(その/24などをまとめて除外)。
+//   IPv6 も完全一致 or 末尾 '*' 前方一致で扱える。未設定(空)なら常に false。
+function isInternalIp(ip, raw) {
+  if (!ip || ip === 'unknown' || !raw) return false;
+  for (const entry of String(raw).split(/[\s,]+/)) {
+    const e = entry.trim();
+    if (!e) continue;
+    if (e.endsWith('*')) { if (ip.startsWith(e.slice(0, -1))) return true; }
+    else if (ip === e) return true;
+  }
+  return false;
 }
 
 // UA からデバイス種別を判定 (mobile / tablet / desktop)。

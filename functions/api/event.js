@@ -9,17 +9,45 @@
 const ALLOWED = new Set(['diag_start', 'apply_click']);
 const BOT_UA = /bot|crawler|spider|monitor|preview|fetch|wget|curl|httpie|scrap|axios|python|headless|phantom|slurp|facebookexternalhit|embedly|go-http|okhttp|libwww|java\/|perl|ruby|scrapy|semrush|ahrefs|mj12|dotbot|petalbot|bytespider|gptbot|ccbot|claudebot|anthropic|google-extended|dataforseo|censys|zgrab|masscan|nuclei|yandex|baidu|node-fetch|undici/i;
 
+// ★社内IP判定(_middleware.jsと同仕様)★ : 完全一致 or 末尾 '*' 前方一致。未設定なら false。
+function isInternalIp(ip, raw) {
+  if (!ip || ip === 'unknown' || !raw) return false;
+  for (const entry of String(raw).split(/[\s,]+/)) {
+    const e = entry.trim();
+    if (!e) continue;
+    if (e.endsWith('*')) { if (ip.startsWith(e.slice(0, -1))) return true; }
+    else if (ip === e) return true;
+  }
+  return false;
+}
+
 function jstDate() {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit',
   }).format(new Date());
 }
-const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' };
+// ★CORS を自ドメイン限定★ : 許可originのみ反映 (sendBeaconは同一オリジンなので無影響)
+const ALLOWED_ORIGINS = [
+  'https://playbook.beyond-holdings.co.jp',
+  'https://playbook-beyond.pages.dev',
+];
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (ALLOWED_ORIGINS.includes(origin)) return true;
+  try { return new URL(origin).hostname.endsWith('.pages.dev'); } catch { return false; }
+}
+function corsHeaders(request) {
+  const origin = request.headers.get('Origin') || '';
+  const h = { 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' };
+  if (isAllowedOrigin(origin)) h['Access-Control-Allow-Origin'] = origin;
+  return h;
+}
 
-export async function onRequestOptions() { return new Response(null, { headers: cors }); }
+export async function onRequestOptions(context) { return new Response(null, { headers: corsHeaders(context.request) }); }
 
 export async function onRequest(context) {
   const { env, request } = context;
+  const cors = corsHeaders(request);
   if (request.method !== 'POST' && request.method !== 'GET') {
     return new Response('method', { status: 405, headers: cors });
   }
@@ -38,7 +66,9 @@ export async function onRequest(context) {
   // bot / 社内端末は数えない (PV/UUと同基準)
   const ua = request.headers.get('user-agent') || '';
   const cookie = request.headers.get('cookie') || '';
-  const excluded = !ua || BOT_UA.test(ua) || cookie.includes('playbook_internal=1');
+  const ip = request.headers.get('cf-connecting-ip') || '';
+  const excluded = !ua || BOT_UA.test(ua) || cookie.includes('playbook_internal=1')
+    || isInternalIp(ip, env.INTERNAL_IPS);  // ★社内IP除外(2026-06-22)★
 
   if (ALLOWED.has(t) && !excluded && env.PLAYBOOK_ANALYTICS) {
     try {

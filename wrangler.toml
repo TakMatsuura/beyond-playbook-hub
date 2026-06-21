@@ -2,6 +2,13 @@ name = "playbook-beyond"
 compatibility_date = "2025-01-01"
 pages_build_output_dir = "."
 
+# ★社内IP除外リスト (2026-06-22)★ : ここに載せたIPからのアクセスは PV/UU/申込 集計から
+#   丸ごと除外する(cookieを仕込み忘れた端末も自動で除外)。カンマ区切り。
+#   完全一致 "203.0.113.7" / 前方一致 "203.0.113.*"(その/24をまとめて) のどちらも可。
+#   IPは /api/whoami を各拠点(オフィス・自宅・スマホ回線)で開けば分かる。
+[vars]
+INTERNAL_IPS = ""
+
 [[kv_namespaces]]
 binding = "PLAYBOOK_ANALYTICS"
 id = "2ad08b7ca5974674a56025bba6defd2a"
