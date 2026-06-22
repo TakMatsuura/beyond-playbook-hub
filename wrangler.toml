@@ -7,7 +7,7 @@ pages_build_output_dir = "."
 #   完全一致 "203.0.113.7" / 前方一致 "203.0.113.*"(その/24をまとめて) のどちらも可。
 #   IPは /api/whoami を各拠点(オフィス・自宅・スマホ回線)で開けば分かる。
 [vars]
-INTERNAL_IPS = ""
+INTERNAL_IPS = "60.101.15.80"
 
 [[kv_namespaces]]
 binding = "PLAYBOOK_ANALYTICS"
