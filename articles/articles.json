@@ -1,7 +1,80 @@
 {
  "generated": "build",
- "count": 20,
+ "count": 25,
  "articles": [
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/magnet/articles/find-your-strength/",
+   "lp": "magnet",
+   "lpName": "MAGNET",
+   "emoji": "🧲",
+   "title": "自社の強みは社内会議では出てこない",
+   "desc": "自社の強みがわからないのは、強みが『空気のような存在』になって自分では気づけないから。答えは社内の議論ではなく、お客様が自社を選び続ける理由の中にあります。受注理由を聞き出して強みを言語化する手順を、想定事例つきで実業の当事者目線で解説。MAGNET",
+   "tags": [
+    "差別化",
+    "ブランディング",
+    "情報発信",
+    "意思決定"
+   ],
+   "date": "2026-06-23"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/beacon/articles/strength-to-customer-words/",
+   "lp": "beacon",
+   "lpName": "BEACON",
+   "emoji": "📡",
+   "title": "専門用語で書くほど伝わらない",
+   "desc": "専門用語で正確に書けば信頼される――この常識が、実は問い合わせを遠ざけています。お客様は『◯◯とは』とそもそもの意味から検索している。強みを専門用語のまま並べず、相手の言葉に翻訳して伝えるコツを、実業を回す当事者目線で解説。BEACON",
+   "tags": [
+    "情報発信",
+    "差別化",
+    "ブランディング",
+    "集客・新規"
+   ],
+   "date": "2026-06-23"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/surge/articles/product-mix-review/",
+   "lp": "surge",
+   "lpName": "SURGE",
+   "emoji": "📈",
+   "title": "売上を追う前に『商品構成』を組み替える",
+   "desc": "2025年度の倒産は1万425件、物価高倒産963件は過去最多。原価が上がり続けるいま、売上を追うより『商品構成』の組み替えが効きます。ABC分析と粗利累計構成比で、稼ぐ主力と利益を食う死に筋を見える化する手順を、実業を回す当事者目線で解説。SURGE",
+   "tags": [
+    "売上アップ",
+    "数字・見える化",
+    "価格・値上げ",
+    "差別化"
+   ],
+   "date": "2026-06-23"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/gear/articles/efficiency-where-to-start/",
+   "lp": "gear",
+   "lpName": "GEAR",
+   "emoji": "⚙️",
+   "title": "業務効率化、何から手をつけるか",
+   "desc": "最低賃金1,121円・人手不足倒産は過去最多・日銀は0.75%へ利上げ。人も金利も高くつく2026年、業務効率化は『やる前提』に。だが多くの会社が『何から手をつけるか』で頓挫する。全部やろうとせず、時間×頻度×付加価値で一点を選ぶ進め方を、実業当事者の視点で解説。GEAR",
+   "tags": [
+    "業務効率化",
+    "DX・AI",
+    "人手不足"
+   ],
+   "date": "2026-06-22"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/pack/articles/reduce-turnover/",
+   "lp": "pack",
+   "lpName": "PACK",
+   "emoji": "👥",
+   "title": "『給料を上げれば辞めない』の落とし穴",
+   "desc": "『給料を上げれば辞めない』は半分しか当たっていない。最低賃金1,121円・人手不足倒産が過去最多の今こそ知るべき、退職理由の本音と、お金で殴り合わずに離職を減らす方法。定着・属人化・採用・育成評価の4観点で、評価の納得感から始める最初の一手を解説。PACK",
+   "tags": [
+    "定着・離職",
+    "人材育成",
+    "数字・見える化"
+   ],
+   "date": "2026-06-22"
+  },
   {
    "url": "https://playbook.beyond-holdings.co.jp/north/articles/how-to-make-philosophy/",
    "lp": "north",
