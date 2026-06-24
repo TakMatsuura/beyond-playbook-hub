@@ -1,7 +1,49 @@
 {
  "generated": "build",
- "count": 25,
+ "count": 28,
  "articles": [
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/seed/articles/small-start-howto/",
+   "lp": "seed",
+   "lpName": "SEED",
+   "emoji": "🌱",
+   "title": "満を持して始めた新規事業が、半年で在庫の山になった話",
+   "desc": "満を持して立ち上げた新規事業が、半年で在庫の山に変わる——その典型を避ける鍵がスモールスタート。失敗理由の42%が『市場ニーズの欠如』という現実の中で、最小の投資で需要を確かめる手順を、想定事例とBEYONDの実業視点で解説。SEED",
+   "tags": [
+    "新規事業",
+    "財務・資金繰り",
+    "意思決定"
+   ],
+   "date": "2026-06-24"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/lens/articles/speed-up-monthly-closing/",
+   "lp": "lens",
+   "lpName": "LENS",
+   "emoji": "🔍",
+   "title": "月次決算が翌々月に出る会社は、二か月遅れで経営している",
+   "desc": "試算表が翌々月にしか出ない会社は、ほぼ確実に判断が二か月遅れている。クラウド会計の利用率が38.3%まで伸びた今、月次決算を翌月10日以内に早めるための具体的な順番を、9社の締めを20日から15日に縮めたBEYONDの実業視点で解説。LENS",
+   "tags": [
+    "数字・見える化",
+    "業務効率化",
+    "DX・AI"
+   ],
+   "date": "2026-06-24"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/north/articles/why-vision-not-spread/",
+   "lp": "north",
+   "lpName": "NORTH",
+   "emoji": "🧭",
+   "title": "ビジョンは『唱和』では浸透しない ── 7%の国で旗を立て直す",
+   "desc": "ビジョンが浸透しないのは『掲示と唱和が足りないから』——この常識が、実は浸透を止めている。仕事に熱意のある社員が7%という日本で、理念を額縁から現場へ移すために本当に必要なことを、9社を束ねるBEYONDの実業視点で解説。NORTH",
+   "tags": [
+    "経営理念",
+    "情報発信",
+    "定着・離職"
+   ],
+   "date": "2026-06-24"
+  },
   {
    "url": "https://playbook.beyond-holdings.co.jp/magnet/articles/find-your-strength/",
    "lp": "magnet",
