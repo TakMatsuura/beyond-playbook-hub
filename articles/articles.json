@@ -1,7 +1,35 @@
 {
  "generated": "build",
- "count": 28,
+ "count": 30,
  "articles": [
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/gear/articles/eliminate-double-entry/",
+   "lp": "gear",
+   "lpName": "GEAR",
+   "emoji": "⚙️",
+   "title": "二重入力をなくす",
+   "desc": "インボイス・改正電子帳簿保存法・デジタルインボイス(Peppol)が揃った2026年、経理の『二重入力』は最も外しやすいムダになった。請求書を見て自社システムに打ち直す手作業は、ミスの温床でコストだけ残る。連携と自動化のROIの見極め方、いきなり全部やらず一本道から外す進め方を、実業当事者の視点で解説。GEAR",
+   "tags": [
+    "DX・AI",
+    "業務効率化",
+    "数字・見える化"
+   ],
+   "date": "2026-06-25"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/pack/articles/resolve-person-dependency/",
+   "lp": "pack",
+   "lpName": "PACK",
+   "emoji": "👥",
+   "title": "『あの人が辞めたら、現場が止まった』──属人化を解く順番",
+   "desc": "『あの人が辞めたら現場が止まる』──属人化は非効率では済まず、会社を止めるリスクに。2025年の人手不足倒産は過去最多427件、従業員退職が引き金の倒産は1.5倍増。慌ててマニュアルを作る前に、棚卸し→急所からSOP→更新が回る運用という解く順番を、想定事例とともに実業当事者の視点で解説。PACK",
+   "tags": [
+    "業務効率化",
+    "人手不足",
+    "数字・見える化"
+   ],
+   "date": "2026-06-25"
+  },
   {
    "url": "https://playbook.beyond-holdings.co.jp/seed/articles/small-start-howto/",
    "lp": "seed",
