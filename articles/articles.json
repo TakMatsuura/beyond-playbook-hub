@@ -1,7 +1,52 @@
 {
  "generated": "build",
- "count": 30,
+ "count": 33,
  "articles": [
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/beacon/articles/reaction-vs-no-reaction/",
+   "lp": "beacon",
+   "lpName": "BEACON",
+   "emoji": "📡",
+   "title": "反応の出る発信と出ない発信の違い",
+   "desc": "毎日発信しているのに反応ゼロ。原因は更新頻度ではなく『中身が宣伝に寄りすぎている』ことかもしれません。反応の出る発信は価値提供8割・宣伝2割が目安。ある工務店の想定事例で、宣伝型から価値提供型へ切り替えた turn を、実業を回す当事者目線で解説。BEACON",
+   "tags": [
+    "情報発信",
+    "集客・新規",
+    "差別化",
+    "ブランディング"
+   ],
+   "date": "2026-06-27"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/magnet/articles/website-trust-5-points/",
+   "lp": "magnet",
+   "lpName": "MAGNET",
+   "emoji": "🧲",
+   "title": "ホームページで『ちゃんとした会社』に見せる5つのポイント",
+   "desc": "検索の入口がスマホとAIに移ったいま、ホームページの第一印象が会社の信頼を左右します。Googleはモバイル版を主に評価し（モバイルファーストインデックス）、表示の速さや崩れ（Core Web Vitals）が順位にも直結。『ちゃんとした会社』に見せる5つのポイントを、実業を回す当事者目線で解説。MAGNET",
+   "tags": [
+    "ブランディング",
+    "差別化",
+    "集客・新規",
+    "情報発信"
+   ],
+   "date": "2026-06-27"
+  },
+  {
+   "url": "https://playbook.beyond-holdings.co.jp/surge/articles/quote-that-wins/",
+   "lp": "surge",
+   "lpName": "SURGE",
+   "emoji": "📈",
+   "title": "『安くすれば取れる』は逆効果",
+   "desc": "値引きすれば受注できる──この常識が単価を削り続けます。価格転嫁できた中小企業は57.1%にとどまり、原価高はもう待ったなし。1本の見積りで戦うのをやめ、松竹梅の3段構成で『竹』へ誘導する作り方を、極端の回避性の裏取りつきで実業の当事者目線で解説。SURGE",
+   "tags": [
+    "価格・値上げ",
+    "売上アップ",
+    "意思決定",
+    "差別化"
+   ],
+   "date": "2026-06-27"
+  },
   {
    "url": "https://playbook.beyond-holdings.co.jp/gear/articles/eliminate-double-entry/",
    "lp": "gear",
