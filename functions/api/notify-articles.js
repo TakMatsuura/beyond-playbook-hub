@@ -20,7 +20,8 @@ export async function onRequest(context) {
   let body = {};
   try { body = await request.json(); } catch (_) { body = {}; }
   if (!key && body.key) key = body.key;
-  if (!env.ARTICLE_NOTIFY_KEY || key !== env.ARTICLE_NOTIFY_KEY) {
+  // ★定数時間比較でタイミング攻撃を防ぐ。受理方法=?key= / body.key は従来どおり★
+  if (!env.ARTICLE_NOTIFY_KEY || !(await timingSafeEqual(key || '', env.ARTICLE_NOTIFY_KEY))) {
     return json({ error: 'unauthorized' }, 401);
   }
 
@@ -48,7 +49,8 @@ export async function onRequest(context) {
     await sendDirectMessage(env, token, env.LINE_WORKS_MATSUURA_ID, text);
     return json({ ok: true, sent: articles.length });
   } catch (e) {
-    return json({ ok: false, error: String(e && e.message || e) }, 500);
+    console.error('[notify-articles] error:', e && e.message || e);
+    return json({ ok: false, error: 'Internal error' }, 500);
   }
 }
 
@@ -100,4 +102,18 @@ async function sendDirectMessage(env, token, userId, text) {
   );
   if (!res.ok) throw new Error(`DM failed: ${res.status} ${(await res.text()).slice(0, 300)}`);
   return { ok: true };
+}
+
+// ★定数時間比較★ : 両辺を SHA-256 でハッシュしてから1バイトずつ XOR 比較する。
+async function timingSafeEqual(a, b) {
+  const enc = new TextEncoder();
+  const [ha, hb] = await Promise.all([
+    crypto.subtle.digest('SHA-256', enc.encode(String(a))),
+    crypto.subtle.digest('SHA-256', enc.encode(String(b))),
+  ]);
+  const va = new Uint8Array(ha);
+  const vb = new Uint8Array(hb);
+  let diff = 0;
+  for (let i = 0; i < va.length; i++) diff |= va[i] ^ vb[i];
+  return diff === 0;
 }

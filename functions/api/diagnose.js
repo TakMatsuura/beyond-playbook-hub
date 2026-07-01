@@ -12,21 +12,79 @@ import { SignJWT, importPKCS8 } from 'jose';
 const AUTH_BASE = 'https://auth.worksmobile.com/oauth2/v2.0';
 const API_BASE = 'https://www.worksapis.com/v1.0';
 
+// ★CORS を自ドメイン限定★ : 許可originのみ反映 (許可外はヘッダ無し=ブラウザが弾く)
+const ALLOWED_ORIGINS = [
+  'https://playbook.beyond-holdings.co.jp',
+  'https://playbook-beyond.pages.dev',
+];
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (ALLOWED_ORIGINS.includes(origin)) return true;
+  try { return new URL(origin).hostname.endsWith('.pages.dev'); } catch { return false; }
+}
+function corsHeaders(request) {
+  const origin = request.headers.get('Origin') || '';
+  const h = { 'Content-Type': 'application/json; charset=utf-8' };
+  if (isAllowedOrigin(origin)) h['Access-Control-Allow-Origin'] = origin;
+  return h;
+}
+
+// ★スパム対策★ : ① honeypot隠しフィールド(website) ② 同一IPレート制限(10分5件)
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_SEC = 600;
+// ★添付画像サイズ上限★ : base64デコード後 5MB を超える画像は拒否 (DoS/メモリ枯渇対策)
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+
 export async function onRequestPost(context) {
   const { env, request } = context;
-  const cors = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json; charset=utf-8' };
+  const cors = corsHeaders(request);
 
   try {
     const requiredEnv = ['LINE_WORKS_CLIENT_ID','LINE_WORKS_CLIENT_SECRET','LINE_WORKS_SERVICE_ACCOUNT','LINE_WORKS_BOT_ID','LINE_WORKS_MATSUURA_ID','LINE_WORKS_PRIVATE_KEY'];
     const missing = requiredEnv.filter(k => !env[k]);
-    if (missing.length > 0) return new Response(JSON.stringify({ ok:false, error:`Missing env: ${missing.join(',')}` }), { status:500, headers:cors });
+    if (missing.length > 0) {
+      console.error('[diagnose] missing env vars:', missing.join(','));
+      return new Response(JSON.stringify({ ok:false, error:'Internal error' }), { status:500, headers:cors });
+    }
 
     let d;
     try { d = JSON.parse(await request.text()); } catch (e) {
-      return new Response(JSON.stringify({ ok:false, error:`Invalid JSON: ${e.message}` }), { status:400, headers:cors });
+      console.error('[diagnose] invalid JSON:', e.message);
+      return new Response(JSON.stringify({ ok:false, error:'Invalid JSON' }), { status:400, headers:cors });
     }
     if (!d.lp || !d.ceiling) {
       return new Response(JSON.stringify({ ok:false, error:'lp と ceiling は必須です' }), { status:400, headers:cors });
+    }
+
+    // ★① honeypot★ — 隠しフィールド website が埋まってたら bot確定 → ok:trueで静かに破棄
+    if (d.website && String(d.website).trim() !== '') {
+      console.log('[diagnose] honeypot triggered, silently dropped');
+      return new Response(JSON.stringify({ ok:true }), { status:200, headers:cors });
+    }
+
+    // ★添付画像サイズ上限★ — base64デコード後サイズを推定し、上限超過は拒否 (atob/upload前)
+    if (d.image) {
+      const b64 = String(d.image).replace(/^data:[^,]*,/, ''); // data URLプレフィックスがあれば除去
+      const pad = b64.endsWith('==') ? 2 : b64.endsWith('=') ? 1 : 0;
+      const approxBytes = Math.floor((b64.length * 3) / 4) - pad;
+      if (approxBytes > MAX_IMAGE_BYTES) {
+        console.log('[diagnose] image too large:', approxBytes);
+        return new Response(JSON.stringify({ ok:false, error:'画像が大きすぎます' }), { status:413, headers:cors });
+      }
+    }
+
+    // ★② レート制限★ — 同一IP 10分で RATE_LIMIT_MAX 件まで (DMスパム防止)
+    if (env.PLAYBOOK_ANALYTICS) {
+      try {
+        const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+        const rlKey = `rl:diagnose:${ip}`;
+        const cnt = parseInt((await env.PLAYBOOK_ANALYTICS.get(rlKey)) || '0', 10);
+        if (cnt >= RATE_LIMIT_MAX) {
+          console.log('[diagnose] rate limit hit:', ip);
+          return new Response(JSON.stringify({ ok:false, error:'送信が多すぎます。しばらくしてから再度お試しください。' }), { status:429, headers:cors });
+        }
+        await env.PLAYBOOK_ANALYTICS.put(rlKey, String(cnt + 1), { expirationTtl: RATE_LIMIT_WINDOW_SEC });
+      } catch (e) { console.error('rate limit check:', e.message); /* 失敗時は通す=非破壊 */ }
     }
 
     const jstNow = new Intl.DateTimeFormat('ja-JP', {
@@ -65,7 +123,7 @@ export async function onRequestPost(context) {
           const fileId = await uploadImage(env, token, d.image, `${lp}-radar.png`);
           await sendImageMessage(env, token, env.LINE_WORKS_MATSUURA_ID, fileId);
           imageResult = 'sent';
-        } catch (e) { imageResult = 'error: ' + e.message; console.error('diag image:', e.message); }
+        } catch (e) { imageResult = 'error'; console.error('diag image:', e.message); }
       } else { imageResult = 'no-image'; }
     }
 
@@ -99,18 +157,18 @@ export async function onRequestPost(context) {
     return new Response(JSON.stringify({ ok:true, sent: shouldSend, isTest, image: (forceTest ? imageResult : undefined) }), { status:200, headers:cors });
   } catch (err) {
     console.error('[diagnose] error:', err.message, err.stack);
-    return new Response(JSON.stringify({ ok:false, error: err.message || 'Internal error' }), { status:500, headers:cors });
+    return new Response(JSON.stringify({ ok:false, error: 'Internal error' }), { status:500, headers:cors });
   }
 }
 
-export async function onRequestOptions() {
-  return new Response(null, {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  });
+export async function onRequestOptions(context) {
+  const origin = context.request.headers.get('Origin') || '';
+  const headers = {
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+  if (isAllowedOrigin(origin)) headers['Access-Control-Allow-Origin'] = origin;
+  return new Response(null, { headers });
 }
 
 function formatNotification(d, jstNow, meta, forceTest) {

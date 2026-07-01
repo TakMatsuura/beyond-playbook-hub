@@ -33,8 +33,9 @@ export async function onRequestGet(context) {
   const { env, request } = context;
   const url = new URL(request.url);
 
+  // ★定数時間比較でタイミング攻撃を防ぐ。受理方法=?key= は従来どおり★
   const key = url.searchParams.get('key');
-  if (!env.DAILY_REPORT_KEY || key !== env.DAILY_REPORT_KEY) {
+  if (!env.DAILY_REPORT_KEY || !(await timingSafeEqual(key || '', env.DAILY_REPORT_KEY))) {
     return jsonRes({ ok: false, error: 'Unauthorized' }, 401);
   }
   if (!env.PLAYBOOK_ANALYTICS) {
@@ -76,7 +77,8 @@ export async function onRequestGet(context) {
       const token = await getAccessToken(env);
       await sendDirectMessage(env, token, env.LINE_WORKS_MATSUURA_ID, msg);
     } catch (e) {
-      return jsonRes({ ok: false, error: e.message, week, prevWeek }, 500);
+      console.error('[weekly-report] send failed:', e.message);
+      return jsonRes({ ok: false, error: 'Internal error', week, prevWeek }, 500);
     }
   }
 
@@ -262,4 +264,18 @@ async function sendDirectMessage(env, token, userId, text) {
     body: JSON.stringify({ content: { type: 'text', text } }),
   });
   if (!res.ok) throw new Error(`DM failed: ${res.status} ${(await res.text()).slice(0,200)}`);
+}
+
+// ★定数時間比較★ : 両辺を SHA-256 でハッシュしてから1バイトずつ XOR 比較する。
+async function timingSafeEqual(a, b) {
+  const enc = new TextEncoder();
+  const [ha, hb] = await Promise.all([
+    crypto.subtle.digest('SHA-256', enc.encode(String(a))),
+    crypto.subtle.digest('SHA-256', enc.encode(String(b))),
+  ]);
+  const va = new Uint8Array(ha);
+  const vb = new Uint8Array(hb);
+  let diff = 0;
+  for (let i = 0; i < va.length; i++) diff |= va[i] ^ vb[i];
+  return diff === 0;
 }

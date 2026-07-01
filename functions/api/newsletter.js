@@ -10,6 +10,10 @@ import { SignJWT, importPKCS8 } from 'jose';
 const AUTH_BASE = 'https://auth.worksmobile.com/oauth2/v2.0';
 const API_BASE = 'https://www.worksapis.com/v1.0';
 
+// ★スパム対策★ : ① honeypot隠しフィールド(website) ② 同一IPレート制限(10分5件)
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_SEC = 600;
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -18,6 +22,12 @@ export async function onRequestPost(context) {
     let body;
     try { body = JSON.parse(text); } catch {
       return jsonRes({ ok: false, error: 'Invalid JSON' }, 400);
+    }
+
+    // ★① honeypot★ — 隠しフィールド website が埋まってたら bot確定 → ok:trueで静かに破棄
+    if (body.website && String(body.website).trim() !== '') {
+      console.log('[newsletter] honeypot triggered, silently dropped');
+      return jsonRes({ ok: true, message: '登録しました。続報をお送りします。' }, 200);
     }
 
     const email = (body.email || '').trim();
@@ -29,6 +39,20 @@ export async function onRequestPost(context) {
     }
     if (email.length > 200) {
       return jsonRes({ ok: false, error: '入力が長すぎます' }, 400);
+    }
+
+    // ★② レート制限★ — 同一IP 10分で RATE_LIMIT_MAX 件まで
+    if (env.PLAYBOOK_ANALYTICS) {
+      try {
+        const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+        const rlKey = `rl:newsletter:${ip}`;
+        const cnt = parseInt((await env.PLAYBOOK_ANALYTICS.get(rlKey)) || '0', 10);
+        if (cnt >= RATE_LIMIT_MAX) {
+          console.log('[newsletter] rate limit hit:', ip);
+          return jsonRes({ ok: false, error: '送信が多すぎます。しばらくしてから再度お試しください。' }, 429);
+        }
+        await env.PLAYBOOK_ANALYTICS.put(rlKey, String(cnt + 1), { expirationTtl: RATE_LIMIT_WINDOW_SEC });
+      } catch (e) { console.error('rate limit check:', e.message); /* 失敗時は通す=非破壊 */ }
     }
 
     // JST日付

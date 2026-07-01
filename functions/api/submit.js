@@ -10,23 +10,70 @@ import { SignJWT, importPKCS8 } from 'jose';
 const AUTH_BASE = 'https://auth.worksmobile.com/oauth2/v2.0';
 const API_BASE = 'https://www.worksapis.com/v1.0';
 
+// ★CORS を自ドメイン限定 (フォームは同一オリジン配信なので正規利用は無影響)★
+//   許可originのみ反映。許可外は Access-Control-Allow-Origin を付けない=ブラウザが弾く。
+const ALLOWED_ORIGINS = [
+  'https://playbook.beyond-holdings.co.jp',
+  'https://playbook-beyond.pages.dev',
+];
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (ALLOWED_ORIGINS.includes(origin)) return true;
+  // *.pages.dev (プレビュー deploy) を許可
+  try { return new URL(origin).hostname.endsWith('.pages.dev'); } catch { return false; }
+}
+
+// ★スパム対策★ : ① honeypot隠しフィールド(website) ② 同一IPレート制限(10分5件)
+const RATE_LIMIT_MAX = 5;          // 上限件数
+const RATE_LIMIT_WINDOW_SEC = 600; // 10分
+function corsHeaders(request) {
+  const origin = request.headers.get('Origin') || '';
+  const h = { 'Content-Type': 'application/json; charset=utf-8' };
+  if (isAllowedOrigin(origin)) h['Access-Control-Allow-Origin'] = origin;
+  return h;
+}
+
 export async function onRequestPost(context) {
   const { env, request } = context;
-  const cors = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json; charset=utf-8' };
+  const cors = corsHeaders(request);
 
   try {
     const requiredEnv = ['LINE_WORKS_CLIENT_ID','LINE_WORKS_CLIENT_SECRET','LINE_WORKS_SERVICE_ACCOUNT','LINE_WORKS_BOT_ID','LINE_WORKS_MATSUURA_ID','LINE_WORKS_PRIVATE_KEY'];
     const missing = requiredEnv.filter(k => !env[k]);
-    if (missing.length > 0) return new Response(JSON.stringify({ ok:false, error:`Missing env: ${missing.join(',')}` }), { status:500, headers:cors });
+    if (missing.length > 0) {
+      console.error('[submit] missing env vars:', missing.join(','));
+      return new Response(JSON.stringify({ ok:false, error:'Internal error' }), { status:500, headers:cors });
+    }
 
     const bodyText = await request.text();
     let data;
     try { data = JSON.parse(bodyText); } catch (e) {
-      return new Response(JSON.stringify({ ok:false, error:`Invalid JSON: ${e.message}` }), { status:400, headers:cors });
+      console.error('[submit] invalid JSON:', e.message);
+      return new Response(JSON.stringify({ ok:false, error:'Invalid JSON' }), { status:400, headers:cors });
+    }
+
+    // ★① honeypot★ — 隠しフィールド website が埋まってたら bot確定 → ok:trueで静かに破棄
+    if (data.website && String(data.website).trim() !== '') {
+      console.log('[submit] honeypot triggered, silently dropped');
+      return new Response(JSON.stringify({ ok:true }), { status:200, headers:cors });
     }
 
     if (!data.name || !data.company || !data.contact) {
       return new Response(JSON.stringify({ ok:false, error:'お名前・会社名・連絡先は必須です' }), { status:400, headers:cors });
+    }
+
+    // ★② レート制限★ — 同一IP 10分で RATE_LIMIT_MAX 件まで (DMスパム防止)
+    if (env.PLAYBOOK_ANALYTICS) {
+      try {
+        const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+        const rlKey = `rl:submit:${ip}`;
+        const cnt = parseInt((await env.PLAYBOOK_ANALYTICS.get(rlKey)) || '0', 10);
+        if (cnt >= RATE_LIMIT_MAX) {
+          console.log('[submit] rate limit hit:', ip);
+          return new Response(JSON.stringify({ ok:false, error:'送信が多すぎます。しばらくしてから再度お試しください。' }), { status:429, headers:cors });
+        }
+        await env.PLAYBOOK_ANALYTICS.put(rlKey, String(cnt + 1), { expirationTtl: RATE_LIMIT_WINDOW_SEC });
+      } catch (e) { console.error('rate limit check:', e.message); /* 失敗時は通す=非破壊 */ }
     }
 
     const jstNow = new Intl.DateTimeFormat('ja-JP', {
@@ -99,18 +146,18 @@ export async function onRequestPost(context) {
     return new Response(JSON.stringify({ ok:true }), { status:200, headers:cors });
   } catch (err) {
     console.error('[submit] error:', err.message, err.stack);
-    return new Response(JSON.stringify({ ok:false, error: err.message || 'Internal error', name: err.name }), { status:500, headers:cors });
+    return new Response(JSON.stringify({ ok:false, error: 'Internal error' }), { status:500, headers:cors });
   }
 }
 
-export async function onRequestOptions() {
-  return new Response(null, {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  });
+export async function onRequestOptions(context) {
+  const origin = context.request.headers.get('Origin') || '';
+  const headers = {
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+  if (isAllowedOrigin(origin)) headers['Access-Control-Allow-Origin'] = origin;
+  return new Response(null, { headers });
 }
 
 async function getAccessToken(env) {
